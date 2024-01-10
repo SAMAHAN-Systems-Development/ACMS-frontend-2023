@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import type { FC } from 'react';
 import React from 'react';
 
@@ -71,11 +72,7 @@ const SearchBar = () => {
   );
 };
 
-const page = () => {
-  const handleViewForm = () => {
-    console.log('View Form button clicked!');
-  };
-
+const page = ({ params }: { params: { id: string } }) => {
   const handleViewAcceptedPayments = () => {
     console.log('View Accepted Payments button clicked!');
   };
@@ -96,7 +93,9 @@ const page = () => {
         </p>
 
         <div className="my-3 space-y-2 space-x-2">
-          <Button text="View Form" onClickHandler={handleViewForm} />
+          <Link href={`/events/${params.id}/register`}>
+            <Button text="View Form" />
+          </Link>
           <Button
             text="View Accepted Payments"
             onClickHandler={handleViewAcceptedPayments}
