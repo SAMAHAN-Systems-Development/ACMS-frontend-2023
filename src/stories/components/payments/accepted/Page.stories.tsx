@@ -35,7 +35,7 @@ const restoreButtonAction = (ids: string[]) => {
 export const Primary: Story = {
   render: () => (
     <PaymentsPage
-      listOfAcceptedPayments={listOfAcceptedPayments}
+      listOfPayments={listOfAcceptedPayments}
       restoreButtonAction={restoreButtonAction}
     />
   ),

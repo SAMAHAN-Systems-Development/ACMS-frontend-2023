@@ -1,9 +1,14 @@
 type Payment = {
-  eventPrice: string;
-  eventTitle: string;
+  event: {
+    price: string;
+    title: string;
+  };
+  firstName: string;
   id: string;
-  paymentPhotoUrl: string;
-  studentName: string;
+  lastName: string;
+  payment: {
+    photo_src: string;
+  };
 };
 
 export default Payment;
