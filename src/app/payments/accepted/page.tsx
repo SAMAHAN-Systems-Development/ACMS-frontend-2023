@@ -1,22 +1,26 @@
-import React, { useEffect, useState } from 'react';
+'use client';
+
+import React, { useCallback, useEffect, useState } from 'react';
 
 import PaymentsPage from '@/components/payments/PaymentsPage';
 
 const PageFinal = () => {
-  const backendUrl = process.env.BACKEND_URL;
+  const backendUrl =
+    process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
   const [listOfAcceptedPayments, setListOfAcceptedPayments] = useState([]);
 
-  useEffect(() => {
-    const fetchPayments = async () => {
-      fetch(`${backendUrl}/payments/accepted`, { method: 'GET' })
-        .then((response) => response.json())
-        .then((data) => {
-          setListOfAcceptedPayments(data);
-        })
-        .catch((error) => error);
-    };
-    void fetchPayments();
+  const fetchPayments = useCallback(async () => {
+    fetch(`${backendUrl}/payment/accepted`, { method: 'GET' })
+      .then((response) => response.json())
+      .then((data) => {
+        setListOfAcceptedPayments(data);
+      })
+      .catch((error) => error);
   }, [backendUrl]);
+
+  useEffect(() => {
+    void fetchPayments();
+  }, [fetchPayments]);
 
   const restoreButtonAction = (ids: string[]) => {
     fetch(`${backendUrl}/payments/restore`, {
@@ -32,7 +36,7 @@ const PageFinal = () => {
 
   return (
     <PaymentsPage
-      listOfAcceptedPayments={listOfAcceptedPayments}
+      listOfPayments={listOfAcceptedPayments}
       restoreButtonAction={restoreButtonAction}
     />
   );

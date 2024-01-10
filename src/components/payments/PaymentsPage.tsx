@@ -6,18 +6,18 @@ import PaymentsCard from '@/components/payments/PaymentsCard';
 import type Payment from '@/types/Payment';
 
 type propTypes = {
-  listOfAcceptedPayments: Payment[];
+  listOfPayments: Payment[];
   restoreButtonAction: ([]) => void;
 };
 
 const PaymentsPage: React.FC<propTypes> = ({
-  listOfAcceptedPayments,
+  listOfPayments,
   restoreButtonAction,
 }) => {
   const [checkedCards, setCheckedCards] = useState<string[]>([]);
 
   const selectAllButtonAction = () => {
-    setCheckedCards(listOfAcceptedPayments.map((payment) => payment.id));
+    setCheckedCards(listOfPayments.map((payment) => payment.id));
   };
 
   const unselectAllButtonAction = () => {
@@ -27,7 +27,8 @@ const PaymentsPage: React.FC<propTypes> = ({
   return (
     <div>
       <div className="flex flex-row gap-8">
-        {listOfAcceptedPayments.length === checkedCards.length ? (
+        {listOfPayments.length === checkedCards.length &&
+        listOfPayments.length !== 0 ? (
           <button onClick={unselectAllButtonAction}>Unselect All</button>
         ) : (
           <button onClick={selectAllButtonAction}>Select All</button>
@@ -37,11 +38,11 @@ const PaymentsPage: React.FC<propTypes> = ({
         </button>
       </div>
       <div>
-        {listOfAcceptedPayments.map((payment: Payment) => (
+        {listOfPayments.map((payment: Payment) => (
           <PaymentsCard
             key={payment.id}
-            eventPrice={payment.eventPrice}
-            eventTitle={payment.eventTitle}
+            eventPrice={payment.event.price}
+            eventTitle={payment.event.title}
             onCheckedAction={() => {
               if (checkedCards.includes(payment.id)) {
                 setCheckedCards(
@@ -54,8 +55,8 @@ const PaymentsPage: React.FC<propTypes> = ({
               }
             }}
             restoreButtonAction={() => restoreButtonAction([payment.id])}
-            studentName={payment.studentName}
-            paymentPhotoUrl={payment.paymentPhotoUrl}
+            studentName={`${payment.firstName} ${payment.lastName}`}
+            paymentPhotoUrl={payment.payment.photo_src}
             checked={checkedCards.includes(payment.id)}
           />
         ))}
