@@ -12,9 +12,14 @@ export const EventsFacilitatorPage: React.FC = ({
 }: Props) => {
     return (
         <section className='flex justify-center items-center'>
-            <EventsFacilitatorList>
-                <EventsFacilitatorEventCard title='Event Title' description='Event Description' />
-            </EventsFacilitatorList>
+            <div className='flex flex-col'>
+                <div className='flex justify-start items-start'>
+                    <h1>List Of Events</h1>
+                </div>
+                <EventsFacilitatorList>
+                    <EventsFacilitatorEventCard title='Event Title' description='Event Description' />
+                </EventsFacilitatorList>
+            </div>
         </section>
     )
 }
