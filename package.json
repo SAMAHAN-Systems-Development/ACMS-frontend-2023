@@ -16,6 +16,8 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@cyrilolanolan/eslint-config-ts": "0.1.1",
+    "@cyrilolanolan/prettier-config": "0.1.1",
     "@storybook/addon-essentials": "^7.6.6",
     "@storybook/addon-interactions": "^7.6.6",
     "@storybook/addon-links": "^7.6.6",

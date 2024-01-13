@@ -1,19 +1,6 @@
+const sharedConfig = require('@cyrilolanolan/prettier-config');
+
 module.exports = {
-    arrowParens: 'always',
-    bracketSpacing: true,
-    endOfLine: 'lf',
-    printWidth: 80,
-    semi: true,
-    singleQuote: true,
-    tabWidth: 2,
-    trailingComma: 'es5',
-    useTabs: false,
-    overrides: [
-      {
-        files: ['*.py'],
-        options: {
-          tabWidth: 4,
-        },
-      },
-    ],
+  ...sharedConfig,
+  // extend or overwrite options here
 };
