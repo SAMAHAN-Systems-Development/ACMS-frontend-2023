@@ -1,5 +1,6 @@
 'use client';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+
 import EventCard from '@/components/event/EventCard';
 
 interface Event {
@@ -41,7 +42,6 @@ const PageFinal: React.FC = () => {
     };
 
     const handleEditEvent = (id: string) => {
-        // Add your logic for editing an event
         console.log('Editing event with ID:', id);
     };
 
@@ -54,7 +54,7 @@ const PageFinal: React.FC = () => {
                     id={event.id}
                     onActivate={handleActivateEvent}
                     eventTitle={event.title}
-                    onEdit={handleEditEvent} // Pass the actual edit function
+                    onEdit={handleEditEvent}
                 />
             ))}
         </div>

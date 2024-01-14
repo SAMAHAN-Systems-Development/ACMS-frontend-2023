@@ -2,21 +2,38 @@ import React from 'react';
 import { useRouter } from 'next/router';
 
 interface EventCardProps {
-    id: string;
-    onActivate: (id: string) => void;
-    onEdit: (id: string) => void;
     eventTitle: string;
+    id: string;
+    onActivate: (id: string) => Promise<void>;
+    onEdit: (id: string) => void;
 }
 
 const EventCard: React.FC<EventCardProps> = ({ id, onActivate, onEdit, eventTitle }) => {
     const router = useRouter();
 
-    const handleViewClick = () => {
-        router.push(`/event/view/${id}`);
+    const handleViewClick = async () => {
+        try {
+            await router.push(`/event/view/${id}`);
+        } catch (error) {
+            console.error('Error navigating to view event:', error);
+        }
     };
 
-    const handleEditClick = () => {
-        router.push(`/event/edit/${id}`);
+    const handleEditClick = async () => {
+        try {
+            await router.push(`/event/edit/${id}`);
+            onEdit(id);
+        } catch (error) {
+            console.error('Error navigating to edit event:', error);
+        }
+    };
+
+    const handleActivateClick = async () => {
+        try {
+            await onActivate(id);
+        } catch (error) {
+            console.error('Error activating event:', error);
+        }
     };
 
     return (
@@ -40,7 +57,7 @@ const EventCard: React.FC<EventCardProps> = ({ id, onActivate, onEdit, eventTitl
                 </button>
                 <button
                     className="px-4 py-2 text-sm font-bold text-white bg-yellow-500 rounded-full ml-2"
-                    onClick={() => onActivate(id)}
+                    onClick={handleActivateClick}
                 >
                     Activate
                 </button>
