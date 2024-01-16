@@ -1,3 +1,5 @@
+'use client';
+
 import type { FC } from 'react';
 import React from 'react';
 
@@ -7,7 +9,7 @@ import ModalWrapper from '@/components/ui/ModalWrapper';
 
 import PaymentsCard from '@/components/payments/PaymentsCard';
 import Button from '@/components/ui/Button';
-import type Payment from '@/types/Payment';
+import type { Payment } from '@/types/types';
 
 type PaymentsModalProps = {
   listOfPayments: Payment[];
