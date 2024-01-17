@@ -10,7 +10,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState(null);
   const supabase = createClientComponentClient();
   const backendUrl =
-    process.env.NEXT_APP_BACKEND_URL || 'http://localhost:3000';
+    process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
 
   useEffect(() => {
     const updateUser = async () => {
