@@ -20,17 +20,8 @@ const PendingPaymentsPage: React.FC<propTypes> = ({
   const [checkedCards, setCheckedCards] = useState<string[]>([]);
   const router = useRouter();
 
-  // const selectAllButtonAction = () => {
-  //   setCheckedCards(listOfPayments.map((payment) => payment.id));
-  // };
-
-  // const unselectAllButtonAction = () => {
-  //   setCheckedCards([]);
-  // };
-
   const toggleSelectAll = () => {
     setCheckedCards((prevCheckedCards) => {
-      // If all are already selected, unselect all; otherwise, select all
       return prevCheckedCards.length === listOfPayments.length
         ? []
         : listOfPayments.map((payment) => payment.id);
@@ -56,27 +47,11 @@ const PendingPaymentsPage: React.FC<propTypes> = ({
         </button>
       </div>
 
-      <div className="mt-4 text-[48px] font-bold">
+      <div className="mt-4 text-[3rem] font-bold">
         PENDING PAYMENT VERIFICATION
       </div>
 
       <div className="">
-        {/* {listOfPayments.length === checkedCards.length &&
-        listOfPayments.length !== 0 ? (
-          <button
-            className="px-4 py-2 text-sm text-white bg-red-500 rounded-md"
-            onClick={unselectAllButtonAction}
-          >
-            Unselect All
-          </button>
-        ) : (
-          <button
-            className="px-4 py-2 text-sm text-white bg-[#181842] rounded-md hover:bg-[#99A0B8]"
-            onClick={selectAllButtonAction}
-          >
-            Select All
-          </button>
-        )} */}
         <label>
           <input type="checkbox" onClick={toggleSelectAll} />
           Select All

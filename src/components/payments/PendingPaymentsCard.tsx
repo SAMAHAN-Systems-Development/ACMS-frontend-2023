@@ -28,7 +28,7 @@ const PendingPaymentsCard: React.FC<propTypes> = ({
       onClick={() => {
         onCheckedAction && onCheckedAction();
       }}
-      className={`w-[381px] h-[531px] border-2 rounded-lg drop-shadow-md p-8 ${
+      className={`w-[23.8125rem] h-[33.1875rem] border-2 rounded-lg drop-shadow-md p-8 ${
         !onCheckedAction ? 'hover:cursor-default' : ''
       }`}
     >
