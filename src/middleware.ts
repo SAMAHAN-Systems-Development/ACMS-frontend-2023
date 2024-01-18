@@ -19,6 +19,7 @@ const allowedUrls = {
     'payment/declined',
     'payment/accepted',
   ],
+  student: []
 };
 
 export async function middleware(req: NextRequest) {
@@ -34,22 +35,36 @@ export async function middleware(req: NextRequest) {
 
   const userType = await fetchUserType(req, res, supabase, backendUrl);
 
-  if (userType) {
-    // res.headers.set('user-type', userType)
-    // TODO: https://nextjs.org/docs/app/building-your-application/routing/middleware
+  console.log(typeof userType !== 'string')
+
+  if (typeof userType !== 'string' && req.nextUrl.pathname !== '/unauthorized') {
+
+    // Allow the student to go to the register url
+    if (req.nextUrl.pathname.includes('/events/register/')) {
+      return res;
+    }
+    // req.nextUrl.pathname = '/unauthorized';
+    // return NextResponse.redirect(req.nextUrl);
   }
+
+  // res.headers.set('x-user-type', userType);
 
   if (
     userType !== 'facilitator' &&
     userType !== 'cashier' &&
-    userType !== 'admin'
+    userType !== 'admin' &&
+    req.nextUrl.pathname !== '/login' &&
+    req.nextUrl.pathname !== '/unauthorized'
   ) {
-    return res;
+    req.nextUrl.pathname = '/unauthorized';
+    return NextResponse.redirect(req.nextUrl);
   }
 
-  if (req.nextUrl.pathname in allowedUrls[userType]) {
-    // TODO: add functionality here
-  }
+  // if (!(req.nextUrl.pathname in allowedUrls[userType])) {
+  //   req.nextUrl.pathname = '/unauthorized';
+  //   return NextResponse.redirect(req.nextUrl);
+  // }
+
   if (session && req.nextUrl.pathname === '/login') {
     req.nextUrl.pathname = '/home';
     return NextResponse.redirect(req.nextUrl);
