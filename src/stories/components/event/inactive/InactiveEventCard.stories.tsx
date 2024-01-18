@@ -1,3 +1,4 @@
+
 import type { Meta, StoryObj } from '@storybook/react';
 
 import InactiveEventCard from '@/components/event/EventCard';
@@ -20,3 +21,14 @@ export const Example: Story = {
         />
     ),
 };
+export const Example2: Story = {
+    render: () => (
+        <InactiveEventCard
+            id="2"
+            onActivate={() => { }}
+            onEdit={() => { }}
+            eventTitle="Mockathon"
+        />
+    ),
+};
+
