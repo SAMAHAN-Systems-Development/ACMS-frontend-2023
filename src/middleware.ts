@@ -35,8 +35,6 @@ export async function middleware(req: NextRequest) {
 
   const userType = await fetchUserType(req, res, supabase, backendUrl);
 
-  console.log(typeof userType !== 'string')
-
   if (typeof userType !== 'string' && req.nextUrl.pathname !== '/unauthorized') {
 
     // Allow the student to go to the register url
