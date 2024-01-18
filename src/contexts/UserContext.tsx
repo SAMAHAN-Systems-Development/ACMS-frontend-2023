@@ -9,7 +9,7 @@ import Unauthorized from '@/components/ui/Unauthorized';
 
 const allowedUrls = {
   facilitator: ['/login', '/home', '/'],
-  cashier: ['/login', '/register-student', '/'],
+  cashier: ['/login', '/register-student', '/home', '/'],
   admin: [
     '/login',
     '/home',

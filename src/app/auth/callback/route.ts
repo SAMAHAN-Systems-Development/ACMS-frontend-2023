@@ -1,3 +1,4 @@
+// Not really important right now, but will just add it here in case there are registration process in the future
 import { cookies } from 'next/headers';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
