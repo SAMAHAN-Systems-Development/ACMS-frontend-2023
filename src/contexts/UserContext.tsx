@@ -1,14 +1,37 @@
 'use client';
 import { createContext, useContext, useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import axios from 'axios';
 
+import Unauthorized from '@/components/ui/Unauthorized';
+
+const allowedUrls = {
+  facilitator: ['/login', '/home', '/'],
+  cashier: ['/login', '/register-student', '/'],
+  admin: [
+    '/login',
+    '/home',
+    '/student',
+    '/event/active',
+    '/event/inactive',
+    '/payments/pending',
+    '/payments/declined',
+    '/payments/accepted',
+    '/',
+  ],
+};
+
 export const UserContext = createContext({});
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<{ email: string; userType: string }>({
+    email: '',
+    userType: '',
+  });
   const supabase = createClientComponentClient();
+  const pathname = usePathname();
   const backendUrl =
     process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
 
@@ -35,9 +58,25 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     void updateUser();
   }, [backendUrl, supabase.auth]);
 
-  return (
-    <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
-  );
+  if (pathname.includes('/events/register/') || pathname === '/login') {
+    return children;
+  }
+
+  if (
+    user.userType !== 'facilitator' &&
+    user.userType !== 'cashier' &&
+    user.userType !== 'admin'
+  ) {
+    return <Unauthorized />;
+  }
+
+  if (allowedUrls[user.userType].includes(pathname)) {
+    return (
+      <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
+    );
+  }
+
+  return <Unauthorized />;
 }
 
 export function useUser() {
