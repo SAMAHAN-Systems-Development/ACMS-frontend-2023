@@ -1,48 +1,16 @@
-'use client';
-
-import React, { useCallback, useEffect, useState } from 'react';
-
 import PaymentsPage from '@/components/payments/PaymentsPage';
-import type Payment from '@/types/Payment';
+import type { Payment } from '@/types/types';
 
-const PageFinal = () => {
+const PageFinal = async () => {
   const backendUrl =
     process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
-  const [listOfDeclinedPayments, setListOfDeclinedPayments] = useState<
-    Payment[]
-  >([]);
 
-  const fetchPayments = useCallback(async () => {
-    fetch(`${backendUrl}/payment/declined`, { method: 'GET' })
-      .then((response) => response.json())
-      .then((data) => {
-        setListOfDeclinedPayments(data);
-      })
-      .catch((error) => error);
-  }, [backendUrl]);
+  const response = await fetch(`${backendUrl}/payment/declined`, {
+    method: 'GET',
+  });
+  const listOfDeclinedPayments: Payment[] = await response.json();
 
-  useEffect(() => {
-    void fetchPayments();
-  }, [fetchPayments]);
-
-  const restoreButtonAction = (ids: string[]) => {
-    fetch(`${backendUrl}/payments/restore`, {
-      method: 'POST',
-      body: JSON.stringify(ids),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setListOfDeclinedPayments(data);
-      })
-      .catch((error) => error);
-  };
-
-  return (
-    <PaymentsPage
-      listOfPayments={listOfDeclinedPayments}
-      restoreButtonAction={restoreButtonAction}
-    />
-  );
+  return <PaymentsPage listOfPayments={listOfDeclinedPayments} />;
 };
 
 export default PageFinal;

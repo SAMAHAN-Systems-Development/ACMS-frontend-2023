@@ -3,18 +3,14 @@
 import React, { useState } from 'react';
 
 import PaymentsCard from '@/components/payments/PaymentsCard';
-import type Payment from '@/types/Payment';
+import type { Payment } from '@/types/types';
 
 type propTypes = {
   listOfPayments: Payment[];
-  restoreButtonAction: ([]) => void;
 };
 
-const PaymentsPage: React.FC<propTypes> = ({
-  listOfPayments,
-  restoreButtonAction,
-}) => {
-  const [checkedCards, setCheckedCards] = useState<string[]>([]);
+const PaymentsPage: React.FC<propTypes> = ({ listOfPayments }) => {
+  const [checkedCards, setCheckedCards] = useState<number[]>([]);
 
   const selectAllButtonAction = () => {
     setCheckedCards(listOfPayments.map((payment) => payment.id));
@@ -33,31 +29,17 @@ const PaymentsPage: React.FC<propTypes> = ({
         ) : (
           <button onClick={selectAllButtonAction}>Select All</button>
         )}
-        <button onClick={() => restoreButtonAction(checkedCards)}>
-          Restore All Selected
-        </button>
+        <button>Restore All Selected</button>
       </div>
-      <div>
-        {listOfPayments.map((payment: Payment) => (
+      <div className="flex gap-8 flex-wrap">
+        {listOfPayments.map((payment: Payment, index: number) => (
           <PaymentsCard
-            key={payment.id}
-            eventPrice={payment.event.price}
-            eventTitle={payment.event.title}
-            onCheckedAction={() => {
-              if (checkedCards.includes(payment.id)) {
-                setCheckedCards(
-                  checkedCards.filter(
-                    (checkedCard) => checkedCard !== payment.id
-                  )
-                );
-              } else {
-                setCheckedCards([...checkedCards, payment.id]);
-              }
-            }}
-            restoreButtonAction={() => restoreButtonAction([payment.id])}
-            studentName={`${payment.firstName} ${payment.lastName}`}
-            paymentPhotoUrl={payment.payment.photo_src}
-            checked={checkedCards.includes(payment.id)}
+            key={payment.id + index}
+            hasRestoreButton={true}
+            hasCheckbox={true}
+            checkedCards={checkedCards}
+            setCheckedCards={setCheckedCards}
+            payment={payment}
           />
         ))}
       </div>
