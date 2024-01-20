@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import type { AxiosResponse } from 'axios';
 import axios from 'axios';
+import { setCookie } from 'cookies-next';
 
 import Unauthorized from '@/components/ui/Unauthorized';
 
@@ -31,7 +32,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     email: '',
     userType: '',
   });
-  const [token, setToken] = useState<string>();
   const supabase = createClientComponentClient();
   const pathname = usePathname();
   const backendUrl =
@@ -53,7 +53,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         .then((res: AxiosResponse) => {
           setUser(res.data);
           const accessToken = res.headers['x-access-token'];
-          setToken(accessToken);
+          setCookie('json-web-token', accessToken);
         })
         .catch((error) => {
           throw new Error(error);
@@ -76,9 +76,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   if (allowedUrls[user.userType].includes(pathname)) {
     return (
-      <UserContext.Provider value={{ user, token }}>
-        {children}
-      </UserContext.Provider>
+      <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
     );
   }
 
