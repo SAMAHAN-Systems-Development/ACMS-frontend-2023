@@ -1,5 +1,7 @@
 # **ACMS Frontend**
 
+More info at [ACMS Documentation](https://www.notion.so/samahan-sysdev/Automated-Crowd-Monitoring-System-ACMS-2023-Documentation-f4a08ad5ef8a48c68d7ae21bec210fc1)
+
 ### Tools that needs to be installed:
 
 - Node (https://nodejs.org/en/download)
