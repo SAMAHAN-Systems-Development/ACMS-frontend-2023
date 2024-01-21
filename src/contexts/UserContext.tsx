@@ -7,6 +7,7 @@ import type { AxiosResponse } from 'axios';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
 
+import Loading from '@/components/ui/Loading';
 import Unauthorized from '@/components/ui/Unauthorized';
 
 const allowedUrls = {
@@ -23,19 +24,23 @@ const allowedUrls = {
     '/payments/accepted',
     '/',
   ],
+  student: ['/events/register/'],
 };
 
 export const UserContext = createContext({});
+const backendUrl =
+  process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<{ email: string; userType: string }>({
+  const [user, setUser] = useState<{
+    email: string;
+    userType: 'facilitator' | 'cashier' | 'admin' | 'student';
+  }>({
     email: '',
-    userType: '',
+    userType: 'student',
   });
   const supabase = createClientComponentClient();
-  const pathname = usePathname();
-  const backendUrl =
-    process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
+  const pathname: string = usePathname();
 
   useEffect(() => {
     const updateUser = async () => {
@@ -60,24 +65,22 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         });
     };
     void updateUser();
-  }, [backendUrl, supabase.auth]);
+  }, [supabase.auth]);
 
-  if (pathname.includes('/events/register/') || pathname === '/login') {
+  // Path for students to register for events
+  if (allowedUrls['student'].includes(pathname) || pathname === '/login') {
     return children;
   }
 
-  if (
-    user.userType !== 'facilitator' &&
-    user.userType !== 'cashier' &&
-    user.userType !== 'admin'
-  ) {
-    return <Unauthorized />;
-  }
-
+  // Checks if the URL is valid according to the usertype
   if (allowedUrls[user.userType].includes(pathname)) {
     return (
       <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
     );
+  }
+
+  if (!user.email) {
+    return <Loading />;
   }
 
   return <Unauthorized />;

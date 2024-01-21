@@ -3,7 +3,8 @@ import Image from 'next/image';
 
 import axios from 'axios';
 
-import { type Payment } from '@/types/types';
+import Checkbox from '@/components/ui/Checkbox';
+import type { Payment } from '@/types/types';
 
 type propTypes = {
   payment: Payment;
@@ -50,41 +51,50 @@ const PaymentsCard: React.FC<propTypes> = ({
 
   return (
     <div
-      className={`border-4 w-60 cursor-pointer`}
+      className="w-[24rem] h-[44rem] cursor-pointer p-8 rounded-xl shadow-[2px_0px_4px_0px_rgba(0,0,0,0.25),0px_4px_4px_0px_rgba(0,0,0,0.25)]"
       onClick={onCheckedAction}
       role="button"
       onKeyUp={onCheckedAction}
       tabIndex={0}
     >
-      {hasCheckbox && (
-        <input type="checkbox" checked={checked} onChange={onCheckedAction} />
-      )}
-      <div className="flex flex-col items-center justify-center p-4">
-        <div className="flex items-center justify-center h-20">
-          <Image
-            className="object-cover w-20 h-20 rounded-full"
-            src={paymentPhotoUrl || '/placeholderImage.jpg'}
-            alt="Payment Photo"
-            width={80}
-            height={80}
-          />
-        </div>
-        <div className="flex flex-col items-center justify-center">
-          <div className="text-lg font-bold text-center">{eventTitle}</div>
-          <div className="text-sm text-center">{studentName}</div>
-          <div className="text-sm text-center">{eventPrice}</div>
-        </div>
-        {hasRestoreButton && (
-          <div className="flex items-center justify-center my-3">
-            <button
-              id="restore-button"
-              onClick={restoreButtonAction}
-              className="px-4 py-2 text-sm font-bold text-white bg-red-500 rounded-full"
-            >
-              Restore
-            </button>
+      <div className="flex flex-col gap-4 max-h-full min-h-full">
+        <div className="flex justify-between gap-12 items-start">
+          <div className="flex flex-col items-start justify-start">
+            <p className="font-body text-lg text-left font-bold">
+              {eventTitle}
+            </p>
+            <p className="text-sm text-left">{studentName}</p>
           </div>
-        )}
+          {hasCheckbox && (
+            <Checkbox checked={checked} onCheckedAction={onCheckedAction} />
+          )}
+        </div>
+
+        <div className="flex flex-col items-center justify-between flex-grow">
+          <div className="flex flex-col gap-4">
+            <p className="text-md text-center font-bold">{eventPrice}</p>
+            <div className="flex items-center justify-center">
+              <Image
+                className="object-cover"
+                src={paymentPhotoUrl || '/placeholderImage.jpg'}
+                alt="Payment Photo"
+                width={200}
+                height={200}
+              />
+            </div>
+          </div>
+          {hasRestoreButton && (
+            <div className="flex items-center justify-end my-3">
+              <button
+                id="restore-button"
+                onClick={restoreButtonAction}
+                className="px-4 py-2 text-sm font-bold text-white bg-navyBlue rounded-md"
+              >
+                Restore
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
