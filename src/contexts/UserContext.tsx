@@ -10,7 +10,6 @@ import { setCookie } from 'cookies-next';
 
 import Loading from '@/components/ui/Loading';
 import Unauthorized from '@/components/ui/Unauthorized';
-// import { useQuery } from '@tanstack/react-query';
 
 const allowedUrls = {
   facilitator: ['/login', '/home', '/'],

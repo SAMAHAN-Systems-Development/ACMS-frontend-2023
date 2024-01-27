@@ -2,6 +2,10 @@
 
 import React, { useState } from 'react';
 
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getCookie } from 'cookies-next';
+
+import { fetchAcceptedPayments, restorePayments } from '@/api/payment';
 import PaymentsCard from '@/components/payments/PaymentsCard';
 import Checkbox from '@/components/ui/Checkbox';
 import type { Payment } from '@/types/types';
@@ -10,8 +14,18 @@ type propTypes = {
   listOfPayments: Payment[];
 };
 
-const PaymentsPage: React.FC<propTypes> = ({ listOfPayments }) => {
+const PaymentsPage: React.FC<propTypes> = () => {
   const [checkedCards, setCheckedCards] = useState<number[]>([]);
+  const queryClient = useQueryClient();
+
+  const token = getCookie('json-web-token') || '';
+
+  const paymentsQuery = useQuery<Payment[]>({
+    queryKey: ['payments', 'accepted'],
+    queryFn: () => fetchAcceptedPayments(token),
+  });
+
+  const listOfPayments: Payment[] = paymentsQuery.data || [];
 
   const selectAllButtonAction = () => {
     setCheckedCards(listOfPayments.map((payment) => payment.id));
@@ -20,6 +34,16 @@ const PaymentsPage: React.FC<propTypes> = ({ listOfPayments }) => {
   const unselectAllButtonAction = () => {
     setCheckedCards([]);
   };
+
+  const restoreAllSelectedMutation = useMutation({
+    mutationFn: async () => {
+      await restorePayments(token, checkedCards);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['payments', 'accepted'] });
+      setCheckedCards([]);
+    },
+  });
 
   return (
     <div className="flex flex-col p-16 gap-8">
@@ -45,7 +69,9 @@ const PaymentsPage: React.FC<propTypes> = ({ listOfPayments }) => {
           />
           <p>Select All</p>
         </div>
-        <button>Restore All Selected</button>
+        <button onClick={() => restoreAllSelectedMutation.mutate()}>
+          Restore All Selected
+        </button>
       </div>
       <div className="flex gap-8 flex-wrap justify-center">
         {listOfPayments.map((payment: Payment, index: number) => (

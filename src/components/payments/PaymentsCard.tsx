@@ -1,8 +1,10 @@
 import React from 'react';
 import Image from 'next/image';
 
-import axios from 'axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { getCookie } from 'cookies-next';
 
+import { restorePayments } from '@/api/payment';
 import Checkbox from '@/components/ui/Checkbox';
 import type { Payment } from '@/types/types';
 
@@ -21,17 +23,25 @@ const PaymentsCard: React.FC<propTypes> = ({
   payment,
   setCheckedCards,
 }) => {
-  const backendUrl =
-    process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
   const eventPrice = payment.event.price;
   const eventTitle = payment.event.title;
   const studentName = `${payment.firstName} ${payment.lastName}`;
   const paymentPhotoUrl = payment.payment.photo_src;
-  const restoreButtonAction = async (event: React.MouseEvent) => {
+  const token = getCookie('json-web-token') || '';
+  const queryClient = useQueryClient();
+
+  const restorePaymentsMutation = useMutation({
+    mutationFn: async () => {
+      await restorePayments(token, [payment.id]);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['payments', 'accepted'] });
+    },
+  });
+
+  const restoreButtonAction = (event: React.MouseEvent) => {
     event.stopPropagation();
-    await axios.post(`${backendUrl}/payment/restore`, {
-      paymentIds: [payment.id],
-    });
+    restorePaymentsMutation.mutate();
   };
 
   let checked = false;
