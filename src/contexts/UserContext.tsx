@@ -1,9 +1,10 @@
 'use client';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext } from 'react';
 import { usePathname } from 'next/navigation';
 
+import type { SupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import type { AxiosResponse } from 'axios';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
 
@@ -33,48 +34,17 @@ const backendUrl =
   process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<{
-    email: string;
-    userType: 'facilitator' | 'cashier' | 'admin' | 'student';
-  }>({
-    email: '',
-    userType: 'student',
-  });
-
-
   const supabase = createClientComponentClient();
   const pathname: string = usePathname();
 
-  const updateUser = async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) return;
-
-    const { data } = await supabase.auth.getUser();
-
-    if (!data.user) return;
-
-    const response = await axios
-      .post(`${backendUrl}/user`, { supabaseUserId: data.user.id })
-      .catch((error) => {
-        throw new Error(error);
-      });
-
-    setUser(response.data)
-
-    const accessToken = response.headers['x-access-token'];
-    setCookie('json-web-token', accessToken);
-
-    // return response.data
+  const userQuery = useQuery({
+    queryKey: ['user'],
+    queryFn: () => updateUser(supabase),
+  });
+  const { userType } = userQuery.data || {
+    email: '',
+    userType: 'student',
   };
-
-  // const userQuery = useQuery({ queryKey: ['user'], queryFn: updateUser })
-  // console.log(userQuery.data)
-
-  useEffect(() => {
-    void updateUser();
-  }, [supabase.auth]);
 
   // Path for students to register for events
   if (allowedUrls['student'].includes(pathname) || pathname === '/login') {
@@ -82,13 +52,15 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }
 
   // Checks if the URL is valid according to the usertype
-  if (allowedUrls[user.userType].includes(pathname)) {
+  if (allowedUrls[userType].includes(pathname)) {
     return (
-      <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
+      <UserContext.Provider value={{ user: userQuery.data }}>
+        {children}
+      </UserContext.Provider>
     );
   }
 
-  if (!user.email) {
+  if (userQuery.isLoading) {
     return <Loading />;
   }
 
@@ -98,3 +70,33 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 export function useUser() {
   return useContext(UserContext);
 }
+
+const updateUser = async (
+  supabase: SupabaseClient
+): Promise<
+  | {
+      email: string;
+      userType: 'facilitator' | 'cashier' | 'admin' | 'student';
+    }
+  | undefined
+> => {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) return;
+
+  const { data } = await supabase.auth.getUser();
+
+  if (!data.user) return;
+
+  const response = await axios
+    .post(`${backendUrl}/user`, { supabaseUserId: data.user.id })
+    .catch((error) => {
+      throw new Error(error);
+    });
+
+  const accessToken = response.headers['x-access-token'];
+  setCookie('json-web-token', accessToken);
+
+  return response.data;
+};
