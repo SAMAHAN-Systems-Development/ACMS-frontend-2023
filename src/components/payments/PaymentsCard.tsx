@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import Image from 'next/image';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -10,6 +11,7 @@ import type { Payment } from '@/types/types';
 
 type propTypes = {
   payment: Payment;
+  paymentPageType: 'accepted' | 'declined';
   checkedCards?: number[];
   hasCheckbox?: boolean;
   hasRestoreButton?: boolean;
@@ -22,6 +24,7 @@ const PaymentsCard: React.FC<propTypes> = ({
   checkedCards,
   payment,
   setCheckedCards,
+  paymentPageType,
 }) => {
   const eventPrice = payment.event.price;
   const eventTitle = payment.event.title;
@@ -34,8 +37,12 @@ const PaymentsCard: React.FC<propTypes> = ({
     mutationFn: async () => {
       await restorePayments(token, [payment.id]);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['payments', 'accepted'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['payments', paymentPageType],
+        exact: true,
+      });
+      toast.success('Payment restored successfully');
     },
   });
 

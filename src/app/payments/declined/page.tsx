@@ -1,29 +1,33 @@
 import { cookies } from 'next/headers';
 
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
+
+import { fetchDeclinedPayments } from '@/api/payment';
 import PaymentsPage from '@/components/payments/PaymentsPage';
-import type { Payment } from '@/types/types';
 
 const PageFinal = async () => {
-  const backendUrl =
-    process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
-
+  const queryClient = new QueryClient();
   const cookieStore = cookies();
   const token = cookieStore.get('json-web-token') || { value: '' };
-
-  const response = await fetch(`${backendUrl}/payment/declined`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token.value}`,
-    },
+  await queryClient.prefetchQuery({
+    queryKey: ['payments', 'declined'],
+    queryFn: () => fetchDeclinedPayments(token.value),
   });
 
-  if (!response.ok) {
-    throw new Error('Error in fetching the declined payments');
-  }
-
-  const listOfDeclinedPayments: Payment[] = await response.json();
-
-  return <PaymentsPage listOfPayments={listOfDeclinedPayments} />;
+  return (
+    <div className="flex flex-col p-16 gap-8">
+      <h1 className="text-5xl text-navyBlue font-extrabold">
+        Declined Payments
+      </h1>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <PaymentsPage paymentPageType="declined" />
+      </HydrationBoundary>
+    </div>
+  );
 };
 
 export default PageFinal;

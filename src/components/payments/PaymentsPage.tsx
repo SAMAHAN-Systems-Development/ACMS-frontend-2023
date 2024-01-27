@@ -1,28 +1,41 @@
 'use client';
 
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 
-import { fetchAcceptedPayments, restorePayments } from '@/api/payment';
+import {
+  fetchAcceptedPayments,
+  fetchDeclinedPayments,
+  restorePayments,
+} from '@/api/payment';
 import PaymentsCard from '@/components/payments/PaymentsCard';
 import Checkbox from '@/components/ui/Checkbox';
 import type { Payment } from '@/types/types';
 
 type propTypes = {
-  listOfPayments: Payment[];
+  paymentPageType: 'accepted' | 'declined';
 };
 
-const PaymentsPage: React.FC<propTypes> = () => {
+const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
   const [checkedCards, setCheckedCards] = useState<number[]>([]);
   const queryClient = useQueryClient();
 
   const token = getCookie('json-web-token') || '';
 
+  const queryFn = () => {
+    if (paymentPageType === 'accepted') {
+      return fetchAcceptedPayments(token);
+    }
+
+    return fetchDeclinedPayments(token);
+  };
+
   const paymentsQuery = useQuery<Payment[]>({
-    queryKey: ['payments', 'accepted'],
-    queryFn: () => fetchAcceptedPayments(token),
+    queryKey: ['payments', paymentPageType],
+    queryFn: queryFn,
   });
 
   const listOfPayments: Payment[] = paymentsQuery.data || [];
@@ -39,14 +52,27 @@ const PaymentsPage: React.FC<propTypes> = () => {
     mutationFn: async () => {
       await restorePayments(token, checkedCards);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['payments', 'accepted'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['payments', paymentPageType],
+        exact: true,
+      });
+      toast.success('Payments restored successfully');
       setCheckedCards([]);
     },
   });
 
+  const restoreAllButtonAction = () => {
+    if (checkedCards.length === 0) {
+      toast.error('No payments selected');
+      return;
+    }
+
+    restoreAllSelectedMutation.mutate();
+  };
+
   return (
-    <div className="flex flex-col p-16 gap-8">
+    <div className="flex flex-col gap-8">
       <div className="flex flex-row gap-8">
         <div
           onClick={
@@ -69,7 +95,10 @@ const PaymentsPage: React.FC<propTypes> = () => {
           />
           <p>Select All</p>
         </div>
-        <button onClick={() => restoreAllSelectedMutation.mutate()}>
+        <button
+          className="px-4 py-2 text-sm font-bold text-white bg-navyBlue rounded-md"
+          onClick={restoreAllButtonAction}
+        >
           Restore All Selected
         </button>
       </div>
@@ -82,6 +111,7 @@ const PaymentsPage: React.FC<propTypes> = () => {
             checkedCards={checkedCards}
             setCheckedCards={setCheckedCards}
             payment={payment}
+            paymentPageType={paymentPageType}
           />
         ))}
       </div>

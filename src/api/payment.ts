@@ -20,6 +20,23 @@ export const fetchAcceptedPayments = async (token: string) => {
   return listOfAcceptedPayments;
 };
 
+export const fetchDeclinedPayments = async (token: string) => {
+  const response = await fetch(`${backendUrl}/payment/declined`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error in fetching the declined payments');
+  }
+
+  const listOfDeclinedPayments: Payment[] = await response.json();
+
+  return listOfDeclinedPayments;
+};
+
 export const restorePayments = async (token: string, paymentIds: number[]) => {
   const response = await fetch(`${backendUrl}/payment/restore`, {
     method: 'POST',

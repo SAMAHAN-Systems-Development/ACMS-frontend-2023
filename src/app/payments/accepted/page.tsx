@@ -18,12 +18,15 @@ const PageFinal = async () => {
     queryFn: () => fetchAcceptedPayments(token.value),
   });
 
-  const listOfAcceptedPayments = await fetchAcceptedPayments(token.value);
-
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <PaymentsPage listOfPayments={listOfAcceptedPayments} />
-    </HydrationBoundary>
+    <div className="flex flex-col p-16 gap-8">
+      <h1 className="text-5xl text-navyBlue font-extrabold">
+        Accepted Payments
+      </h1>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <PaymentsPage paymentPageType="accepted" />
+      </HydrationBoundary>
+    </div>
   );
 };
 
