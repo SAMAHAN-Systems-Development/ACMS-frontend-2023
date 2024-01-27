@@ -9,6 +9,7 @@ import { setCookie } from 'cookies-next';
 
 import Loading from '@/components/ui/Loading';
 import Unauthorized from '@/components/ui/Unauthorized';
+// import { useQuery } from '@tanstack/react-query';
 
 const allowedUrls = {
   facilitator: ['/login', '/home', '/'],
@@ -39,31 +40,39 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     email: '',
     userType: 'student',
   });
+
+
   const supabase = createClientComponentClient();
   const pathname: string = usePathname();
 
+  const updateUser = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (!session) return;
+
+    const { data } = await supabase.auth.getUser();
+
+    if (!data.user) return;
+
+    const response = await axios
+      .post(`${backendUrl}/user`, { supabaseUserId: data.user.id })
+      .catch((error) => {
+        throw new Error(error);
+      });
+
+    setUser(response.data)
+
+    const accessToken = response.headers['x-access-token'];
+    setCookie('json-web-token', accessToken);
+
+    // return response.data
+  };
+
+  // const userQuery = useQuery({ queryKey: ['user'], queryFn: updateUser })
+  // console.log(userQuery.data)
+
   useEffect(() => {
-    const updateUser = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session) return;
-
-      const { data } = await supabase.auth.getUser();
-
-      if (!data.user) return;
-
-      axios
-        .post(`${backendUrl}/user`, { supabaseUserId: data.user.id })
-        .then((res: AxiosResponse) => {
-          setUser(res.data);
-          const accessToken = res.headers['x-access-token'];
-          setCookie('json-web-token', accessToken);
-        })
-        .catch((error) => {
-          throw new Error(error);
-        });
-    };
     void updateUser();
   }, [supabase.auth]);
 

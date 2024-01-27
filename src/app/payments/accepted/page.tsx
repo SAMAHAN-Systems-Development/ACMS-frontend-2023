@@ -10,6 +10,8 @@ const PageFinal = async () => {
   const cookieStore = cookies();
   const token = cookieStore.get('json-web-token') || { value: '' };
 
+  // console.log(token.value)
+
   const response = await fetch(`${backendUrl}/payment/accepted`, {
     method: 'GET',
     headers: {
