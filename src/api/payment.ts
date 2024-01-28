@@ -48,7 +48,7 @@ export const restorePayments = async (token: string, paymentIds: number[]) => {
   });
 
   if (!response.ok) {
-    throw new Error('Error in fetching the accepted payments');
+    throw new Error('Error in restoring payments');
   }
 
   return true;
