@@ -7,7 +7,6 @@ import Providers from '@/app/providers';
 import '@/app/globals.css';
 
 import Loading from '@/components/ui/Loading';
-import { UserProvider } from '@/contexts/UserContext';
 
 const openSans = Open_Sans({
   subsets: ['latin'],
@@ -29,9 +28,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={openSans.className}>
         <Suspense fallback={<Loading />}>
-          <Providers>
-            <UserProvider>{children}</UserProvider>
-          </Providers>
+          <Providers>{children}</Providers>
         </Suspense>
       </body>
     </html>

@@ -8,12 +8,14 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import 'react-toastify/dist/ReactToastify.css';
 
+import { UserProvider } from '@/contexts/UserContext';
+
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [client] = useState(new QueryClient());
 
   return (
     <QueryClientProvider client={client}>
-      {children}
+      <UserProvider>{children}</UserProvider>
       <ReactQueryDevtools initialIsOpen={false} />
       <ToastContainer
         position="bottom-right"

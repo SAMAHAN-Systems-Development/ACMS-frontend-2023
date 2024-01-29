@@ -27,10 +27,7 @@ export const fetchUser = async (
   }
   const accessToken = response.headers.get('x-access-token');
 
-  const users: {
-    email: '';
-    userType: 'facilitator' | 'cashier' | 'admin' | 'student';
-  } = await response.json();
+  const users = await response.json();
 
   if (!accessToken) return { ...users, accessToken: '' };
 
