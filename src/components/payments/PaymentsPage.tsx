@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getCookie } from 'cookies-next';
 
 import {
   fetchAcceptedPayments,
@@ -23,7 +22,11 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
   const [checkedCards, setCheckedCards] = useState<number[]>([]);
   const queryClient = useQueryClient();
 
-  const token = getCookie('json-web-token') || '';
+  const tokenQuery = useQuery<string>({
+    queryKey: ['jwt'],
+  });
+
+  const token = tokenQuery.data || '';
 
   const queryFn = () => {
     if (paymentPageType === 'accepted') {

@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import {
   dehydrate,
   HydrationBoundary,
@@ -7,15 +8,24 @@ import {
 } from '@tanstack/react-query';
 
 import { fetchDeclinedPayments } from '@/api/payment';
+import { fetchUser } from '@/api/user';
 import PaymentsPage from '@/components/payments/PaymentsPage';
 
 const PageFinal = async () => {
   const queryClient = new QueryClient();
+
   const cookieStore = cookies();
-  const token = cookieStore.get('json-web-token') || { value: '' };
+  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+  const user = await fetchUser(supabase);
+
   await queryClient.prefetchQuery({
     queryKey: ['payments', 'declined'],
-    queryFn: () => fetchDeclinedPayments(token.value),
+    queryFn: () => fetchDeclinedPayments(user.accessToken),
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ['jwt'],
+    queryFn: () => user.accessToken,
   });
 
   return (
