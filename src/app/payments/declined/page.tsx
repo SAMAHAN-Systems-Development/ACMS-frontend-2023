@@ -19,8 +19,8 @@ const PageFinal = async () => {
   const user = await fetchUser(supabase);
 
   await queryClient.prefetchQuery({
-    queryKey: ['payments', 'declined'],
-    queryFn: () => fetchDeclinedPayments(user.accessToken),
+    queryKey: ['payments', 'declined', { page: 1 }],
+    queryFn: () => fetchDeclinedPayments(user.accessToken, 1),
   });
 
   await queryClient.prefetchQuery({

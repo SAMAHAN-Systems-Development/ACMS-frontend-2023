@@ -1,5 +1,3 @@
-import type { Payment } from '@/types/types';
-
 const backendUrl =
   process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
 
@@ -15,9 +13,10 @@ export const fetchAcceptedPayments = async (token: string, page: number) => {
     throw new Error('Error in fetching the accepted payments');
   }
 
-  const listOfAcceptedPayments: Payment[] = await response.json();
+  const responseData = await response.json();
+  const { acceptedPayments, maxPage } = responseData;
 
-  return listOfAcceptedPayments;
+  return { payments: acceptedPayments, maxPage };
 };
 
 export const fetchDeclinedPayments = async (token: string, page: number) => {
@@ -32,9 +31,11 @@ export const fetchDeclinedPayments = async (token: string, page: number) => {
     throw new Error('Error in fetching the declined payments');
   }
 
-  const listOfDeclinedPayments: Payment[] = await response.json();
+  const responseData = await response.json();
 
-  return listOfDeclinedPayments;
+  const { declinedPayments, maxPage } = responseData;
+
+  return { payments: declinedPayments, maxPage };
 };
 
 export const restorePayments = async (token: string, paymentIds: number[]) => {

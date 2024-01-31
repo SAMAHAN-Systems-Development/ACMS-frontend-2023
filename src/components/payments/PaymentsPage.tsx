@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, use } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -12,9 +12,8 @@ import {
 } from '@/api/payment';
 import PaymentsCard from '@/components/payments/PaymentsCard';
 import Checkbox from '@/components/ui/Checkbox';
-import type { Payment } from '@/types/types';
-
 import Pagination from '@/components/ui/Pagination';
+import type { Payment } from '@/types/types';
 
 type propTypes = {
   paymentPageType: 'accepted' | 'declined';
@@ -39,12 +38,15 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
     return fetchDeclinedPayments(token, page);
   };
 
-  const paymentsQuery = useQuery<Payment[]>({
+  const paymentsQuery = useQuery<{ maxPage: number; payments: Payment[] }>({
     queryKey: ['payments', paymentPageType, { page }],
     queryFn: queryFn,
   });
 
-  const listOfPayments: Payment[] = paymentsQuery.data || [];
+  const { payments: listOfPayments, maxPage } = paymentsQuery.data || {
+    payments: [],
+    maxPage: 1,
+  };
 
   const selectAllButtonAction = () => {
     setCheckedCards(listOfPayments.map((payment) => payment.id));
@@ -83,12 +85,12 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
         <div
           onClick={
             listOfPayments.length === checkedCards.length &&
-              listOfPayments.length !== 0
+            listOfPayments.length !== 0
               ? unselectAllButtonAction
               : selectAllButtonAction
           }
           role="button"
-          onKeyUp={() => { }}
+          onKeyUp={() => {}}
           tabIndex={0}
           className="flex gap-2 cursor-pointer items-center"
         >
@@ -97,7 +99,7 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
               listOfPayments.length === checkedCards.length &&
               listOfPayments.length !== 0
             }
-            onCheckedAction={() => { }}
+            onCheckedAction={() => {}}
           />
           <p>Select All</p>
         </div>
@@ -107,6 +109,9 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
         >
           Restore All Selected
         </button>
+        <div className="flex justify-center">
+          <Pagination page={page} setPage={setPage} maxPage={maxPage} />
+        </div>
       </div>
       <div className="flex gap-8 flex-wrap justify-center">
         {listOfPayments.map((payment: Payment, index: number) => (
@@ -122,7 +127,7 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
         ))}
       </div>
       <div className="flex justify-center">
-        <Pagination page={page} setPage={setPage} maxPage={3} />
+        <Pagination page={page} setPage={setPage} maxPage={maxPage} />
       </div>
     </div>
   );
