@@ -52,7 +52,7 @@ const PaymentsCard: React.FC<propTypes> = ({
   };
 
   let checked = false;
-  let onCheckedAction = () => {};
+  let onCheckedAction = () => { };
   if (checkedCards && setCheckedCards) {
     checked = checkedCards.includes(payment.id);
     onCheckedAction = () => {

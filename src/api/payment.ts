@@ -3,8 +3,8 @@ import type { Payment } from '@/types/types';
 const backendUrl =
   process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
 
-export const fetchAcceptedPayments = async (token: string) => {
-  const response = await fetch(`${backendUrl}/payment/accepted`, {
+export const fetchAcceptedPayments = async (token: string, page: number) => {
+  const response = await fetch(`${backendUrl}/payment/accepted?page=${page}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -20,8 +20,8 @@ export const fetchAcceptedPayments = async (token: string) => {
   return listOfAcceptedPayments;
 };
 
-export const fetchDeclinedPayments = async (token: string) => {
-  const response = await fetch(`${backendUrl}/payment/declined`, {
+export const fetchDeclinedPayments = async (token: string, page: number) => {
+  const response = await fetch(`${backendUrl}/payment/declined?page=${page}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
