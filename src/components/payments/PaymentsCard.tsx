@@ -2,14 +2,14 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { getCookie } from 'cookies-next';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { restorePayments } from '@/api/payment';
 import Checkbox from '@/components/ui/Checkbox';
 import type { Payment } from '@/types/types';
 
 type propTypes = {
+  page: number;
   payment: Payment;
   paymentPageType: 'accepted' | 'declined';
   checkedCards?: number[];
@@ -25,12 +25,17 @@ const PaymentsCard: React.FC<propTypes> = ({
   payment,
   setCheckedCards,
   paymentPageType,
+  page,
 }) => {
   const eventPrice = payment.event.price;
   const eventTitle = payment.event.title;
   const studentName = `${payment.firstName} ${payment.lastName}`;
   const paymentPhotoUrl = payment.payment.photo_src;
-  const token = getCookie('json-web-token') || '';
+  const tokenQuery = useQuery<string>({
+    queryKey: ['jwt'],
+  });
+
+  const token = tokenQuery.data || '';
   const queryClient = useQueryClient();
 
   const restorePaymentsMutation = useMutation({
@@ -39,7 +44,7 @@ const PaymentsCard: React.FC<propTypes> = ({
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['payments', paymentPageType],
+        queryKey: ['payments', paymentPageType, { page }],
         exact: true,
       });
       toast.success('Payment restored successfully');
@@ -52,7 +57,7 @@ const PaymentsCard: React.FC<propTypes> = ({
   };
 
   let checked = false;
-  let onCheckedAction = () => { };
+  let onCheckedAction = () => {};
   if (checkedCards && setCheckedCards) {
     checked = checkedCards.includes(payment.id);
     onCheckedAction = () => {

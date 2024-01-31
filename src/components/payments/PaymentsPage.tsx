@@ -123,6 +123,7 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
             setCheckedCards={setCheckedCards}
             payment={payment}
             paymentPageType={paymentPageType}
+            page={page}
           />
         ))}
       </div>

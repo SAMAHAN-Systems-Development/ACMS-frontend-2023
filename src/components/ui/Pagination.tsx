@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 type propTypes = {
   maxPage: number;
@@ -7,7 +7,11 @@ type propTypes = {
 };
 
 const Pagination: React.FC<propTypes> = ({ page, setPage, maxPage }) => {
-  const [pageTemp, setPageTemp] = React.useState<number>(page);
+  const [pageTemp, setPageTemp] = useState<number>(page);
+
+  useEffect(() => {
+    setPageTemp(page);
+  }, [page]);
 
   const isPreviousDisabled = page === 1;
   const isNextDisabled = page >= maxPage;
@@ -17,7 +21,6 @@ const Pagination: React.FC<propTypes> = ({ page, setPage, maxPage }) => {
       return;
     }
     setPage(page - 1);
-    setPageTemp(page - 1);
   };
 
   const nextClickAction = () => {
@@ -25,7 +28,6 @@ const Pagination: React.FC<propTypes> = ({ page, setPage, maxPage }) => {
       return;
     }
     setPage(page + 1);
-    setPageTemp(page + 1);
   };
 
   const inputChangeAction = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,18 +37,15 @@ const Pagination: React.FC<propTypes> = ({ page, setPage, maxPage }) => {
   const inputBlurAction = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (Number(event.target.value) > maxPage) {
       setPage(maxPage);
-      setPageTemp(maxPage);
       return;
     }
 
     if (Number(event.target.value) < 1) {
       setPage(1);
-      setPageTemp(1);
       return;
     }
 
     setPage(Number(event.target.value));
-    setPageTemp(Number(event.target.value));
   };
 
   return (
