@@ -8,8 +8,8 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 
-import { fetchAcceptedPayments } from '@/api/payment';
-import { fetchUser } from '@/api/user';
+import { fetchAcceptedPayments } from '@/utilities/fetch/payment';
+import { fetchUser } from '@/utilities/fetch/user';
 import PaymentsPage from '@/components/payments/PaymentsPage';
 
 const PageFinal = async () => {

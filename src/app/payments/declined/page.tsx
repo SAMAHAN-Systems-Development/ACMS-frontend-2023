@@ -7,9 +7,9 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 
-import { fetchDeclinedPayments } from '@/api/payment';
-import { fetchUser } from '@/api/user';
 import PaymentsPage from '@/components/payments/PaymentsPage';
+import { fetchDeclinedPayments } from '@/utilities/fetch/payment';
+import { fetchUser } from '@/utilities/fetch/user';
 
 const PageFinal = async () => {
   const queryClient = new QueryClient();

@@ -4,9 +4,9 @@ import Image from 'next/image';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { restorePayments } from '@/api/payment';
 import Checkbox from '@/components/ui/Checkbox';
 import type { Payment } from '@/types/types';
+import { restorePayments } from '@/utilities/fetch/payment';
 
 type propTypes = {
   page: number;

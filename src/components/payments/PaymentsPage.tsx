@@ -5,15 +5,15 @@ import { toast } from 'react-toastify';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import {
-  fetchAcceptedPayments,
-  fetchDeclinedPayments,
-  restorePayments,
-} from '@/api/payment';
 import PaymentsCard from '@/components/payments/PaymentsCard';
 import Checkbox from '@/components/ui/Checkbox';
 import Pagination from '@/components/ui/Pagination';
 import type { Payment } from '@/types/types';
+import {
+  fetchAcceptedPayments,
+  fetchDeclinedPayments,
+  restorePayments,
+} from '@/utilities/fetch/payment';
 
 type propTypes = {
   paymentPageType: 'accepted' | 'declined';

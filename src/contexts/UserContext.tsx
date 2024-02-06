@@ -5,9 +5,9 @@ import { usePathname } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useQuery } from '@tanstack/react-query';
 
-import { fetchUser } from '@/api/user';
 import Loading from '@/components/ui/Loading';
 import Unauthorized from '@/components/ui/Unauthorized';
+import { fetchUser } from '@/utilities/fetch/user';
 
 const allowedUrls = {
   facilitator: ['/login', '/home', '/'],
