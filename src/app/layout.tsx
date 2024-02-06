@@ -1,11 +1,18 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Open_Sans } from 'next/font/google';
+
+import Providers from '@/app/providers';
 
 import '@/app/globals.css';
 
-import { UserProvider } from '@/contexts/UserContext';
+import Loading from '@/components/ui/Loading';
 
-const inter = Inter({ subsets: ['latin'] });
+const openSans = Open_Sans({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-openSans',
+});
 
 export const metadata: Metadata = {
   title: 'ACMS',
@@ -19,8 +26,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <UserProvider>{children}</UserProvider>
+      <body className={openSans.className}>
+        <Suspense fallback={<Loading />}>
+          <Providers>{children}</Providers>
+        </Suspense>
       </body>
     </html>
   );

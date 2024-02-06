@@ -1,20 +1,52 @@
 'use client';
 
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import PaymentsCard from '@/components/payments/PaymentsCard';
-import type Payment from '@/types/Payment';
+import Checkbox from '@/components/ui/Checkbox';
+import Pagination from '@/components/ui/Pagination';
+import type { Payment } from '@/types/types';
+import {
+  fetchAcceptedPayments,
+  fetchDeclinedPayments,
+  restorePayments,
+} from '@/utilities/fetch/payment';
 
 type propTypes = {
-  listOfPayments: Payment[];
-  restoreButtonAction: ([]) => void;
+  paymentPageType: 'accepted' | 'declined';
 };
 
-const PaymentsPage: React.FC<propTypes> = ({
-  listOfPayments,
-  restoreButtonAction,
-}) => {
-  const [checkedCards, setCheckedCards] = useState<string[]>([]);
+const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
+  const [checkedCards, setCheckedCards] = useState<number[]>([]);
+  const [page, setPage] = useState(1);
+  const queryClient = useQueryClient();
+
+  const tokenQuery = useQuery<string>({
+    queryKey: ['jwt'],
+  });
+
+  const token = tokenQuery.data || '';
+
+  const queryFn = () => {
+    if (paymentPageType === 'accepted') {
+      return fetchAcceptedPayments(token, page);
+    }
+
+    return fetchDeclinedPayments(token, page);
+  };
+
+  const paymentsQuery = useQuery<{ maxPage: number; payments: Payment[] }>({
+    queryKey: ['payments', paymentPageType, { page }],
+    queryFn: queryFn,
+  });
+
+  const { payments: listOfPayments, maxPage } = paymentsQuery.data || {
+    payments: [],
+    maxPage: 1,
+  };
 
   const selectAllButtonAction = () => {
     setCheckedCards(listOfPayments.map((payment) => payment.id));
@@ -24,42 +56,79 @@ const PaymentsPage: React.FC<propTypes> = ({
     setCheckedCards([]);
   };
 
+  const restoreAllSelectedMutation = useMutation({
+    mutationFn: async () => {
+      await restorePayments(token, checkedCards);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['payments', paymentPageType, { page }],
+        exact: true,
+      });
+      toast.success('Payments restored successfully');
+      setCheckedCards([]);
+    },
+  });
+
+  const restoreAllButtonAction = () => {
+    if (checkedCards.length === 0) {
+      toast.error('No payments selected');
+      return;
+    }
+
+    restoreAllSelectedMutation.mutate();
+  };
+
   return (
-    <div>
+    <div className="flex flex-col gap-8">
       <div className="flex flex-row gap-8">
-        {listOfPayments.length === checkedCards.length &&
-        listOfPayments.length !== 0 ? (
-          <button onClick={unselectAllButtonAction}>Unselect All</button>
-        ) : (
-          <button onClick={selectAllButtonAction}>Select All</button>
-        )}
-        <button onClick={() => restoreButtonAction(checkedCards)}>
+        <div
+          onClick={
+            listOfPayments.length === checkedCards.length &&
+            listOfPayments.length !== 0
+              ? unselectAllButtonAction
+              : selectAllButtonAction
+          }
+          role="button"
+          onKeyUp={() => {}}
+          tabIndex={0}
+          className="flex gap-2 cursor-pointer items-center"
+        >
+          <Checkbox
+            checked={
+              listOfPayments.length === checkedCards.length &&
+              listOfPayments.length !== 0
+            }
+            onCheckedAction={() => {}}
+          />
+          <p>Select All</p>
+        </div>
+        <button
+          className="px-4 py-2 text-sm font-bold text-white bg-navyBlue rounded-md"
+          onClick={restoreAllButtonAction}
+        >
           Restore All Selected
         </button>
+        <div className="flex justify-center">
+          <Pagination page={page} setPage={setPage} maxPage={maxPage} />
+        </div>
       </div>
-      <div>
-        {listOfPayments.map((payment: Payment) => (
+      <div className="flex gap-8 flex-wrap justify-center">
+        {listOfPayments.map((payment: Payment, index: number) => (
           <PaymentsCard
-            key={payment.id}
-            eventPrice={payment.event.price}
-            eventTitle={payment.event.title}
-            onCheckedAction={() => {
-              if (checkedCards.includes(payment.id)) {
-                setCheckedCards(
-                  checkedCards.filter(
-                    (checkedCard) => checkedCard !== payment.id
-                  )
-                );
-              } else {
-                setCheckedCards([...checkedCards, payment.id]);
-              }
-            }}
-            restoreButtonAction={() => restoreButtonAction([payment.id])}
-            studentName={`${payment.firstName} ${payment.lastName}`}
-            paymentPhotoUrl={payment.payment.photo_src}
-            checked={checkedCards.includes(payment.id)}
+            key={payment.id + index}
+            hasRestoreButton={true}
+            hasCheckbox={true}
+            checkedCards={checkedCards}
+            setCheckedCards={setCheckedCards}
+            payment={payment}
+            paymentPageType={paymentPageType}
+            page={page}
           />
         ))}
+      </div>
+      <div className="flex justify-center">
+        <Pagination page={page} setPage={setPage} maxPage={maxPage} />
       </div>
     </div>
   );
