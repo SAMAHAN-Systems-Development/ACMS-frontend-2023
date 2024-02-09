@@ -1,3 +1,4 @@
+import { addDynamicIconSelectors } from '@iconify/tailwind';
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
@@ -17,9 +18,10 @@ const config: Config = {
     },
     colors: {
       navyBlue: '#181842',
+      blue: '#7A92C2',
       white: '#ffffff',
     },
   },
-  plugins: [],
+  plugins: [addDynamicIconSelectors()],
 };
 export default config;

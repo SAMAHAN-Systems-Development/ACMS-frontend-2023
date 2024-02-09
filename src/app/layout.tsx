@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
-import { Open_Sans } from 'next/font/google';
+import { Work_Sans } from 'next/font/google';
 
 import Providers from '@/app/providers';
 
@@ -8,10 +8,10 @@ import '@/app/globals.css';
 
 import Loading from '@/components/ui/Loading';
 
-const openSans = Open_Sans({
+const workSans = Work_Sans({
   subsets: ['latin'],
-  weight: ['400', '700'],
-  variable: '--font-openSans',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-workSans',
 });
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={openSans.className}>
+      <body className={workSans.className}>
         <Suspense fallback={<Loading />}>
           <Providers>{children}</Providers>
         </Suspense>

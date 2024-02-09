@@ -14,7 +14,7 @@ const Checkbox = ({
         id="some_id"
         checked={checked}
         onChange={onCheckedAction}
-        className="relative peer shrink-0 appearance-none w-5 h-5 border-2 border-blue-500 rounded-md bg-white mt-1 checked:bg-navyBlue checked:border-0 cursor-pointer"
+        className="relative peer shrink-0 appearance-none w-5 h-5 border-2 border-blue rounded-md bg-white mt-1 checked:bg-navyBlue checked:border-0 cursor-pointer"
       />
       <svg
         className="absolute w-5 h-5 mt-1 hidden peer-checked:block"

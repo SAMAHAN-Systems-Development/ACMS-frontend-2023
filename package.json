@@ -11,6 +11,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@iconify-json/material-symbols": "^1.1.72",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-form": "^0.0.3",
     "@supabase/auth-helpers-nextjs": "^0.8.7",
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@cyrilolanolan/eslint-config-ts": "0.1.1",
     "@cyrilolanolan/prettier-config": "0.1.1",
+    "@iconify/tailwind": "^0.1.4",
     "@storybook/addon-essentials": "^7.6.6",
     "@storybook/addon-interactions": "^7.6.6",
     "@storybook/addon-links": "^7.6.6",

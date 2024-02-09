@@ -49,20 +49,30 @@ const Pagination: React.FC<propTypes> = ({ page, setPage, maxPage }) => {
   };
 
   return (
-    <div className="flex gap-4">
-      <button disabled={isPreviousDisabled} onClick={previousClickAction}>
-        Prev
-      </button>
+    <div className="flex gap-2 justify-center items-center">
+      <span
+        className="icon-[material-symbols--keyboard-arrow-left]"
+        style={{ width: '48px', height: '48px', color: '#181842' }}
+        onClick={isPreviousDisabled ? () => {} : previousClickAction}
+        role="button"
+        onKeyUp={() => {}}
+        tabIndex={0}
+      />
       <input
-        className="w-6 border-2"
+        className="w-10 border-2 border-blue h-8 text-center rounded text-md text-navyBlue font-bold"
         type="text"
         onChange={inputChangeAction}
         onBlur={inputBlurAction}
         value={pageTemp}
       />
-      <button disabled={isNextDisabled} onClick={nextClickAction}>
-        Next
-      </button>
+      <span
+        className="icon-[material-symbols--keyboard-arrow-right]"
+        style={{ width: '48px', height: '48px', color: '#181842' }}
+        onClick={isNextDisabled ? () => {} : nextClickAction}
+        role="button"
+        onKeyUp={() => {}}
+        tabIndex={0}
+      />
     </div>
   );
 };
