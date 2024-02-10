@@ -8,9 +8,9 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 
+import PaymentsPage from '@/components/payments/PaymentsPage';
 import { fetchAcceptedPayments } from '@/utilities/fetch/payment';
 import { fetchUser } from '@/utilities/fetch/user';
-import PaymentsPage from '@/components/payments/PaymentsPage';
 
 const PageFinal = async () => {
   const queryClient = new QueryClient();
@@ -30,14 +30,9 @@ const PageFinal = async () => {
   });
 
   return (
-    <div className="flex flex-col p-16 gap-8">
-      <h1 className="text-5xl text-navyBlue font-extrabold">
-        Accepted Payments
-      </h1>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <PaymentsPage paymentPageType="accepted" />
-      </HydrationBoundary>
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <PaymentsPage paymentPageType="accepted" />
+    </HydrationBoundary>
   );
 };
 
