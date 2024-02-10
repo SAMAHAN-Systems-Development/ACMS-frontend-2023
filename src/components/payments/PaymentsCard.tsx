@@ -7,14 +7,20 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import PaymentButton from '@/components/payments/PaymentButton';
 import Checkbox from '@/components/ui/Checkbox';
 import type { Payment } from '@/types/types';
-import { restorePayments } from '@/utilities/fetch/payment';
+import {
+  acceptPayments,
+  declinePayments,
+  restorePayments,
+} from '@/utilities/fetch/payment';
 
 type propTypes = {
   page: number;
   payment: Payment;
-  paymentPageType: 'accepted' | 'declined';
+  paymentPageType: 'accepted' | 'declined' | 'pending';
   checkedCards?: number[];
+  hasAcceptButton?: boolean;
   hasCheckbox?: boolean;
+  hasDeclineButton?: boolean;
   hasRestoreButton?: boolean;
   setCheckedCards?: React.Dispatch<React.SetStateAction<number[]>>;
 };
@@ -27,6 +33,8 @@ const PaymentsCard: React.FC<propTypes> = ({
   setCheckedCards,
   paymentPageType,
   page,
+  hasDeclineButton,
+  hasAcceptButton,
 }) => {
   const eventPrice = payment.event.price;
   const eventTitle = payment.event.title;
@@ -52,9 +60,45 @@ const PaymentsCard: React.FC<propTypes> = ({
     },
   });
 
+  const acceptPaymentsMutation = useMutation({
+    mutationFn: async () => {
+      await acceptPayments(token, [payment.id]);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['payments', paymentPageType, { page }],
+        exact: true,
+      });
+      toast.success('Payment accepted successfully');
+    },
+  });
+
+  const declinePaymentsMutation = useMutation({
+    mutationFn: async () => {
+      await declinePayments(token, [payment.id]);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['payments', paymentPageType, { page }],
+        exact: true,
+      });
+      toast.success('Payment declined successfully');
+    },
+  });
+
   const restoreButtonAction = (event: React.MouseEvent) => {
     event.stopPropagation();
     restorePaymentsMutation.mutate();
+  };
+
+  const acceptButtonAction = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    acceptPaymentsMutation.mutate();
+  };
+
+  const declineButtonAction = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    declinePaymentsMutation.mutate();
   };
 
   let checked = false;
@@ -106,13 +150,29 @@ const PaymentsCard: React.FC<propTypes> = ({
               />
             </div>
           </div>
-          {hasRestoreButton && (
-            <div className="flex items-center justify-center my-3 w-full">
-              <PaymentButton onClick={restoreButtonAction}>
-                Restore
-              </PaymentButton>
-            </div>
-          )}
+          <div className="flex flex-row gap-4 justify-between w-full">
+            {hasRestoreButton && (
+              <div className="flex items-center justify-center my-3 w-full">
+                <PaymentButton onClick={restoreButtonAction}>
+                  Restore
+                </PaymentButton>
+              </div>
+            )}
+            {hasAcceptButton && (
+              <div className="flex items-center justify-center my-3 w-full">
+                <PaymentButton onClick={acceptButtonAction}>
+                  Accept
+                </PaymentButton>
+              </div>
+            )}
+            {hasDeclineButton && (
+              <div className="flex items-center justify-center my-3 w-full">
+                <PaymentButton onClick={declineButtonAction}>
+                  Decline
+                </PaymentButton>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

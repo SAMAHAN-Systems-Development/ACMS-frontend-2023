@@ -38,6 +38,24 @@ export const fetchDeclinedPayments = async (token: string, page: number) => {
   return { payments: declinedPayments, maxPage };
 };
 
+export const fetchPendingPayments = async (token: string, page: number) => {
+  const response = await fetch(`${backendUrl}/payment/pending?page=${page}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error in fetching the pending payments');
+  }
+
+  const responseData = await response.json();
+  const { pendingPayments, maxPage } = responseData;
+
+  return { payments: pendingPayments, maxPage };
+};
+
 export const restorePayments = async (token: string, paymentIds: number[]) => {
   const response = await fetch(`${backendUrl}/payment/restore`, {
     method: 'POST',
@@ -50,6 +68,40 @@ export const restorePayments = async (token: string, paymentIds: number[]) => {
 
   if (!response.ok) {
     throw new Error('Error in restoring payments');
+  }
+
+  return true;
+};
+
+export const acceptPayments = async (token: string, paymentIds: number[]) => {
+  const response = await fetch(`${backendUrl}/payment/accept`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ paymentIds }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Error in accepting payments');
+  }
+
+  return true;
+};
+
+export const declinePayments = async (token: string, paymentIds: number[]) => {
+  const response = await fetch(`${backendUrl}/payment/decline`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ paymentIds }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Error in declining payments');
   }
 
   return true;
