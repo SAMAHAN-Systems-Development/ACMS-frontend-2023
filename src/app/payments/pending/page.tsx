@@ -1,57 +1,39 @@
-'use client';
-import React, { useCallback, useEffect, useState } from 'react';
+'use server';
+import { cookies } from 'next/headers';
 
-import PendingPaymentsPage from '@/components/payments/PendingPaymentsPage';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
 
-const Page = () => {
-  const backendUrl =
-    process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
-  const [listOfPendingPayments, setListOfPendingPayments] = useState([]);
+import PaymentsPage from '@/components/payments/PaymentsPage';
+import { fetchPendingPayments } from '@/utilities/fetch/payment';
+import { fetchUser } from '@/utilities/fetch/user';
 
-  const getPendingPaymentStatus = useCallback(async () => {
-    fetch(`${backendUrl}/payment/pending`, { method: 'GET' })
-      .then((response) => response.json())
-      .then((data) => {
-        setListOfPendingPayments(data);
-      })
-      .catch((error) => error);
-  }, [backendUrl]);
+const PageFinal = async () => {
+  const queryClient = new QueryClient();
 
-  useEffect(() => {
-    void getPendingPaymentStatus();
-  }, [getPendingPaymentStatus]);
+  const cookieStore = cookies();
+  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+  const user = await fetchUser(supabase);
 
-  const acceptButtonAction = (ids: string[]) => {
-    fetch(`${backendUrl}/payments/accept`, {
-      method: 'PUT',
-      body: JSON.stringify(ids),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setListOfPendingPayments(data);
-      })
-      .catch((error) => error);
-  };
+  await queryClient.prefetchQuery({
+    queryKey: ['payments', 'pending', { page: 1 }],
+    queryFn: () => fetchPendingPayments(user.accessToken, 1),
+  });
 
-  const declineButtonAction = (ids: string[]) => {
-    fetch(`${backendUrl}/payments/decline`, {
-      method: 'PUT',
-      body: JSON.stringify(ids),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setListOfPendingPayments(data);
-      })
-      .catch((error) => error);
-  };
+  await queryClient.prefetchQuery({
+    queryKey: ['jwt'],
+    queryFn: () => user.accessToken,
+  });
 
   return (
-    <PendingPaymentsPage
-      listOfPayments={listOfPendingPayments}
-      acceptAllButtonAction={acceptButtonAction}
-      declineAllButtonAction={declineButtonAction}
-    />
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <PaymentsPage paymentPageType="pending" />
+    </HydrationBoundary>
   );
 };
 
-export default Page;
+export default PageFinal;

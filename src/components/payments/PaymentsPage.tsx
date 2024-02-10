@@ -12,18 +12,20 @@ import Checkbox from '@/components/ui/Checkbox';
 import Pagination from '@/components/ui/Pagination';
 import type { Payment } from '@/types/types';
 import {
+  acceptPayments,
+  declinePayments,
   fetchAcceptedPayments,
   fetchDeclinedPayments,
+  fetchPendingPayments,
   restorePayments,
 } from '@/utilities/fetch/payment';
 
 type propTypes = {
-  paymentPageType: 'accepted' | 'declined';
+  paymentPageType: 'accepted' | 'declined' | 'pending';
 };
 
 const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
-  const paymentPageTitle =
-    paymentPageType === 'accepted' ? 'Accepted Payments' : 'Declined Payments';
+  const paymentPageTitle = getPaymentTitle(paymentPageType);
   const [checkedCards, setCheckedCards] = useState<number[]>([]);
   const { push } = useRouter();
   const [page, setPage] = useState(1);
@@ -44,6 +46,10 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
   const queryFn = () => {
     if (paymentPageType === 'accepted') {
       return fetchAcceptedPayments(token, page);
+    }
+
+    if (paymentPageType === 'pending') {
+      return fetchPendingPayments(token, page);
     }
 
     return fetchDeclinedPayments(token, page);
@@ -81,6 +87,34 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
     },
   });
 
+  const acceptAllSelectedMutation = useMutation({
+    mutationFn: async () => {
+      await acceptPayments(token, checkedCards);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['payments', paymentPageType, { page }],
+        exact: true,
+      });
+      toast.success('Payments accepted successfully');
+      setCheckedCards([]);
+    },
+  });
+
+  const declineAllSelectedMutation = useMutation({
+    mutationFn: async () => {
+      await declinePayments(token, checkedCards);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['payments', paymentPageType, { page }],
+        exact: true,
+      });
+      toast.success('Payments declined successfully');
+      setCheckedCards([]);
+    },
+  });
+
   const restoreAllButtonAction = () => {
     if (checkedCards.length === 0) {
       toast.error('No payments selected');
@@ -88,6 +122,24 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
     }
 
     restoreAllSelectedMutation.mutate();
+  };
+
+  const acceptAllButtonAction = () => {
+    if (checkedCards.length === 0) {
+      toast.error('No payments selected');
+      return;
+    }
+
+    acceptAllSelectedMutation.mutate();
+  };
+
+  const declineAllButtonAction = () => {
+    if (checkedCards.length === 0) {
+      toast.error('No payments selected');
+      return;
+    }
+
+    declineAllSelectedMutation.mutate();
   };
 
   return (
@@ -118,9 +170,25 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
             />
             <p className="pt-1 text-navyBlue font-medium text-md">Select All</p>
           </div>
-          <PaymentButton onClick={restoreAllButtonAction}>
-            Restore All Selected
-          </PaymentButton>
+          <div className="flex flex-row gap-4">
+            {(paymentPageType === 'accepted' ||
+              paymentPageType === 'declined') && (
+              <PaymentButton onClick={restoreAllButtonAction}>
+                RESTORE SELECTED
+              </PaymentButton>
+            )}
+
+            {paymentPageType === 'pending' && (
+              <PaymentButton onClick={acceptAllButtonAction}>
+                ACCEPT SELECTED
+              </PaymentButton>
+            )}
+            {paymentPageType === 'pending' && (
+              <PaymentButton onClick={declineAllButtonAction}>
+                DECLINE SELECTED
+              </PaymentButton>
+            )}
+          </div>
         </div>
         <div className="flex flex-col gap-4 flex-grow items-end p-16">
           <PaymentButton
@@ -147,7 +215,11 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
           {listOfPayments.map((payment: Payment, index: number) => (
             <PaymentsCard
               key={payment.id + index}
-              hasRestoreButton={true}
+              hasRestoreButton={
+                paymentPageType === 'accepted' || paymentPageType === 'declined'
+              }
+              hasAcceptButton={paymentPageType === 'pending'}
+              hasDeclineButton={paymentPageType === 'pending'}
               hasCheckbox={true}
               checkedCards={checkedCards}
               setCheckedCards={setCheckedCards}
@@ -165,6 +237,19 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
   );
 };
 
+const getPaymentTitle = (paymentPageType: string) => {
+  switch (paymentPageType) {
+    case 'accepted':
+      return 'Accepted Payments';
+    case 'declined':
+      return 'Declined Payments';
+    case 'pending':
+      return 'Pending Payments';
+    default:
+      return 'Accepted Payments';
+  }
+};
+
 const getRedirectButtonProperties = (paymentPageType: string) => {
   switch (paymentPageType) {
     case 'accepted':
@@ -179,6 +264,13 @@ const getRedirectButtonProperties = (paymentPageType: string) => {
         upperButtonLabel: 'View Pending Payments',
         lowerButtonLabel: 'View Accepted Payments',
         upperButtonLocation: '/payments/pending',
+        lowerButtonLocation: '/payments/accepted',
+      };
+    case 'pending':
+      return {
+        upperButtonLabel: 'View Declined Payments',
+        lowerButtonLabel: 'View Accepted Payments',
+        upperButtonLocation: '/payments/declined',
         lowerButtonLocation: '/payments/accepted',
       };
     default:
