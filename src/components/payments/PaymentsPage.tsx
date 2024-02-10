@@ -240,13 +240,13 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
 const getPaymentTitle = (paymentPageType: string) => {
   switch (paymentPageType) {
     case 'accepted':
-      return 'Accepted Payments';
+      return 'ACCEPTED PAYMENTS';
     case 'declined':
-      return 'Declined Payments';
+      return 'DECLINED PAYMENTS';
     case 'pending':
-      return 'Pending Payments';
+      return 'PENDING PAYMENT VERIFICATIONS';
     default:
-      return 'Accepted Payments';
+      return 'ACCEPTED PAYMENTS';
   }
 };
 
