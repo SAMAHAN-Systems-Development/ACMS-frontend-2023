@@ -1,3 +1,4 @@
+'use server';
 import { cookies } from 'next/headers';
 
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
@@ -29,14 +30,9 @@ const PageFinal = async () => {
   });
 
   return (
-    <div className="flex flex-col p-16 gap-8">
-      <h1 className="text-5xl text-navyBlue font-extrabold">
-        Declined Payments
-      </h1>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <PaymentsPage paymentPageType="declined" />
-      </HydrationBoundary>
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <PaymentsPage paymentPageType="declined" />
+    </HydrationBoundary>
   );
 };
 

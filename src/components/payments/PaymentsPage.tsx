@@ -2,9 +2,11 @@
 
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import PaymentButton from '@/components/payments/PaymentButton';
 import PaymentsCard from '@/components/payments/PaymentsCard';
 import Checkbox from '@/components/ui/Checkbox';
 import Pagination from '@/components/ui/Pagination';
@@ -20,9 +22,18 @@ type propTypes = {
 };
 
 const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
+  const paymentPageTitle =
+    paymentPageType === 'accepted' ? 'Accepted Payments' : 'Declined Payments';
   const [checkedCards, setCheckedCards] = useState<number[]>([]);
+  const { push } = useRouter();
   const [page, setPage] = useState(1);
   const queryClient = useQueryClient();
+  const {
+    upperButtonLabel,
+    lowerButtonLabel,
+    upperButtonLocation,
+    lowerButtonLocation,
+  } = getRedirectButtonProperties(paymentPageType);
 
   const tokenQuery = useQuery<string>({
     queryKey: ['jwt'],
@@ -81,57 +92,103 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-row gap-8">
-        <div
-          onClick={
-            listOfPayments.length === checkedCards.length &&
-            listOfPayments.length !== 0
-              ? unselectAllButtonAction
-              : selectAllButtonAction
-          }
-          role="button"
-          onKeyUp={() => {}}
-          tabIndex={0}
-          className="flex gap-2 cursor-pointer items-center"
-        >
-          <Checkbox
-            checked={
+      <div className="flex flex-row border-b-2 w-full">
+        <div className="flex flex-col gap-4 p-12">
+          <h1 className="text-5xl text-navyBlue font-extrabold">
+            {paymentPageTitle}
+          </h1>
+          <div
+            onClick={
               listOfPayments.length === checkedCards.length &&
               listOfPayments.length !== 0
+                ? unselectAllButtonAction
+                : selectAllButtonAction
             }
-            onCheckedAction={() => {}}
-          />
-          <p>Select All</p>
+            role="button"
+            onKeyUp={() => {}}
+            tabIndex={0}
+            className="flex gap-2 cursor-pointer items-center"
+          >
+            <Checkbox
+              checked={
+                listOfPayments.length === checkedCards.length &&
+                listOfPayments.length !== 0
+              }
+              onCheckedAction={() => {}}
+            />
+            <p className="pt-1 text-navyBlue font-medium text-md">Select All</p>
+          </div>
+          <PaymentButton onClick={restoreAllButtonAction}>
+            Restore All Selected
+          </PaymentButton>
         </div>
-        <button
-          className="px-4 py-2 text-sm font-bold text-white bg-navyBlue rounded-md"
-          onClick={restoreAllButtonAction}
-        >
-          Restore All Selected
-        </button>
+        <div className="flex flex-col gap-4 flex-grow items-end p-16">
+          <PaymentButton
+            onClick={() => {
+              push(upperButtonLocation);
+            }}
+          >
+            {upperButtonLabel}
+          </PaymentButton>
+          <PaymentButton
+            onClick={() => {
+              push(lowerButtonLocation);
+            }}
+          >
+            {lowerButtonLabel}
+          </PaymentButton>
+        </div>
+      </div>
+      <div className="flex flex-col gap-8 flex-wrap justify-center px-16 pb-16">
+        <div className="flex justify-center">
+          <Pagination page={page} setPage={setPage} maxPage={maxPage} />
+        </div>
+        <div className="flex gap-8 flex-wrap justify-center">
+          {listOfPayments.map((payment: Payment, index: number) => (
+            <PaymentsCard
+              key={payment.id + index}
+              hasRestoreButton={true}
+              hasCheckbox={true}
+              checkedCards={checkedCards}
+              setCheckedCards={setCheckedCards}
+              payment={payment}
+              paymentPageType={paymentPageType}
+              page={page}
+            />
+          ))}
+        </div>
         <div className="flex justify-center">
           <Pagination page={page} setPage={setPage} maxPage={maxPage} />
         </div>
       </div>
-      <div className="flex gap-8 flex-wrap justify-center">
-        {listOfPayments.map((payment: Payment, index: number) => (
-          <PaymentsCard
-            key={payment.id + index}
-            hasRestoreButton={true}
-            hasCheckbox={true}
-            checkedCards={checkedCards}
-            setCheckedCards={setCheckedCards}
-            payment={payment}
-            paymentPageType={paymentPageType}
-            page={page}
-          />
-        ))}
-      </div>
-      <div className="flex justify-center">
-        <Pagination page={page} setPage={setPage} maxPage={maxPage} />
-      </div>
     </div>
   );
+};
+
+const getRedirectButtonProperties = (paymentPageType: string) => {
+  switch (paymentPageType) {
+    case 'accepted':
+      return {
+        upperButtonLabel: 'View Pending Payments',
+        lowerButtonLabel: 'View Declined Payments',
+        upperButtonLocation: '/payments/pending',
+        lowerButtonLocation: '/payments/declined',
+      };
+    case 'declined':
+      return {
+        upperButtonLabel: 'View Pending Payments',
+        lowerButtonLabel: 'View Accepted Payments',
+        upperButtonLocation: '/payments/pending',
+        lowerButtonLocation: '/payments/accepted',
+      };
+    default:
+      return {
+        upperButtonLabel: 'View Accepted Payments',
+        lowerButtonLabel: 'View Declined Payments',
+        upperButtonLocation: '/payments/accepted',
+        lowerButtonLocation: '/payments/declined',
+      };
+  }
 };
 
 export default PaymentsPage;
