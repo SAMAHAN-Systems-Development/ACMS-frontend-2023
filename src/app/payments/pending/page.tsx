@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-query';
 
 import PaymentsPage from '@/components/payments/PaymentsPage';
-import { fetchDeclinedPayments } from '@/utilities/fetch/payment';
+import { fetchPendingPayments } from '@/utilities/fetch/payment';
 import { fetchUser } from '@/utilities/fetch/user';
 
 const PageFinal = async () => {
@@ -19,8 +19,8 @@ const PageFinal = async () => {
   const user = await fetchUser(supabase);
 
   await queryClient.prefetchQuery({
-    queryKey: ['payments', 'declined', { page: 1 }],
-    queryFn: () => fetchDeclinedPayments(user.accessToken, 1),
+    queryKey: ['payments', 'pending', { page: 1 }],
+    queryFn: () => fetchPendingPayments(user.accessToken, 1),
   });
 
   await queryClient.prefetchQuery({
@@ -30,7 +30,7 @@ const PageFinal = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <PaymentsPage paymentPageType="declined" />
+      <PaymentsPage paymentPageType="pending" />
     </HydrationBoundary>
   );
 };
