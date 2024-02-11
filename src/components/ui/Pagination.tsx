@@ -37,11 +37,13 @@ const Pagination: React.FC<propTypes> = ({ page, setPage, maxPage }) => {
   const inputBlurAction = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (Number(event.target.value) > maxPage) {
       setPage(maxPage);
+      setPageTemp(maxPage);
       return;
     }
 
     if (Number(event.target.value) < 1) {
       setPage(1);
+      setPageTemp(1);
       return;
     }
 
@@ -52,7 +54,12 @@ const Pagination: React.FC<propTypes> = ({ page, setPage, maxPage }) => {
     <div className="flex gap-2 justify-center items-center">
       <span
         className="icon-[material-symbols--keyboard-arrow-left]"
-        style={{ width: '48px', height: '48px', color: '#181842' }}
+        style={{
+          width: '48px',
+          height: '48px',
+          color: '#181842',
+          opacity: isPreviousDisabled ? 0.5 : 1,
+        }}
         onClick={isPreviousDisabled ? () => {} : previousClickAction}
         role="button"
         onKeyUp={() => {}}
@@ -67,7 +74,12 @@ const Pagination: React.FC<propTypes> = ({ page, setPage, maxPage }) => {
       />
       <span
         className="icon-[material-symbols--keyboard-arrow-right]"
-        style={{ width: '48px', height: '48px', color: '#181842' }}
+        style={{
+          width: '48px',
+          height: '48px',
+          color: '#181842',
+          opacity: isNextDisabled ? 0.5 : 1,
+        }}
         onClick={isNextDisabled ? () => {} : nextClickAction}
         role="button"
         onKeyUp={() => {}}
