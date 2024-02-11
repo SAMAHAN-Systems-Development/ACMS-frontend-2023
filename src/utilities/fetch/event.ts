@@ -2,7 +2,7 @@ const backendUrl =
   process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
 
 export const fetchActiveEvents = async (token: string, page: number) => {
-  const response = await fetch(`${backendUrl}/events/active?page=${page}`, {
+  const response = await fetch(`${backendUrl}/event/active?page=${page}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -14,7 +14,7 @@ export const fetchActiveEvents = async (token: string, page: number) => {
   }
 
   const responseData = await response.json();
-  const { acceptedPayments, maxPage } = responseData;
+  const { activeEvents, maxPage } = responseData;
 
-  return { payments: acceptedPayments, maxPage };
+  return { events: activeEvents, maxPage };
 };
