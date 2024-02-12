@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -31,7 +32,15 @@ const ViewEventPage = ({ id }: { id: string }) => {
   return (
     <>
       <section className="relative border-b-2 border-navyBlue w-full text-center py-10 text-navyBlue">
-        <p className="absolute left-10">back</p>
+        <Link href={"/event/active"} className="absolute left-10">
+          <span
+            className="icon-[material-symbols--keyboard-arrow-left]"
+            style={{ width: "48px", height: "48px", color: "#181842" }}
+            role="button"
+            onKeyUp={() => {}}
+            tabIndex={0}
+          />
+        </Link>
         <h1 className="text-3xl font-bold  capitalize">
           {eventData.data.title}
         </h1>
