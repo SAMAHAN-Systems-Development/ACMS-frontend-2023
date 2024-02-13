@@ -64,7 +64,11 @@ const ViewEventPage = ({ id }: { id: string }) => {
         </div>
       </section>
       <section className="md:w-4/5 w-96 mx-auto my-10">
-        <StudentsTable list={eventData.data.students} />
+        {eventData.isFetching ? (
+          <div className="flex justify-center">Loading...</div>
+        ) : (
+          <StudentsTable list={eventData.data.students} />
+        )}
       </section>
     </>
   );
