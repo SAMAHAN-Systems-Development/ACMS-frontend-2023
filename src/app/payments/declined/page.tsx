@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import {
   dehydrate,
   HydrationBoundary,
@@ -15,7 +15,7 @@ const PageFinal = async () => {
   const queryClient = new QueryClient();
 
   const cookieStore = cookies();
-  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+  const supabase = createServerComponentClient({ cookies: () => cookieStore });
   const user = await fetchUser(supabase);
 
   await queryClient.prefetchQuery({
