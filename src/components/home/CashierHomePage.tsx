@@ -27,7 +27,7 @@ const CashierHomePage = () => {
 
   const [inputData, setInputData] = useState<{
     email: string;
-    event: number;
+    eventId: number;
     firstName: string;
     lastName: string;
     year_and_course: string;
@@ -36,7 +36,7 @@ const CashierHomePage = () => {
     lastName: '',
     year_and_course: '',
     email: '',
-    event: allEventTitle[0].id,
+    eventId: allEventTitle[0].id,
   });
 
   const onFormSubmit = async (event: React.FormEvent) => {
@@ -60,13 +60,13 @@ const CashierHomePage = () => {
   };
 
   return (
-    <div className="h-full">
+    <div className="flex flex-col h-full">
       <div className="p-8 w-full border-b-2">
         <h1 className="text-5xl text-navyBlue font-extrabold text-center">
           REGISTRATION FORM
         </h1>
       </div>
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center flex-grow pb-12">
         <form
           className="flex flex-col gap-4 items-center"
           onSubmit={onFormSubmit}
@@ -74,6 +74,7 @@ const CashierHomePage = () => {
           <div className="flex gap-4 w-full">
             <input
               name="firstName"
+              placeholder="First Name"
               type="text"
               className="border-2 w-full"
               onChange={inputOnChange}
@@ -81,6 +82,7 @@ const CashierHomePage = () => {
             />
             <input
               name="lastName"
+              placeholder="Last Name"
               type="text"
               className="border-2 w-full"
               onChange={inputOnChange}
@@ -89,6 +91,7 @@ const CashierHomePage = () => {
           </div>
           <input
             name="year_and_course"
+            placeholder="Year and Course"
             type="text"
             className="border-2 w-full"
             onChange={inputOnChange}
@@ -96,6 +99,7 @@ const CashierHomePage = () => {
           />
           <input
             name="email"
+            placeholder="AdDU Email"
             type="text"
             className="border-2 w-full"
             onChange={inputOnChange}
@@ -106,7 +110,7 @@ const CashierHomePage = () => {
             name="event"
             id="event"
             onChange={inputOnChange}
-            value={String(inputData.event)}
+            value={String(inputData.eventId)}
           >
             {allEventTitle.map((event: EventTitle) => (
               <option key={event.id} value={event.id}>
@@ -114,7 +118,11 @@ const CashierHomePage = () => {
               </option>
             ))}
           </select>
-          <button type="submit">Submit</button>
+          <div className="flex w-full justify-end">
+            <button className="px-4 py-2 bg-blue rounded" type="submit">
+              Submit
+            </button>
+          </div>
         </form>
       </div>
     </div>
