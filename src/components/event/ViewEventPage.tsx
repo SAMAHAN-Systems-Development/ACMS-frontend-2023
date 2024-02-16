@@ -31,7 +31,7 @@ const ViewEventPage = ({ id }: { id: string }) => {
 
   return (
     <>
-      <section className="relative border-b-2 border-navyBlue w-full text-center py-10 text-navyBlue">
+      <section className="relative border-b-2 border-navyBlue w-full text-center py-10">
         <Link href={"/event/active"} className="absolute left-10">
           <span
             className="icon-[material-symbols--keyboard-arrow-left]"
@@ -45,7 +45,7 @@ const ViewEventPage = ({ id }: { id: string }) => {
           {eventData.data.title}
         </h1>
       </section>
-      <section className="flex w-full my-10 text-navyBlue">
+      <section className="flex w-full my-10">
         <div className="border-2 border-navyBlue mx-auto rounded-2xl p-5 lg:w-1/3 sm:w-1/2 w-full">
           <DetailLine
             title={"Event Description"}
