@@ -16,6 +16,7 @@ const allowedUrls = {
     '/login',
     '/home',
     '/student',
+    '/events/[id]',
     '/event/active',
     '/event/inactive',
     '/payments/pending',
@@ -48,7 +49,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }
 
   // Checks if the URL is valid according to the usertype
-  if (allowedUrls[userType].includes(pathname)) {
+  if (allowedUrls[userType].includes(pathname) || pathname.includes('/events/')) {
     return (
       <UserContext.Provider value={{ user: userQuery.data }}>
         {children}
