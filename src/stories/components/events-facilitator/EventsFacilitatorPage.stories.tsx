@@ -1,11 +1,12 @@
-import { EventsFacilitatorPage } from "@/components/events-facilitator/EventsFacilitatorPage";
-import { Meta } from "@storybook/react";
+import type { Meta } from '@storybook/react';
 
-const meta: Meta<typeof EventsFacilitatorPage> = {
-    title: "Events Facilitator Page",
-    component: EventsFacilitatorPage
+import FacilitatorHomePage from '@/components/home/FacilitatorHomePage';
+
+const meta: Meta<typeof FacilitatorHomePage> = {
+  title: 'Events Facilitator Page',
+  component: FacilitatorHomePage,
 };
 
-export default meta
+export default meta;
 
-export const Page = () => <EventsFacilitatorPage />
+export const Page = () => <FacilitatorHomePage />;
