@@ -34,7 +34,12 @@ const PaymentsModal: FC<PaymentsModalProps> = ({ listOfPayments, type }) => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
               {listOfPayments.map((payment: Payment) => (
-                <PaymentsCard key={payment.id} payment={payment} />
+                <PaymentsCard
+                  key={payment.id}
+                  payment={payment}
+                  page={1}
+                  paymentPageType="accepted"
+                />
               ))}
             </div>
           </div>
