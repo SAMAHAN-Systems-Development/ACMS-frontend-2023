@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
 export async function POST(request: Request) {
-  const requestUrl = new URL(request.url);
+  const baseUrl = process.env.NEXT_APP_BASE_URL;
   const formData = await request.formData();
   const email = String(formData.get('email'));
   const password = String(formData.get('password'));
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     password,
   });
 
-  return NextResponse.redirect(`${requestUrl.origin}`, {
+  return NextResponse.redirect(`${baseUrl}/home`, {
     status: 301,
   });
 }
