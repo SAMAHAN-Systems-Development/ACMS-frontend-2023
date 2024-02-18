@@ -22,7 +22,6 @@ const allowedUrls = {
     '/payments/declined',
     '/payments/accepted',
     '/',
-    '/test'
   ],
   student: ['/events/register/'],
 };
