@@ -5,6 +5,8 @@ import Link from "next/link";
 
 import { useQuery } from "@tanstack/react-query";
 
+import PaymentsModal from "@/components/payments/PaymentsModal";
+import Button from "@/components/ui/Button";
 import StudentsTable from "@/components/ui/StudentsTable";
 import { fetchEventData } from "@/utilities/fetch/event";
 
@@ -61,6 +63,19 @@ const ViewEventPage = ({ id }: { id: string }) => {
             detail={eventData.data.students.length}
           />
           <DetailLine title={"Event Price:"} detail={eventData.data.price} />
+          <div className="flex flex-col space-y-2 items-center mt-5">
+            <PaymentsModal
+              paymentType={"accepted"}
+              token={token}
+              eventId={eventData.data.id}
+            />
+            <PaymentsModal
+              paymentType={"declined"}
+              token={token}
+              eventId={eventData.data.id}
+            />
+            <Button text={"View Registration Form"} />
+          </div>
         </div>
       </section>
       <section className="md:w-4/5 w-96 mx-auto my-10">
