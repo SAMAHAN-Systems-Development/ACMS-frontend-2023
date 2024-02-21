@@ -7,11 +7,11 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 
-import PaymentsPage from '@/components/payments/PaymentsPage';
-import { fetchDeclinedPayments } from '@/utilities/fetch/payment';
+import FacilitatorHomePage from '@/components/home/FacilitatorHomePage';
+import { fetchActiveEvents } from '@/utilities/fetch/event';
 import { fetchUser } from '@/utilities/fetch/user';
 
-const PageFinal = async () => {
+const Home = async () => {
   const queryClient = new QueryClient();
 
   const cookieStore = cookies();
@@ -19,8 +19,8 @@ const PageFinal = async () => {
   const user = await fetchUser(supabase);
 
   await queryClient.prefetchQuery({
-    queryKey: ['payments', 'declined', { page: 1 }],
-    queryFn: () => fetchDeclinedPayments(user.accessToken, 1),
+    queryKey: ['events', 'active', { page: 1 }],
+    queryFn: () => fetchActiveEvents(user.accessToken, 1),
   });
 
   await queryClient.prefetchQuery({
@@ -28,11 +28,22 @@ const PageFinal = async () => {
     queryFn: () => user.accessToken,
   });
 
+  if (user.userType === 'facilitator') {
+    return (
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <FacilitatorHomePage />
+      </HydrationBoundary>
+    );
+  }
+
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <PaymentsPage paymentPageType="declined" />
-    </HydrationBoundary>
+    <form>
+      <p>{user.userType}</p>
+      <button formAction="/auth/logout" formMethod="post">
+        Logout
+      </button>
+    </form>
   );
 };
 
-export default PageFinal;
+export default Home;
