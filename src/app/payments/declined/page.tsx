@@ -1,37 +1,47 @@
-import { cookies } from 'next/headers';
+'use client';
 
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import PaymentsPage from '@/components/payments/PaymentsPage';
-import { fetchDeclinedPayments } from '@/utilities/fetch/payment';
-import { fetchUser } from '@/utilities/fetch/user';
+import type Payment from '@/types/Payment';
 
-const PageFinal = async () => {
-  const queryClient = new QueryClient();
+const PageFinal = () => {
+  const backendUrl =
+    process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
+  const [listOfDeclinedPayments, setListOfDeclinedPayments] = useState<
+    Payment[]
+  >([]);
 
-  const cookieStore = cookies();
-  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-  const user = await fetchUser(supabase);
+  const fetchPayments = useCallback(async () => {
+    fetch(`${backendUrl}/payment/declined`, { method: 'GET' })
+      .then((response) => response.json())
+      .then((data) => {
+        setListOfDeclinedPayments(data);
+      })
+      .catch((error) => error);
+  }, [backendUrl]);
 
-  await queryClient.prefetchQuery({
-    queryKey: ['payments', 'declined', { page: 1 }],
-    queryFn: () => fetchDeclinedPayments(user.accessToken, 1),
-  });
+  useEffect(() => {
+    void fetchPayments();
+  }, [fetchPayments]);
 
-  await queryClient.prefetchQuery({
-    queryKey: ['jwt'],
-    queryFn: () => user.accessToken,
-  });
+  const restoreButtonAction = (ids: string[]) => {
+    fetch(`${backendUrl}/payments/restore`, {
+      method: 'POST',
+      body: JSON.stringify(ids),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setListOfDeclinedPayments(data);
+      })
+      .catch((error) => error);
+  };
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <PaymentsPage paymentPageType="declined" />
-    </HydrationBoundary>
+    <PaymentsPage
+      listOfPayments={listOfDeclinedPayments}
+      restoreButtonAction={restoreButtonAction}
+    />
   );
 };
 

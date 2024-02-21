@@ -1,91 +1,71 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 
-import PaymentButton from '@/components/payments/PaymentButton';
-
 interface EventCardProps {
-  eventDescription: string;
-  eventId: string;
-  eventPrice: string;
   eventTitle: string;
-  maxParticipants: number;
-  numberOfParticipantsRegistered: number;
-  hasActivateButton?: boolean;
-  hasDeactivateButton?: boolean;
-  hasEditButton?: boolean;
-  hasScanQrButton?: boolean;
-  hasViewButton?: boolean;
+  id: string;
+  onActivate: (id: string) => Promise<void>;
+  onEdit: (id: string) => void;
 }
 
 const EventCard: React.FC<EventCardProps> = ({
-  eventId,
+  id,
+  onActivate,
+  onEdit,
   eventTitle,
-  eventPrice,
-  maxParticipants,
-  numberOfParticipantsRegistered,
-  eventDescription,
-  hasViewButton,
-  hasEditButton,
-  hasActivateButton,
-  hasDeactivateButton,
-  hasScanQrButton,
 }) => {
   const router = useRouter();
 
-  const descriptionLength = eventTitle.length > 50 ? 100 : 150;
-
-  const editedDescription =
-    eventDescription.length > descriptionLength
-      ? eventDescription.slice(0, descriptionLength) + '...'
-      : eventDescription;
-
-  const viewButtonOnClick = () => {
-    router.push(`/event/view/${eventId}`);
+  const handleViewClick = async () => {
+    try {
+      await router.push(`/event/view/${id}`);
+    } catch (error) {
+      console.error('Error navigating to view event:', error);
+    }
   };
 
-  const editButtonOnClick = () => {
-    router.push(`/event/edit/${eventId}`);
+  const handleEditClick = async () => {
+    try {
+      await router.push(`/event/edit/${id}`);
+      onEdit(id);
+    } catch (error) {
+      console.error('Error navigating to edit event:', error);
+    }
+  };
+
+  const handleActivateClick = async () => {
+    try {
+      await onActivate(id);
+    } catch (error) {
+      console.error('Error activating event:', error);
+    }
   };
 
   return (
-    <div className="relative w-[29rem] md:h-[22rem] h-auto rounded-xl border-blue border-2 shadow-[2px_0px_4px_0px_rgba(0,0,0,0.25),0px_4px_4px_0px_rgba(0,0,0,0.25)]">
-      <div className="flex flex-col p-4 gap-4 justify-between h-full">
-        <div className="flex flex-col gap-4">
-          <div className="flex gap-4 justify-between md:mb-4">
-            <h2 className="font-bold text-lg sm:text-xl">{eventTitle}</h2>
-            <h2 className="font-bold text-l">{eventPrice}</h2>
-          </div>
-          <div className="flex flex-col">
-            <p className="text-sm sm:text-md">
-              Crowd Limit: <span className="font-bold">{maxParticipants}</span>
-            </p>
-            <p className="text-sm sm:text-md">
-              Students Registered:{' '}
-              <span className="font-bold">
-                {numberOfParticipantsRegistered}
-              </span>
-            </p>
-          </div>
+    <div className="relative w-[414px] h-[191px] top-[-2px] left-[-2px] rounded-[10px] border-[3px] border-solid border-[#9a9c9c] shadow-[2px_0px_4px_#00000040,0px_4px_4px_#00000040]">
+      <div className="px-6 py-4">
+        <div className="font-bold text-xl mb-2">{eventTitle}</div>
+      </div>
 
-          <p className="text-sm sm:text-md">{editedDescription}</p>
-        </div>
-        <div className="flex gap-4">
-          {hasScanQrButton && (
-            <PaymentButton onClick={() => {}}>Scan Qr</PaymentButton>
-          )}
-          {hasViewButton && (
-            <PaymentButton onClick={viewButtonOnClick}>View</PaymentButton>
-          )}
-          {hasEditButton && (
-            <PaymentButton onClick={editButtonOnClick}>Edit</PaymentButton>
-          )}
-          {hasActivateButton && (
-            <PaymentButton onClick={() => {}}>Activate</PaymentButton>
-          )}
-          {hasDeactivateButton && (
-            <PaymentButton onClick={() => {}}>Deactivate</PaymentButton>
-          )}
-        </div>
+      <div className="px-6 py-4">
+        <button
+          className="px-4 py-2 text-sm font-bold text-white bg-blue-500 rounded-full"
+          onClick={handleViewClick}
+        >
+          View Event
+        </button>
+        <button
+          className="px-4 py-2 text-sm font-bold text-white bg-green-500 rounded-full ml-2"
+          onClick={handleEditClick}
+        >
+          Edit Event
+        </button>
+        <button
+          className="px-4 py-2 text-sm font-bold text-white bg-yellow-500 rounded-full ml-2"
+          onClick={handleActivateClick}
+        >
+          Activate
+        </button>
       </div>
     </div>
   );

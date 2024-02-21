@@ -1,181 +1,62 @@
 import React from 'react';
-import { toast } from 'react-toastify';
+import type { StaticImageData } from 'next/image';
 import Image from 'next/image';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
-import PaymentButton from '@/components/payments/PaymentButton';
-import Checkbox from '@/components/ui/Checkbox';
-import type { Payment } from '@/types/types';
-import {
-  acceptPayments,
-  declinePayments,
-  restorePayments,
-} from '@/utilities/fetch/payment';
-
 type propTypes = {
-  page: number;
-  payment: Payment;
-  paymentPageType: 'accepted' | 'declined' | 'pending';
-  checkedCards?: number[];
-  hasAcceptButton?: boolean;
-  hasCheckbox?: boolean;
-  hasDeclineButton?: boolean;
-  hasRestoreButton?: boolean;
-  setCheckedCards?: React.Dispatch<React.SetStateAction<number[]>>;
+  eventTitle: string;
+  studentName: string;
+  checked?: boolean;
+  eventPrice?: string;
+  onCheckedAction?: () => void;
+  paymentPhotoUrl?: string | StaticImageData;
+  restoreButtonAction?: () => void;
 };
 
 const PaymentsCard: React.FC<propTypes> = ({
-  hasRestoreButton,
-  hasCheckbox,
-  checkedCards,
-  payment,
-  setCheckedCards,
-  paymentPageType,
-  page,
-  hasDeclineButton,
-  hasAcceptButton,
+  eventTitle,
+  studentName,
+  eventPrice,
+  paymentPhotoUrl,
+  restoreButtonAction,
+  onCheckedAction,
+  checked,
 }) => {
-  const eventPrice = payment.event.price;
-  const eventTitle = payment.event.title;
-  const studentName = `${payment.firstName} ${payment.lastName}`;
-  const paymentPhotoUrl = payment.payment.photo_src;
-  const tokenQuery = useQuery<string>({
-    queryKey: ['jwt'],
-  });
-
-  const token = tokenQuery.data || '';
-  const queryClient = useQueryClient();
-
-  const restorePaymentsMutation = useMutation({
-    mutationFn: async () => {
-      await restorePayments(token, [payment.id]);
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['payments', paymentPageType, { page }],
-        exact: true,
-      });
-      toast.success('Payment restored successfully');
-    },
-  });
-
-  const acceptPaymentsMutation = useMutation({
-    mutationFn: async () => {
-      await acceptPayments(token, [payment.id]);
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['payments', paymentPageType, { page }],
-        exact: true,
-      });
-      toast.success('Payment accepted successfully');
-    },
-  });
-
-  const declinePaymentsMutation = useMutation({
-    mutationFn: async () => {
-      await declinePayments(token, [payment.id]);
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['payments', paymentPageType, { page }],
-        exact: true,
-      });
-      toast.success('Payment declined successfully');
-    },
-  });
-
-  const restoreButtonAction = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    restorePaymentsMutation.mutate();
-  };
-
-  const acceptButtonAction = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    acceptPaymentsMutation.mutate();
-  };
-
-  const declineButtonAction = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    declinePaymentsMutation.mutate();
-  };
-
-  let checked = false;
-  let onCheckedAction = () => {};
-  if (checkedCards && setCheckedCards) {
-    checked = checkedCards.includes(payment.id);
-    onCheckedAction = () => {
-      if (checkedCards.includes(payment.id)) {
-        setCheckedCards(
-          checkedCards.filter((checkedCard) => checkedCard !== payment.id)
-        );
-      } else {
-        setCheckedCards([...checkedCards, payment.id]);
-      }
-    };
-  }
-
   return (
-    <div
-      className="w-[24rem] h-[44rem] cursor-pointer p-8 rounded-xl border-blue border-2 shadow-[2px_0px_4px_0px_rgba(0,0,0,0.25),0px_4px_4px_0px_rgba(0,0,0,0.25)]"
-      onClick={onCheckedAction}
-      role="button"
-      onKeyUp={onCheckedAction}
-      tabIndex={0}
+    <button
+      className={`border-4` + !onCheckedAction && `hover:cursor-default`}
+      onClick={onCheckedAction && onCheckedAction}
     >
-      <div className="flex flex-col gap-4 max-h-full min-h-full">
-        <div className="flex justify-between gap-12 items-start">
-          <div className="flex flex-col items-start justify-start">
-            <p className="font-body text-sm text-left font-bold">
-              {eventTitle}
-            </p>
-            <p className="text-sm text-left">{studentName}</p>
-          </div>
-          {hasCheckbox && (
-            <Checkbox checked={checked} onCheckedAction={onCheckedAction} />
-          )}
+      {onCheckedAction && <input type="checkbox" checked={checked} />}
+      <div className="flex flex-col items-center justify-center w-full h-full p-4">
+        <div className="flex items-center justify-center w-full h-20">
+          <Image
+            className="object-cover w-20 h-20 rounded-full"
+            src={paymentPhotoUrl || '/placeholderImage.jpg'}
+            alt="Payment Photo"
+            width={80}
+            height={80}
+          />
         </div>
-
-        <div className="flex flex-col items-center justify-between flex-grow">
-          <div className="flex flex-col gap-4">
-            <p className="text-xl text-center font-bold">{eventPrice}</p>
-            <div className="flex items-center justify-center">
-              <Image
-                className="object-cover"
-                src={paymentPhotoUrl || '/placeholderImage.jpg'}
-                alt="Payment Photo"
-                width={200}
-                height={200}
-              />
-            </div>
-          </div>
-          <div className="flex flex-row gap-4 justify-between w-full">
-            {hasRestoreButton && (
-              <div className="flex items-center justify-center my-3 w-full">
-                <PaymentButton onClick={restoreButtonAction}>
-                  Restore
-                </PaymentButton>
-              </div>
-            )}
-            {hasAcceptButton && (
-              <div className="flex items-center justify-center my-3 w-full">
-                <PaymentButton onClick={acceptButtonAction}>
-                  Accept
-                </PaymentButton>
-              </div>
-            )}
-            {hasDeclineButton && (
-              <div className="flex items-center justify-center my-3 w-full">
-                <PaymentButton onClick={declineButtonAction}>
-                  Decline
-                </PaymentButton>
-              </div>
-            )}
-          </div>
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          <div className="text-lg font-bold text-center">{eventTitle}</div>
+          <div className="text-sm text-center">{studentName}</div>
+          <div className="text-sm text-center">{eventPrice}</div>
         </div>
+        {restoreButtonAction && (
+          <div className="flex items-center justify-center w-full my-3">
+            <button
+              className="px-4 py-2 text-sm font-bold text-white bg-red-500 rounded-full"
+              onClick={(event) => {
+                event.stopPropagation();
+                restoreButtonAction();
+              }}
+            >
+              Restore
+            </button>
+          </div>
+        )}
       </div>
-    </div>
+    </button>
   );
 };
 

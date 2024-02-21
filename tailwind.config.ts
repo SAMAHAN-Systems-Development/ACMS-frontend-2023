@@ -1,4 +1,3 @@
-import { addDynamicIconSelectors } from '@iconify/tailwind';
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
@@ -16,12 +15,7 @@ const config: Config = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
     },
-    colors: {
-      navyBlue: '#181842',
-      blue: '#7A92C2',
-      white: '#ffffff',
-    },
   },
-  plugins: [addDynamicIconSelectors()],
+  plugins: [],
 };
 export default config;
