@@ -10,13 +10,13 @@ const meta: Meta<typeof InactiveEventCard> = {
 export default meta;
 type Story = StoryObj<typeof InactiveEventCard>;
 
-export const Example: Story = {
-    render: () => (
-        <InactiveEventCard
-            id="1"
-            onActivate={() => { }}
-            onEdit={() => { }}
-            eventTitle="Code in the Dark"
-        />
-    ),
-};
+// export const Example: Story = {
+//     render: () => (
+//         <InactiveEventCard
+//             id="1"
+//             onActivate={() => Promise.new()}
+//             onEdit={() => { }}
+//             eventTitle="Code in the Dark"
+//         />
+//     ),
+// };
