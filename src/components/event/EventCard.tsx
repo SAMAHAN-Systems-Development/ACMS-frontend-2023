@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import PaymentButton from '@/components/payments/PaymentButton';
 import type { Event } from '@/types/types';
-import { activeEvents, inactiveEvents } from '@/utilities/fetch/event';
+import { activateEvents, inactivateEvents } from '@/utilities/fetch/event';
 
 type propTypes = {
   event: Event;
@@ -51,7 +51,7 @@ const EventCard: React.FC<propTypes> = ({
 
   const deactivateEventsMutation = useMutation({
     mutationFn: async () => {
-      await inactiveEvents(token, [event.id]);
+      await inactivateEvents(token, event.id);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -64,7 +64,7 @@ const EventCard: React.FC<propTypes> = ({
 
   const activateEventsMutation = useMutation({
     mutationFn: async () => {
-      await activeEvents(token, [event.id]);
+      await activateEvents(token, event.id);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
