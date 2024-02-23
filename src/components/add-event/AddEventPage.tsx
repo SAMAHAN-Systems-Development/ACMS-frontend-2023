@@ -1,102 +1,132 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import * as Switch from '@radix-ui/react-switch';
 import * as Form from '@radix-ui/react-form';
 import AddEventInput from '@/components/add-event/components/AddEventInput';
+import AddEventNavBar from '@/components/add-event/components/AddEventNavBar';
 
 // title, description, date, crowd limit, requires-payment-switch, price
 
 
 const AddEventPage = () => {
+
+    const [event, setEvent] = useState({})
+
+
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        alert((e.currentTarget.elements.namedItem('title') as HTMLInputElement).value)
+        // post()
+    }
+
+    const post = async () => {
+        const response = await fetch('/api/event', {
+            method: 'POST',
+            body: JSON.stringify({ event }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        const data = await response.json()
+        alert(data)
+        // alert(event)
+        // const emailInput = e.elements.namedItem('email') as HTMLInputElement;
+    }
+
     return (
-        <div className='flex justify-center items-center h-screen flex-col gap-8'>
-            <h1 className=' font-bold'>Add new event</h1>
-            <div>
-                <Form.Root>
-                    <Form.Field className="FormField" name="title">
-                        <div className='flex items-baseline justify-between'>
-                            <Form.Label className="FormLabel">Event Title</Form.Label>
-                            <Form.Message className="FormMessage" match="valueMissing">
-                                Please enter the event title.
-                            </Form.Message>
-                            {/* <Form.Message className="FormMessage" match="typeMismatch">
-                                Please provide a valid email
-                            </Form.Message> */}
-                        </div>
-                        <Form.Control asChild>
-                            <AddEventInput title="title" required />
-                        </Form.Control>
-                    </Form.Field>
+        <>
+            <AddEventNavBar />
+            <Switch.Root className='w-10 h-10'>
+                <Switch.Thumb />
+            </Switch.Root>
+            <div className='flex justify-center items-center h-screen flex-col gap-8'>
+                <h1 className=' font-bold'>Add new event</h1>
+                <div>
+                    <Form.Root onSubmit={onSubmit}>
+                        <Form.Field className="FormField" name="title">
+                            <div className='flex items-baseline justify-between'>
+                                <Form.Label className="FormLabel">Event Title</Form.Label>
+                                <Form.Message className="FormMessage" match="valueMissing">
+                                    Please enter the event title.
+                                </Form.Message>
+                                {/* <Form.Message className="FormMessage" match="typeMismatch">
+                                    Please provide a valid email
+                                </Form.Message> */}
+                            </div>
+                            <Form.Control asChild>
+                                <AddEventInput title="title" required />
+                            </Form.Control>
+                        </Form.Field>
 
-                    <Form.Field className="FormField" name="description">
-                        <div className='flex items-baseline justify-between'>
-                            <Form.Label className="FormLabel">Description</Form.Label>
-                            <Form.Message className="FormMessage" match="valueMissing">
-                                Please enter a description.
-                            </Form.Message>
-                        </div>
-                        <Form.Control asChild>
-                            <textarea className=" border-2 rounded-lg p-2" required />
-                        </Form.Control>
-                    </Form.Field>
+                        <Form.Field className="FormField" name="description">
+                            <div className='flex items-baseline justify-between'>
+                                <Form.Label className="FormLabel">Description</Form.Label>
+                                <Form.Message className="FormMessage" match="valueMissing">
+                                    Please enter a description.
+                                </Form.Message>
+                            </div>
+                            <Form.Control asChild>
+                                <textarea className=" border-2 rounded-lg p-2" required />
+                            </Form.Control>
+                        </Form.Field>
 
-                    <Form.Field className="FormField" name="date">
-                        <div className='flex items-baseline justify-between'>
-                            <Form.Label className="FormLabel">Event Date</Form.Label>
-                            <Form.Message className="FormMessage" match="valueMissing">
-                                Please enter a date.
-                            </Form.Message>
-                        </div>
-                        <Form.Control asChild>
-                            <AddEventInput title='date' type='date' required />
-                        </Form.Control>
-                    </Form.Field>
+                        <Form.Field className="FormField" name="date">
+                            <div className='flex items-baseline justify-between'>
+                                <Form.Label className="FormLabel">Event Date</Form.Label>
+                                <Form.Message className="FormMessage" match="valueMissing">
+                                    Please enter a date.
+                                </Form.Message>
+                            </div>
+                            <Form.Control asChild>
+                                <AddEventInput title='date' type='date' required />
+                            </Form.Control>
+                        </Form.Field>
 
-                    <Form.Field className="FormField" name="requires-payment">
-                        <div className='flex items-baseline justify-between'>
-                            <Form.Label className="FormLabel">Requires Payment</Form.Label>
+                        <Form.Field className="FormField" name="requires-payment">
+                            <div className='flex items-baseline justify-between'>
+                                <Form.Label className="FormLabel">Requires Payment</Form.Label>
 
-                        </div>
-                        <Form.Control asChild>
-                            <Switch.Root >
-                                <Switch.Thumb />
-                            </Switch.Root>
-                        </Form.Control>
-                    </Form.Field>
+                            </div>
+                            <Form.Control asChild>
+                                <Switch.Root className='w-10 h-10'>
+                                    <Switch.Thumb />
+                                </Switch.Root>
+                            </Form.Control>
+                        </Form.Field>
 
-                    <Form.Field className="FormField" name="crowd-limit">
-                        <div className='flex items-baseline justify-between'>
-                            <Form.Label className="FormLabel">Crowd Limit</Form.Label>
-                            <Form.Message className="FormMessage" match="valueMissing">
-                                Please enter a crowd limit.
-                            </Form.Message>
-                        </div>
-                        <Form.Control asChild>
-                            <AddEventInput title='crowd-limit' type='number' />
-                        </Form.Control>
-                    </Form.Field>
+                        <Form.Field className="FormField" name="crowd-limit">
+                            <div className='flex items-baseline justify-between'>
+                                <Form.Label className="FormLabel">Crowd Limit</Form.Label>
+                                <Form.Message className="FormMessage" match="valueMissing">
+                                    Please enter a crowd limit.
+                                </Form.Message>
+                            </div>
+                            <Form.Control asChild>
+                                <AddEventInput title='crowd-limit' type='number' />
+                            </Form.Control>
+                        </Form.Field>
 
-                    <Form.Field className="FormField" name="price">
-                        <div className='flex items-baseline justify-between'>
-                            <Form.Label className="FormLabel">Event Price</Form.Label>
-                            <Form.Message className="FormMessage" match="valueMissing">
-                                Please enter a price.
-                            </Form.Message>
-                        </div>
-                        <Form.Control asChild>
-                            <AddEventInput title='price' type='number' />
-                        </Form.Control>
-                    </Form.Field>
+                        <Form.Field className="FormField" name="price">
+                            <div className='flex items-baseline justify-between'>
+                                <Form.Label className="FormLabel">Event Price</Form.Label>
+                                <Form.Message className="FormMessage" match="valueMissing">
+                                    Please enter a price.
+                                </Form.Message>
+                            </div>
+                            <Form.Control asChild>
+                                <AddEventInput title='price' type='number' />
+                            </Form.Control>
+                        </Form.Field>
 
-                    <Form.Submit asChild>
-                        <button className="Button" style={{ marginTop: 10 }}>
-                            Add Event
-                        </button>
-                    </Form.Submit>
-                </Form.Root>
+                        <Form.Submit asChild>
+                            <button className="Button" style={{ marginTop: 10 }}>
+                                Add Event
+                            </button>
+                        </Form.Submit>
+                    </Form.Root>
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 
