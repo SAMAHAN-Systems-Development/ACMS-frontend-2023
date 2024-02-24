@@ -1,3 +1,4 @@
+import React from 'react';
 import { cookies } from 'next/headers';
 
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
@@ -36,13 +37,13 @@ const Home = async () => {
     queryFn: () => fetchAllActiveTitleEvents(user.accessToken),
   });
 
-  // if (user.userType === 'facilitator') {
-  //   return (
-  //     <HydrationBoundary state={dehydrate(queryClient)}>
-  //       <FacilitatorHomePage />
-  //     </HydrationBoundary>
-  //   );
-  // }
+  if (user.userType === 'facilitator') {
+    return (
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <FacilitatorHomePage />
+      </HydrationBoundary>
+    );
+  }
 
   // if (user.userType === 'cashier') {
   //   return (

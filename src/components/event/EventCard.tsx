@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import QrScanner from 'qr-scanner'; // if installed via package and bundling with a module bundler like webpack or rollup
 
 import PaymentButton from '@/components/payments/PaymentButton';
 import type { Event } from '@/types/types';
@@ -10,13 +11,7 @@ import { activateEvents, inactivateEvents } from '@/utilities/fetch/event';
 
 type propTypes = {
   event: Event;
-  // eventDescription: string;
-  // eventId: string;
   eventPageType: 'active' | 'inactive';
-  // eventPrice: string;
-  // eventTitle: string;
-  // maxParticipants: number;
-  // numberOfParticipantsRegistered: number;
   page: number;
   hasActivateButton?: boolean;
   hasDeactivateButton?: boolean;
@@ -99,6 +94,11 @@ const EventCard: React.FC<propTypes> = ({
     activateEventsMutation.mutate();
   };
 
+  const scanQrButtonAction = (e: React.MouseEvent) => {
+    console.log(event.id);
+    // router.push(`/event/scan/${event.id}`);
+  };
+
   return (
     <div className="relative w-[25rem] md:h-[22rem] h-auto rounded-xl border-blue border-2 shadow-[2px_0px_4px_0px_rgba(0,0,0,0.25),0px_4px_4px_0px_rgba(0,0,0,0.25)]">
       <div className="flex flex-col p-4 gap-4 justify-between h-full">
@@ -122,7 +122,7 @@ const EventCard: React.FC<propTypes> = ({
         </div>
         <div className="flex gap-4">
           {hasScanQrButton && (
-            <PaymentButton onClick={() => {}}>Scan Qr</PaymentButton>
+            <PaymentButton onClick={scanQrButtonAction}>Scan Qr</PaymentButton>
           )}
           {hasViewButton && (
             <PaymentButton onClick={viewButtonOnClick}>View</PaymentButton>

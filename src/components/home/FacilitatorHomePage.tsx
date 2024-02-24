@@ -42,12 +42,9 @@ const FacilitatorHomePage = () => {
           {listOfEvents.map((event: Event) => (
             <EventCard
               key={event.id}
-              eventId={event.id}
-              eventTitle={event.title}
-              eventPrice={event.price}
-              maxParticipants={event.max_participants}
-              numberOfParticipantsRegistered={event.students.length}
-              eventDescription={event.description}
+              event={event}
+              page={page}
+              eventPageType="active"
               hasScanQrButton={true}
             />
           ))}
