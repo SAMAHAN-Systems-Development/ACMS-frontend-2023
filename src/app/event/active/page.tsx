@@ -30,7 +30,7 @@ const PageFinal = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <EventPage />
+      <EventPage eventType="active" />
     </HydrationBoundary>
   );
 };

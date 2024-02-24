@@ -17,8 +17,6 @@ export const fetchEventData = async (token: string, id: string) => {
 
   return responseData;
 };
-// const backendUrl =
-//   process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000";
 
 export const fetchActiveEvents = async (token: string, page: number) => {
   const response = await fetch(`${backendUrl}/event/active?page=${page}`, {
@@ -36,6 +34,24 @@ export const fetchActiveEvents = async (token: string, page: number) => {
   const { activeEvents, maxPage } = responseData;
 
   return { events: activeEvents, maxPage };
+};
+
+export const fetchInactiveEvents = async (token: string, page: number) => {
+  const response = await fetch(`${backendUrl}/event/inactive?page=${page}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error in fetching the inactive events');
+  }
+
+  const responseData = await response.json();
+  const { inactiveEvents, maxPage } = responseData;
+
+  return { events: inactiveEvents, maxPage };
 };
 
 export const fetchAllActiveTitleEvents = async (token: string) => {
@@ -56,14 +72,12 @@ export const fetchAllActiveTitleEvents = async (token: string) => {
   return allActiveEvents;
 };
 
-export const inactiveEvents = async (token: string, eventIds: number[]) => {
-  const response = await fetch(`${backendUrl}/events/inactive`, {
-    method: 'POST',
+export const inactivateEvents = async (token: string, eventId: number) => {
+  const response = await fetch(`${backendUrl}/event/inactivate/${eventId}`, {
+    method: 'PATCH',
     headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ eventIds }),
   });
 
   if (!response.ok) {
@@ -73,14 +87,12 @@ export const inactiveEvents = async (token: string, eventIds: number[]) => {
   return true;
 };
 
-export const activeEvents = async (token: string, eventIds: number[]) => {
-  const response = await fetch(`${backendUrl}/events/active`, {
-    method: 'POST',
+export const activateEvents = async (token: string, eventId: number) => {
+  const response = await fetch(`${backendUrl}/event/activate/${eventId}`, {
+    method: 'PATCH',
     headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ eventIds }),
   });
 
   if (!response.ok) {
