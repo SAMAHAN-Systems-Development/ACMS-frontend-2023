@@ -9,6 +9,7 @@ import {
 } from '@tanstack/react-query';
 
 import PaymentsPage from '@/components/payments/PaymentsPage';
+import Navigation from '@/components/ui/Navigation';
 import { fetchPendingPayments } from '@/utilities/fetch/payment';
 import { fetchUser } from '@/utilities/fetch/user';
 
@@ -31,6 +32,7 @@ const PageFinal = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      <Navigation />
       <PaymentsPage paymentPageType="pending" />
     </HydrationBoundary>
   );

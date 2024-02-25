@@ -8,21 +8,21 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 
-import PaymentsPage from '@/components/payments/PaymentsPage';
-import { fetchDeclinedPayments } from '@/utilities/fetch/payment';
-import { fetchUser } from '@/utilities/fetch/user';
+import QrScanPage from '@/components/event/QrScanPage';
 import Navigation from '@/components/ui/Navigation';
+import { fetchEventData } from '@/utilities/fetch/event';
+import { fetchUser } from '@/utilities/fetch/user';
 
-const PageFinal = async () => {
+const FinalPage = async ({ params }: { params: { eventId: string } }) => {
+  const eventId = params.eventId;
   const queryClient = new QueryClient();
-
   const cookieStore = cookies();
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
   const user = await fetchUser(supabase);
 
   await queryClient.prefetchQuery({
-    queryKey: ['payments', 'declined', { page: 1 }],
-    queryFn: () => fetchDeclinedPayments(user.accessToken, 1),
+    queryKey: ['events', eventId],
+    queryFn: () => fetchEventData(user.accessToken, eventId),
   });
 
   await queryClient.prefetchQuery({
@@ -31,11 +31,13 @@ const PageFinal = async () => {
   });
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
+    <div>
       <Navigation />
-      <PaymentsPage paymentPageType="declined" />
-    </HydrationBoundary>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <QrScanPage eventId={eventId} />
+      </HydrationBoundary>
+    </div>
   );
 };
 
-export default PageFinal;
+export default FinalPage;

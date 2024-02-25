@@ -11,6 +11,7 @@ import {
 import PaymentsPage from '@/components/payments/PaymentsPage';
 import { fetchAcceptedPayments } from '@/utilities/fetch/payment';
 import { fetchUser } from '@/utilities/fetch/user';
+import Navigation from '@/components/ui/Navigation';
 
 const PageFinal = async () => {
   const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const PageFinal = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      <Navigation />
       <PaymentsPage paymentPageType="accepted" />
     </HydrationBoundary>
   );

@@ -7,28 +7,25 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 
-import { fetchUser } from '@/utilities/fetch/user';
 import { StudentPage } from '@/components/student/StudentPage';
-
+import { fetchUser } from '@/utilities/fetch/user';
 
 const Page = async () => {
-    const queryClient = new QueryClient();
+  const queryClient = new QueryClient();
 
-    const cookieStore = cookies();
-    const supabase = createServerComponentClient({ cookies: () => cookieStore });
-    const user = await fetchUser(supabase);
-    
-      await queryClient.prefetchQuery({
-        queryKey: ['jwt'],
-        queryFn: () => user.accessToken,
-      });
-    
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient({ cookies: () => cookieStore });
+  const user = await fetchUser(supabase);
 
-    return (
-        <HydrationBoundary state={dehydrate(queryClient)}>
-            <StudentPage />
-       
-        </HydrationBoundary>
-    )
-}
+  await queryClient.prefetchQuery({
+    queryKey: ['jwt'],
+    queryFn: () => user.accessToken,
+  });
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <StudentPage />
+    </HydrationBoundary>
+  );
+};
 export default Page;

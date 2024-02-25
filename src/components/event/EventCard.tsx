@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import QrScanner from 'qr-scanner'; // if installed via package and bundling with a module bundler like webpack or rollup
 
 import PaymentButton from '@/components/payments/PaymentButton';
 import type { Event } from '@/types/types';
@@ -94,9 +93,8 @@ const EventCard: React.FC<propTypes> = ({
     activateEventsMutation.mutate();
   };
 
-  const scanQrButtonAction = (e: React.MouseEvent) => {
-    console.log(event.id);
-    // router.push(`/event/scan/${event.id}`);
+  const scanQrButtonAction = () => {
+    router.push(`/event/qr-scan/${event.id}`);
   };
 
   return (
@@ -122,7 +120,7 @@ const EventCard: React.FC<propTypes> = ({
         </div>
         <div className="flex gap-4">
           {hasScanQrButton && (
-            <PaymentButton onClick={scanQrButtonAction}>Scan Qr</PaymentButton>
+            <PaymentButton onClick={scanQrButtonAction}>Scan QR</PaymentButton>
           )}
           {hasViewButton && (
             <PaymentButton onClick={viewButtonOnClick}>View</PaymentButton>

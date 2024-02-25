@@ -35,21 +35,6 @@ export type Event = {
 
 export type Payment = {
   createdAt: string;
-  email: string;
-  event: Event;
-  eventId: number;
-  firstName: string;
-  id: number;
-  lastName: string;
-  payment: PaymentDetail;
-  paymentId: number;
-  updatedAt: string;
-  uuid: string;
-  year_and_course: string;
-};
-
-type PaymentDetail = {
-  createdAt: string;
   id: string;
   photo_src: string;
   status: string;
