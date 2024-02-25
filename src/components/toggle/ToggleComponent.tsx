@@ -4,13 +4,17 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
 
+interface Props{
+  value: string;
+  setValue: (value: string) => void;
+  onChange: ()=> void;
+}
 
-
-export const ToggleComponent:React.FC = () => {
+export const ToggleComponent:React.FC<Props> = ({value, setValue, onChange}) => {
     return (
         <FormGroup>
           <FormControlLabel
-            control={<IOSSwitch sx={{ m: 1 }} defaultChecked  />}
+            control={<IOSSwitch value={value} onChange={onChange} sx={{ m: 1 }} defaultChecked  />}
             label=""
           />
         </FormGroup>
