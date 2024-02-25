@@ -4,13 +4,13 @@ interface Props{
     text: string;
     type: string;
     isDisabled: boolean;
-    onClick: Function;
+    onClick: () => void;
 }
 
 export const ButtonComponent:React.FC<Props> = ({text, type, isDisabled, onClick}) => {
     return (
         <button 
-                onClick={onClick()}
+                onClick={onClick}
                 className={`px-4 py-1 text-slate-50 font-semibold rounded-lg  
                 ${type === 'primary' && !isDisabled
                     ? 'bg-navyBlue text-white' 
