@@ -1,71 +1,146 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
-interface EventCardProps {
-  eventTitle: string;
-  id: string;
-  onActivate: (id: string) => Promise<void>;
-  onEdit: (id: string) => void;
-}
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-const EventCard: React.FC<EventCardProps> = ({
-  id,
-  onActivate,
-  onEdit,
-  eventTitle,
+import PaymentButton from '@/components/payments/PaymentButton';
+import type { Event } from '@/types/types';
+import { activateEvents, inactivateEvents } from '@/utilities/fetch/event';
+
+type propTypes = {
+  event: Event;
+  // eventDescription: string;
+  // eventId: string;
+  eventPageType: 'active' | 'inactive';
+  // eventPrice: string;
+  // eventTitle: string;
+  // maxParticipants: number;
+  // numberOfParticipantsRegistered: number;
+  page: number;
+  hasActivateButton?: boolean;
+  hasDeactivateButton?: boolean;
+  hasEditButton?: boolean;
+  hasScanQrButton?: boolean;
+  hasViewButton?: boolean;
+};
+
+const EventCard: React.FC<propTypes> = ({
+  event,
+  // eventId,
+  // eventTitle,
+  eventPageType,
+  // eventPrice,
+  // maxParticipants,
+  // numberOfParticipantsRegistered,
+  page,
+  // eventDescription,
+  hasViewButton,
+  hasEditButton,
+  hasActivateButton,
+  hasDeactivateButton,
+  hasScanQrButton,
 }) => {
   const router = useRouter();
+  const tokenQuery = useQuery<string>({
+    queryKey: ['jwt'],
+  });
 
-  const handleViewClick = async () => {
-    try {
-      await router.push(`/event/view/${id}`);
-    } catch (error) {
-      console.error('Error navigating to view event:', error);
-    }
+  const token = tokenQuery.data || '';
+  const queryClient = useQueryClient();
+
+  const deactivateEventsMutation = useMutation({
+    mutationFn: async () => {
+      await inactivateEvents(token, event.id);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['events', eventPageType, { page }],
+        exact: true,
+      });
+      toast.success('Event deactivated successfully');
+    },
+  });
+
+  const activateEventsMutation = useMutation({
+    mutationFn: async () => {
+      await activateEvents(token, event.id);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['events', eventPageType, { page }],
+        exact: true,
+      });
+      toast.success('Event activated successfully');
+    },
+  });
+  const descriptionLength = event.title.length > 50 ? 100 : 150;
+
+  const editedDescription =
+    event.description.length > descriptionLength
+      ? event.description.slice(0, descriptionLength) + '...'
+      : event.description;
+
+  const viewButtonOnClick = () => {
+    router.push(`/event/view/${event.id}`);
   };
 
-  const handleEditClick = async () => {
-    try {
-      await router.push(`/event/edit/${id}`);
-      onEdit(id);
-    } catch (error) {
-      console.error('Error navigating to edit event:', error);
-    }
+  const editButtonOnClick = () => {
+    router.push(`/event/edit/${event.id}`);
   };
 
-  const handleActivateClick = async () => {
-    try {
-      await onActivate(id);
-    } catch (error) {
-      console.error('Error activating event:', error);
-    }
+  const deactivateButtonAction = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    deactivateEventsMutation.mutate();
+  };
+
+  const activateButtonAction = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    activateEventsMutation.mutate();
   };
 
   return (
-    <div className="relative w-[414px] h-[191px] top-[-2px] left-[-2px] rounded-[10px] border-[3px] border-solid border-[#9a9c9c] shadow-[2px_0px_4px_#00000040,0px_4px_4px_#00000040]">
-      <div className="px-6 py-4">
-        <div className="font-bold text-xl mb-2">{eventTitle}</div>
-      </div>
+    <div className="relative w-[25rem] md:h-[22rem] h-auto rounded-xl border-blue border-2 shadow-[2px_0px_4px_0px_rgba(0,0,0,0.25),0px_4px_4px_0px_rgba(0,0,0,0.25)]">
+      <div className="flex flex-col p-4 gap-4 justify-between h-full">
+        <div className="flex flex-col gap-4">
+          <div className="flex gap-4 justify-between md:mb-4">
+            <h2 className="font-bold text-lg sm:text-xl">{event.title}</h2>
+            <h2 className="font-bold text-l">{event.price}</h2>
+          </div>
+          <div className="flex flex-col">
+            <p className="text-sm sm:text-md">
+              Crowd Limit:{' '}
+              <span className="font-bold">{event.max_participants}</span>
+            </p>
+            <p className="text-sm sm:text-md">
+              Students Registered:{' '}
+              <span className="font-bold">{event.students.length}</span>
+            </p>
+          </div>
 
-      <div className="px-6 py-4">
-        <button
-          className="px-4 py-2 text-sm font-bold text-white bg-blue-500 rounded-full"
-          onClick={handleViewClick}
-        >
-          View Event
-        </button>
-        <button
-          className="px-4 py-2 text-sm font-bold text-white bg-green-500 rounded-full ml-2"
-          onClick={handleEditClick}
-        >
-          Edit Event
-        </button>
-        <button
-          className="px-4 py-2 text-sm font-bold text-white bg-yellow-500 rounded-full ml-2"
-          onClick={handleActivateClick}
-        >
-          Activate
-        </button>
+          <p className="text-sm sm:text-md">{editedDescription}</p>
+        </div>
+        <div className="flex gap-4">
+          {hasScanQrButton && (
+            <PaymentButton onClick={() => {}}>Scan Qr</PaymentButton>
+          )}
+          {hasViewButton && (
+            <PaymentButton onClick={viewButtonOnClick}>View</PaymentButton>
+          )}
+          {hasEditButton && (
+            <PaymentButton onClick={editButtonOnClick}>Edit</PaymentButton>
+          )}
+          {hasActivateButton && (
+            <PaymentButton onClick={activateButtonAction}>
+              Activate
+            </PaymentButton>
+          )}
+          {hasDeactivateButton && (
+            <PaymentButton onClick={deactivateButtonAction}>
+              Deactivate
+            </PaymentButton>
+          )}
+        </div>
       </div>
     </div>
   );

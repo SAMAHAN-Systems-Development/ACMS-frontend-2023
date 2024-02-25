@@ -20,6 +20,7 @@ const config: Config = {
       navyBlue: '#181842',
       blue: '#7A92C2',
       white: '#ffffff',
+      black: '#000000',
     },
   },
   plugins: [addDynamicIconSelectors()],
