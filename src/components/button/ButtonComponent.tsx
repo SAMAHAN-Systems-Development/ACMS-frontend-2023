@@ -1,16 +1,16 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 interface Props{
     text: string;
     type: string;
     isDisabled: boolean;
+    onClick: () => void;
 }
 
-export const ButtonComponent:React.FC<Props> = ({text, type, isDisabled}) => {
-    console.log('type:', type);
-    console.log('isDisabled:', isDisabled);
+export const ButtonComponent:React.FC<Props> = ({text, type, isDisabled, onClick}) => {
     return (
         <button 
+                onClick={onClick}
                 className={`px-4 py-1 text-slate-50 font-semibold rounded-lg  
                 ${type === 'primary' && !isDisabled
                     ? 'bg-navyBlue text-white' 
