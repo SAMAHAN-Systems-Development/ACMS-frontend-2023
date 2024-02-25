@@ -1,8 +1,15 @@
 import React from 'react'
 
-const AddEventNavbarButton = () => {
+type Props = {
+    text: String,
+
+}
+
+const AddEventNavbarButton = ({ text }: Props) => {
     return (
-        <div></div>
+        <button className='p-5'>
+            {text}
+        </button>
     )
 }
 

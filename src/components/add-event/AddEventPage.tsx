@@ -5,22 +5,44 @@ import * as Switch from '@radix-ui/react-switch';
 import * as Form from '@radix-ui/react-form';
 import AddEventInput from '@/components/add-event/components/AddEventInput';
 import AddEventNavBar from '@/components/add-event/components/AddEventNavBar';
-
+import { Event as ACMSEvent } from '@/types/types'
 // title, description, date, crowd limit, requires-payment-switch, price
 
 
 const AddEventPage = () => {
 
-    const [event, setEvent] = useState({})
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
+    const [event, setEvent] = useState({} as ACMSEvent)
 
+
+    const getInput = (elements: HTMLFormControlsCollection, name: string): HTMLInputElement => {
+        return elements.namedItem(name) as HTMLInputElement
+    }
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        let elements: HTMLFormControlsCollection = e.currentTarget.elements
+        // const tokenQuery = useQuery<string>({
+        //     queryKey: ['jwt'], 
+        // })
+        setEvent({
+            title: getInput(elements, "title").value,
+            date: getInput(elements, "date").value,
+            description: getInput(elements, "description").value,
+            max_participants: Number(getInput(elements, "crowd_limit").value),
+            requires_payment: Boolean(getInput(elements, "requires_payment").value),
+            price: getInput(elements, "price").value,
+            is_active: true,
+            students: [],
+            createdAt: "",
+            updatedAt: "",
+            form_name: false,
+            id: "",
+        } as ACMSEvent)
         alert((e.currentTarget.elements.namedItem('title') as HTMLInputElement).value)
-        // post()
     }
 
     const post = async () => {
-        const response = await fetch('/api/event', {
+        const response = await fetch(`/${BACKEND_URL}/event`, {
             method: 'POST',
             body: JSON.stringify({ event }),
             headers: {
@@ -36,11 +58,9 @@ const AddEventPage = () => {
     return (
         <>
             <AddEventNavBar />
-            <Switch.Root className='w-10 h-10'>
-                <Switch.Thumb />
-            </Switch.Root>
+
             <div className='flex justify-center items-center h-screen flex-col gap-8'>
-                <h1 className=' font-bold'>Add new event</h1>
+                <h1 className=' font-bold text-3xl uppercase'>Add new event</h1>
                 <div>
                     <Form.Root onSubmit={onSubmit}>
                         <Form.Field className="FormField" name="title">
