@@ -10,7 +10,7 @@ import PaymentButton from '@/components/payments/PaymentButton';
 import PaymentsCard from '@/components/payments/PaymentsCard';
 import Checkbox from '@/components/ui/Checkbox';
 import Pagination from '@/components/ui/Pagination';
-import type { Payment } from '@/types/types';
+import type { Student } from '@/types/types';
 import {
   acceptPayments,
   declinePayments,
@@ -55,18 +55,18 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
     return fetchDeclinedPayments(token, page);
   };
 
-  const paymentsQuery = useQuery<{ maxPage: number; payments: Payment[] }>({
+  const paymentsQuery = useQuery<{ maxPage: number; payments: Student[] }>({
     queryKey: ['payments', paymentPageType, { page }],
     queryFn: queryFn,
   });
 
-  const { payments: listOfPayments, maxPage } = paymentsQuery.data || {
+  const { payments: listOfStudents, maxPage } = paymentsQuery.data || {
     payments: [],
     maxPage: 1,
   };
 
   const selectAllButtonAction = () => {
-    setCheckedCards(listOfPayments.map((payment) => payment.id));
+    setCheckedCards(listOfStudents.map((student) => student.paymentId));
   };
 
   const unselectAllButtonAction = () => {
@@ -151,8 +151,8 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
           </h1>
           <div
             onClick={
-              listOfPayments.length === checkedCards.length &&
-              listOfPayments.length !== 0
+              listOfStudents.length === checkedCards.length &&
+              listOfStudents.length !== 0
                 ? unselectAllButtonAction
                 : selectAllButtonAction
             }
@@ -163,8 +163,8 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
           >
             <Checkbox
               checked={
-                listOfPayments.length === checkedCards.length &&
-                listOfPayments.length !== 0
+                listOfStudents.length === checkedCards.length &&
+                listOfStudents.length !== 0
               }
               onCheckedAction={() => {}}
             />
@@ -212,9 +212,9 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
           <Pagination page={page} setPage={setPage} maxPage={maxPage} />
         </div>
         <div className="flex gap-8 flex-wrap justify-center">
-          {listOfPayments.map((payment: Payment, index: number) => (
+          {listOfStudents.map((student: Student, index: number) => (
             <PaymentsCard
-              key={payment.id + index}
+              key={student.paymentId + index}
               hasRestoreButton={
                 paymentPageType === 'accepted' || paymentPageType === 'declined'
               }
@@ -223,7 +223,7 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
               hasCheckbox={true}
               checkedCards={checkedCards}
               setCheckedCards={setCheckedCards}
-              payment={payment}
+              student={student}
               paymentPageType={paymentPageType}
               page={page}
             />

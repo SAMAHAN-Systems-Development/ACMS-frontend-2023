@@ -9,9 +9,9 @@ import {
 } from '@tanstack/react-query';
 
 import PaymentsPage from '@/components/payments/PaymentsPage';
+import Navigation from '@/components/ui/Navigation';
 import { fetchDeclinedPayments } from '@/utilities/fetch/payment';
 import { fetchUser } from '@/utilities/fetch/user';
-import Navigation from '@/components/ui/Navigation';
 
 const PageFinal = async () => {
   const queryClient = new QueryClient();

@@ -9,14 +9,14 @@ import ModalWrapper from '@/components/ui/ModalWrapper';
 
 import PaymentsCard from '@/components/payments/PaymentsCard';
 import Button from '@/components/ui/Button';
-import type { Payment } from '@/types/types';
+import type { Student } from '@/types/types';
 
 type PaymentsModalProps = {
-  listOfPayments: Payment[];
+  listOfStudents: Student[];
   type: string;
 };
 
-const PaymentsModal: FC<PaymentsModalProps> = ({ listOfPayments, type }) => {
+const PaymentsModal: FC<PaymentsModalProps> = ({ listOfStudents, type }) => {
   return (
     <Dialog.Root>
       <Dialog.Trigger>
@@ -33,10 +33,10 @@ const PaymentsModal: FC<PaymentsModalProps> = ({ listOfPayments, type }) => {
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-              {listOfPayments.map((payment: Payment) => (
+              {listOfStudents.map((student: Student) => (
                 <PaymentsCard
-                  key={payment.id}
-                  payment={payment}
+                  key={student.id}
+                  student={student}
                   page={1}
                   paymentPageType="accepted"
                 />
