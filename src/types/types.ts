@@ -23,7 +23,7 @@ export type Event = {
   date: string;
   description: string;
   form_name: boolean;
-  id: string;
+  id: number;
   is_active: boolean;
   max_participants: number;
   price: string;

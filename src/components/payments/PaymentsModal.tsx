@@ -43,8 +43,6 @@ const PaymentsModal: FC<PaymentsModalProps> = ({
     queryFn: queryFn,
   });
 
-  console.log(paymentsQuery.data);
-
   const isEmpty =
     paymentsQuery.data?.payments && paymentsQuery.data.payments.length == 0;
 

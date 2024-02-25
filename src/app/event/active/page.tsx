@@ -9,7 +9,7 @@ import {
 } from '@tanstack/react-query';
 
 import EventPage from '@/components/event/EventPage';
-import { fetchInactiveEvents } from '@/utilities/fetch/event';
+import { fetchActiveEvents } from '@/utilities/fetch/event';
 import { fetchUser } from '@/utilities/fetch/user';
 
 const PageFinal = async () => {
@@ -19,8 +19,8 @@ const PageFinal = async () => {
   const user = await fetchUser(supabase);
 
   await queryClient.prefetchQuery({
-    queryKey: ['events', 'inactive', { page: 1 }],
-    queryFn: () => fetchInactiveEvents(user.accessToken, 1),
+    queryKey: ['events', 'active', { page: 1 }],
+    queryFn: () => fetchActiveEvents(user.accessToken, 1),
   });
 
   await queryClient.prefetchQuery({
@@ -30,7 +30,7 @@ const PageFinal = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <EventPage eventType="inactive" />
+      <EventPage eventType="active" />
     </HydrationBoundary>
   );
 };
