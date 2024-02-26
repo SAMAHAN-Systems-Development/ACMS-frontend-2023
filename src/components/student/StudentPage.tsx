@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import * as qrcode from 'qrcode';
 
-import { Button } from '@/components/ui/Button';
+import Button from '@/components/ui/Button';
 import type { Student } from '@/types/types';
 import { fetchStudent, fetchStudentOnEvent } from '@/utilities/fetch/student';
 
