@@ -10,13 +10,7 @@ import { activateEvents, inactivateEvents } from '@/utilities/fetch/event';
 
 type propTypes = {
   event: Event;
-  // eventDescription: string;
-  // eventId: string;
   eventPageType: 'active' | 'inactive';
-  // eventPrice: string;
-  // eventTitle: string;
-  // maxParticipants: number;
-  // numberOfParticipantsRegistered: number;
   page: number;
   hasActivateButton?: boolean;
   hasDeactivateButton?: boolean;
@@ -99,6 +93,10 @@ const EventCard: React.FC<propTypes> = ({
     activateEventsMutation.mutate();
   };
 
+  const scanQrButtonAction = () => {
+    router.push(`/event/qr-scan/${event.id}`);
+  };
+
   return (
     <div className="relative w-[25rem] md:h-[22rem] h-auto rounded-xl border-blue border-2 shadow-[2px_0px_4px_0px_rgba(0,0,0,0.25),0px_4px_4px_0px_rgba(0,0,0,0.25)]">
       <div className="flex flex-col p-4 gap-4 justify-between h-full">
@@ -122,7 +120,7 @@ const EventCard: React.FC<propTypes> = ({
         </div>
         <div className="flex gap-4">
           {hasScanQrButton && (
-            <PaymentButton onClick={() => {}}>Scan Qr</PaymentButton>
+            <PaymentButton onClick={scanQrButtonAction}>Scan QR</PaymentButton>
           )}
           {hasViewButton && (
             <PaymentButton onClick={viewButtonOnClick}>View</PaymentButton>

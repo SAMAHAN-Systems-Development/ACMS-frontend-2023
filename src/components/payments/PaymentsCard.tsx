@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import PaymentButton from '@/components/payments/PaymentButton';
 import Checkbox from '@/components/ui/Checkbox';
-import type { Payment } from '@/types/types';
+import type { Student } from '@/types/types';
 import {
   acceptPayments,
   declinePayments,
@@ -15,8 +15,8 @@ import {
 
 type propTypes = {
   page: number;
-  payment: Payment;
   paymentPageType: 'accepted' | 'declined' | 'pending';
+  student: Student;
   checkedCards?: number[];
   hasAcceptButton?: boolean;
   hasCheckbox?: boolean;
@@ -29,17 +29,17 @@ const PaymentsCard: React.FC<propTypes> = ({
   hasRestoreButton,
   hasCheckbox,
   checkedCards,
-  payment,
+  student,
   setCheckedCards,
   paymentPageType,
   page,
   hasDeclineButton,
   hasAcceptButton,
 }) => {
-  const eventPrice = payment.event.price;
-  const eventTitle = payment.event.title;
-  const studentName = `${payment.firstName} ${payment.lastName}`;
-  const paymentPhotoUrl = payment.payment.photo_src;
+  const eventPrice = student.event.price;
+  const eventTitle = student.event.title;
+  const studentName = `${student.firstName} ${student.lastName}`;
+  const paymentPhotoUrl = student.payment.photo_src;
   const tokenQuery = useQuery<string>({
     queryKey: ['jwt'],
   });
@@ -49,7 +49,7 @@ const PaymentsCard: React.FC<propTypes> = ({
 
   const restorePaymentsMutation = useMutation({
     mutationFn: async () => {
-      await restorePayments(token, [payment.id]);
+      await restorePayments(token, [student.paymentId]);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -62,7 +62,7 @@ const PaymentsCard: React.FC<propTypes> = ({
 
   const acceptPaymentsMutation = useMutation({
     mutationFn: async () => {
-      await acceptPayments(token, [payment.id]);
+      await acceptPayments(token, [student.paymentId]);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -75,7 +75,7 @@ const PaymentsCard: React.FC<propTypes> = ({
 
   const declinePaymentsMutation = useMutation({
     mutationFn: async () => {
-      await declinePayments(token, [payment.id]);
+      await declinePayments(token, [student.paymentId]);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -104,14 +104,16 @@ const PaymentsCard: React.FC<propTypes> = ({
   let checked = false;
   let onCheckedAction = () => {};
   if (checkedCards && setCheckedCards) {
-    checked = checkedCards.includes(payment.id);
+    checked = checkedCards.includes(student.paymentId);
     onCheckedAction = () => {
-      if (checkedCards.includes(payment.id)) {
+      if (checkedCards.includes(student.paymentId)) {
         setCheckedCards(
-          checkedCards.filter((checkedCard) => checkedCard !== payment.id)
+          checkedCards.filter(
+            (checkedCard) => checkedCard !== student.paymentId
+          )
         );
       } else {
-        setCheckedCards([...checkedCards, payment.id]);
+        setCheckedCards([...checkedCards, student.paymentId]);
       }
     };
   }

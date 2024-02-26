@@ -39,13 +39,35 @@ export const fetchStudent = async (token: string, uuid: string) => {
   if (!response.ok) {
     throw new Error(`Error in fetching student id. Status: ${response.status}`);
   }
-  let responseData = null
-  try{
-    responseData = await response.json();
 
-  }catch(err){
-    return {student: responseData, isFound:false }
+  try {
+    const responseData = await response.json();
+    return { student: responseData, isFound: true };
+  } catch (err) {
+    return { student: {}, isFound: false };
+  }
+};
+
+export const fetchStudentOnEvent = async (
+  token: string,
+  uuid: string,
+  eventId: number
+) => {
+  const response = await fetch(`${backendUrl}/student/${uuid}/${eventId}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    return { student: {}, isFound: false };
   }
 
-  return { student: responseData, isFound:true };
+  try {
+    const responseData = await response.json();
+    return { student: responseData, isFound: true };
+  } catch (err) {
+    return { student: {}, isFound: false };
+  }
 };
