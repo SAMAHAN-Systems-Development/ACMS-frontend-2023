@@ -10,7 +10,7 @@ type ModalWrapperProps = {
 
 const ModalWrapper: React.FC<ModalWrapperProps> = ({ children }) => {
   return (
-    <Dialog.Overlay className="fixed top-0 right-0 bottom-0 left-0 bg-black/30 flex justify-center items-center  z-[9999]">
+    <Dialog.Overlay className="fixed top-0 right-0 bottom-0 left-0 bg-black/30 flex justify-center items-center z-[9999]">
       <Dialog.Content className="overflow-y-auto rounded">
         {children}
       </Dialog.Content>

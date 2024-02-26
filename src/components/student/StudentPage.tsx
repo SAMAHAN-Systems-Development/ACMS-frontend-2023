@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import * as qrcode from 'qrcode';
 
+import { Button } from '@/components/ui/Button';
 import type { Student } from '@/types/types';
 import { fetchStudent, fetchStudentOnEvent } from '@/utilities/fetch/student';
 
@@ -30,7 +31,7 @@ export const StudentPage = () => {
         : fetchStudent(token, uuid),
   });
   const backButtonAction = () => {
-    router.back();
+    router.push(`/event/qr-scan/${eventId}`);
   };
 
   useEffect(() => {
@@ -48,8 +49,7 @@ export const StudentPage = () => {
   const { student, isFound } = studentQuery.data;
 
   return (
-    <div className="w-full min-h-full flex flex-col items-center justify-center">
-      <button onClick={backButtonAction}>Back</button>
+    <div className="w-full min-h-full flex flex-col items-center justify-center gap-8">
       <div className="w-full h-full flex items-center justify-center">
         {isFound ? (
           <div className="lg:w-4/12 md:w-6/12 w-8/12 flex flex-row items-center justify-center text-center gap-8 border-navyBlue border-solid border-2 rounded-3xl p-12">
@@ -90,6 +90,7 @@ export const StudentPage = () => {
           </div>
         )}
       </div>
+      <Button onClick={backButtonAction}>Scan Again</Button>
     </div>
   );
 };

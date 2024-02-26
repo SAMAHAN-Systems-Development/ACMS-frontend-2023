@@ -1,20 +1,23 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 
-import type { Event } from '@/types/types';
+import StudentViewModal from '@/components/event/StudentViewModal';
+import type { Event, Student } from '@/types/types';
 import { fetchEventData } from '@/utilities/fetch/event';
+import { fetchStudentOnEvent } from '@/utilities/fetch/student';
 
 type propTypes = {
   eventId: string;
 };
 
+// let hasScanned = false;
 const QrScanPage: React.FC<propTypes> = ({ eventId }) => {
-  const router = useRouter();
-  // const reactRouter = useReactRouter();
+  const [isStudentModalOpen, setIsStudentModalOpen] = useState(false);
+  const [hasScanned, setHasScanned] = useState(false);
   const tokenQuery = useQuery<string>({
     queryKey: ['jwt'],
   });
@@ -33,29 +36,58 @@ const QrScanPage: React.FC<propTypes> = ({ eventId }) => {
     // console.error(errorMessage);
   };
 
-  useEffect(() => {
-    const onScanSuccess = (decodedText: string) => {
-      router.push(`/student?uuid=${decodedText}&eventId=${eventId}`);
-    };
+  const studentMutation = useMutation({
+    mutationFn: async (uuid: string) => {
+      return await fetchStudentOnEvent(token, uuid, Number(eventId));
+    },
+  });
 
+  const onScanSuccess = async (
+    decodedText: string,
+    scanner: Html5QrcodeScanner
+  ) => {
+    if (!hasScanned) {
+      studentMutation.mutate(decodedText);
+      setIsStudentModalOpen(true);
+      setHasScanned(true);
+      await scanner.clear();
+    }
+  };
+
+  useEffect(() => {
     const scanQrButtonAction = async () => {
-      const config = { fps: 30, qrbox: { width: 300, height: 300 } };
+      const config = { fps: 30, qrbox: { width: 200, height: 200 } };
       const scanner = new Html5QrcodeScanner('qr-reader', config, false);
-      scanner.render(onScanSuccess, onScanError);
+      scanner.render(
+        (decodedText: string) => onScanSuccess(decodedText, scanner),
+        onScanError
+      );
     };
 
     void scanQrButtonAction();
-  }, [eventId, router]);
+  }, [hasScanned]);
+
+  // if (hasScanned && !studentMutation.data) return null;
+
+  const studentData = studentMutation.data || { student: {}, isFound: false };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full bg-white p-8">
-      <div className="flex flex-col items-center justify-center p-8 w-full">
-        <h1 className="text-3xl font-bold">{eventTitle}</h1>
+    <div className="flex flex-col items-center justify-center w-full h-full bg-white">
+      <div className="flex flex-col items-center justify-center w-full">
+        <h1 className="text-3xl font-bold p-8">{eventTitle}</h1>
         <div
           className="border-2 border-black rounded-md w-full max-w-[50rem] h-[40rem]"
           id="qr-reader"
         />
       </div>
+      <StudentViewModal
+        student={studentData.student}
+        isStudentModalOpen={isStudentModalOpen}
+        isFound={studentData.isFound}
+        setIsStudentModalOpen={setIsStudentModalOpen}
+        setHasScanned={setHasScanned}
+        studentMutation={studentMutation}
+      />
     </div>
   );
 };
