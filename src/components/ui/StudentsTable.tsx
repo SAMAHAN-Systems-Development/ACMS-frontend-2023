@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import type { ChangeEvent } from "react";
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import type { ChangeEvent } from 'react';
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 
-import Button from "@/components/ui/Button";
-import type { Student } from "@/types/types";
+import Button from '@/components/ui/Button';
+import type { Student } from '@/types/types';
 
 const PAGE_SIZE = 10;
 
 const StudentsTable = ({ list }: { list: Student[] }) => {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [shownStudents, setShownStudents] = useState<Student[]>([]);
 
@@ -65,7 +65,7 @@ const StudentsTable = ({ list }: { list: Student[] }) => {
               <th className="w-[30%] py-5">UUID</th>
               <th className="w-[30%]">Name</th>
               <th className="w-[30%]">Year & Course</th>
-              <th className="w-[10%]">{""}</th>
+              <th className="w-[10%]">{''}</th>
             </tr>
           </thead>
           <tbody>
@@ -81,7 +81,7 @@ const StudentsTable = ({ list }: { list: Student[] }) => {
                 <td>{student.year_and_course}</td>
                 <td className="border-l-2">
                   <Link href={`/student/${student.uuid}`}>
-                    <Button text="View More" />
+                    <Button onClick={() => {}}>View More</Button>
                   </Link>
                 </td>
               </tr>
