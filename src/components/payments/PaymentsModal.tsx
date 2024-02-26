@@ -11,7 +11,7 @@ import ModalWrapper from '@/components/ui/ModalWrapper';
 import PaymentsCard from '@/components/payments/PaymentsCard';
 import Button from '@/components/ui/Button';
 import Pagination from '@/components/ui/Pagination';
-import type { Payment } from '@/types/types';
+import type { Student } from '@/types/types';
 import {
   fetchAcceptedEventPayments,
   fetchDeclinedEventPayments,
@@ -50,7 +50,7 @@ const PaymentsModal: FC<PaymentsModalProps> = ({
     <Dialog.Root>
       <Dialog.Trigger>
         <div className="w-fit">
-          <Button text={`View ${paymentType} payments`} />
+          <Button onClick={() => {}}>{`View ${paymentType} payments`}</Button>
         </div>
       </Dialog.Trigger>
       <Dialog.Portal>
@@ -70,10 +70,10 @@ const PaymentsModal: FC<PaymentsModalProps> = ({
             </div>
             {!isEmpty ? (
               <div className="grid grid-cols-1 lg:grid-cols-2">
-                {paymentsQuery.data?.payments?.map((payment: Payment) => (
-                  <div key={payment.id} className="cols-1 mx-auto py-2">
+                {paymentsQuery.data?.payments?.map((student: Student) => (
+                  <div key={student.id} className="cols-1 mx-auto py-2">
                     <PaymentsCard
-                      payment={payment}
+                      student={student}
                       page={1}
                       paymentPageType="accepted"
                     />
