@@ -1,7 +1,9 @@
+/* eslint-disable linebreak-style */
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 
 import * as Form from '@radix-ui/react-form';
+import { createClient } from '@supabase/supabase-js';
 
 import InputFile from '@/components/ui/InputFile';
 
@@ -14,6 +16,34 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
   eventName,
   requiresPayment,
 }) => {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleChange = async (event: any) => {
+    const supabaseUrl =
+      process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      'https://acms-backend-2023.onrender.com';
+    const supabaseKey =
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqcWxveHB5a25xY2NyZXR6b3l0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDIzMDI1NjgsImV4cCI6MjAxNzg3ODU2OH0.s4upzMGDuRJ4l-kRK0HMCB6_iSy1ZKATYnzBW2dnoWA';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    setSelectedFile(event.target.files[0]);
+
+    try {
+      if (selectedFile) {
+        const { data, error } = await supabase.storage
+          .from('payment')
+          .upload(selectedFile.name, selectedFile);
+        if (error) {
+          console.error('Error uploading file:', error);
+        } else {
+          console.log('File uploaded successfully: ', data);
+        }
+      }
+    } catch (error) {
+      console.error('Error during file upload:', error);
+    }
+  };
+
   return (
     <div className="flex flex-col justify-center">
       <div className=" flex flex-col items-center border-y-2 py-5">
@@ -107,7 +137,12 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
             </Form.Control>
           </Form.Field>
 
-          {requiresPayment && <InputFile />}
+          {requiresPayment && (
+            <InputFile
+              handleChange={handleChange}
+              selectedFile={selectedFile}
+            />
+          )}
 
           <div className="flex justify-end mt-8">
             <Form.Submit asChild>
