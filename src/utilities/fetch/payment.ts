@@ -106,3 +106,53 @@ export const declinePayments = async (token: string, paymentIds: number[]) => {
 
   return true;
 };
+
+export const fetchAcceptedEventPayments = async (
+  token: string,
+  page: number,
+  eventId: number
+) => {
+  const response = await fetch(
+    `${backendUrl}/payment/accepted/${eventId}?page=${page}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch accepted event payments.');
+  }
+
+  const responseData = await response.json();
+  const { acceptedPayments, maxPage } = responseData;
+
+  return { payments: acceptedPayments, maxPage };
+};
+
+export const fetchDeclinedEventPayments = async (
+  token: string,
+  page: number,
+  eventId: number
+) => {
+  const response = await fetch(
+    `${backendUrl}/payment/declined/${eventId}?page=${page}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch declined event payments.');
+  }
+
+  const responseData = await response.json();
+  const { declinedPayments, maxPage } = responseData;
+
+  return { payments: declinedPayments, maxPage };
+};

@@ -1,5 +1,5 @@
-import type { FC } from 'react';
-import React from 'react';
+import type { FC } from "react";
+import React from "react";
 
 type ButtonProps = {
   text: string;
@@ -7,7 +7,7 @@ type ButtonProps = {
 
 const Button: FC<ButtonProps> = ({ text }) => {
   return (
-    <div className="bg-red-500 font-bold capitalize w-fit py-2 px-4 rounded-xl">
+    <div className="bg-navyBlue text-white font-bold capitalize w-fit py-2 px-4 rounded-xl">
       {text}
     </div>
   );
