@@ -31,7 +31,7 @@ function Navigation() {
   const navItems = userType === 'admin' ? [homeInfo, eventsInfo] : [homeInfo];
 
   return (
-    <nav className="flex items-center border-b-2 justify-between">
+    <nav className="w-full flex items-center border-b-2 justify-between">
       <div className="flex items-center px-2">
         <div className="h-6 w-6 bg-[#181842] rounded-full mr-2" />
         <span className="text-lg color-#181842 font-bold">ACMS</span>

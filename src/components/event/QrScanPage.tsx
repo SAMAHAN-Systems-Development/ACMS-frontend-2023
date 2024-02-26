@@ -1,12 +1,11 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 
 import StudentViewModal from '@/components/event/StudentViewModal';
-import type { Event, Student } from '@/types/types';
+import type { Event } from '@/types/types';
 import { fetchEventData } from '@/utilities/fetch/event';
 import { fetchStudentOnEvent } from '@/utilities/fetch/student';
 
@@ -14,7 +13,6 @@ type propTypes = {
   eventId: string;
 };
 
-// let hasScanned = false;
 const QrScanPage: React.FC<propTypes> = ({ eventId }) => {
   const [isStudentModalOpen, setIsStudentModalOpen] = useState(false);
   const [hasScanned, setHasScanned] = useState(false);
@@ -31,10 +29,6 @@ const QrScanPage: React.FC<propTypes> = ({ eventId }) => {
 
   const eventData = eventDataQuery.data || { title: '' };
   const eventTitle = eventData.title;
-
-  const onScanError = () => {
-    // console.error(errorMessage);
-  };
 
   const studentMutation = useMutation({
     mutationFn: async (uuid: string) => {
@@ -60,14 +54,12 @@ const QrScanPage: React.FC<propTypes> = ({ eventId }) => {
       const scanner = new Html5QrcodeScanner('qr-reader', config, false);
       scanner.render(
         (decodedText: string) => onScanSuccess(decodedText, scanner),
-        onScanError
+        () => {}
       );
     };
 
     void scanQrButtonAction();
   }, [hasScanned]);
-
-  // if (hasScanned && !studentMutation.data) return null;
 
   const studentData = studentMutation.data || { student: {}, isFound: false };
 

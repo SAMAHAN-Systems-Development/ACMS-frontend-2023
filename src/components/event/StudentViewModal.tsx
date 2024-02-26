@@ -2,13 +2,11 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 import * as Dialog from '@radix-ui/react-dialog';
+import type { UseMutationResult } from '@tanstack/react-query';
 import * as qrcode from 'qrcode';
-
-import ModalWrapper from '@/components/ui/ModalWrapper';
 
 import { Button } from '@/components/ui/Button';
 import type { Student } from '@/types/types';
-import { UseMutationResult } from '@tanstack/react-query';
 
 type propTypes = {
   isFound: boolean;
@@ -16,10 +14,14 @@ type propTypes = {
   setHasScanned: React.Dispatch<React.SetStateAction<boolean>>;
   setIsStudentModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   student: Student;
-  studentMutation: UseMutationResult<{
-    isFound: boolean;
-    student: any;
-  }>;
+  studentMutation:
+    | UseMutationResult<{
+        isFound: boolean;
+        student: any;
+      }>
+    | Error
+    | string
+    | unknown;
 };
 
 const StudentViewModal: React.FC<propTypes> = ({
@@ -52,10 +54,13 @@ const StudentViewModal: React.FC<propTypes> = ({
     <Dialog.Root open={isStudentModalOpen}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed top-0 right-0 bottom-0 left-0 bg-black/30 flex justify-center items-center z-[9999]">
-          <Dialog.Content className="w-full h-[40rem] overflow-y-auto rounded bg-white flex justify-center items-center">
+          <Dialog.Content className="w-full h-[40rem] max-w-[50rem] overflow-y-auto rounded bg-white flex justify-center items-center">
             <div className="w-full h-full flex flex-col items-center gap-8 bg-white p-4">
               <Button onClick={scanAgainButtonAction}>Scan Again</Button>
-              {studentMutation.isSuccess ? (
+              {studentMutation &&
+              typeof studentMutation === 'object' &&
+              'isSuccess' in studentMutation &&
+              studentMutation.isSuccess ? (
                 <div className="min-w-full flex items-center justify-center bg-white">
                   {isFound ? (
                     <div className="w-full h-full flex flex-col items-center justify-center text-center gap-8 border-navyBlue mb-8 border-solid border-2 rounded-3xl p-12">
