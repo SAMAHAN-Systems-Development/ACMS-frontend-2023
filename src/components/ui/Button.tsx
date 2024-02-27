@@ -4,21 +4,24 @@ interface Props {
   children: React.ReactNode;
   onClick: () => void;
   isDisabled?: boolean;
-  type?: string;
+  type?: 'button' | 'submit' | 'reset' | undefined;
+  variant?: string;
 }
 
 const Button: React.FC<Props> = ({
   children,
-  type = 'primary',
+  variant = 'primary',
+  type = 'button',
   isDisabled = false,
   onClick,
 }) => {
   return (
     <button
       onClick={onClick}
-      className={`px-4 py-1 text-slate-50 font-semibold rounded-lg  
+      type={type}
+      className={`w-full px-4 py-1 text-slate-50 font-semibold rounded-lg  
         ${
-          type === 'primary' && !isDisabled
+          variant === 'primary' && !isDisabled
             ? 'bg-navyBlue text-white'
             : isDisabled
             ? 'bg-blue text-white border-none cursor-not-allowed disabled'

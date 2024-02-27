@@ -1,50 +1,55 @@
 'use client';
+import { useState } from 'react';
+
 import * as Form from '@radix-ui/react-form';
 
-const LoginForm = () => {
-  return (
-    <div className="flex flex-col items-center justify-center mt-20">
-      <h1 className="font-semibold text-lg">Login Form</h1>
-      <Form.Root className="FormRoot mt-4" action="/auth/login" method="post">
-        <Form.Field className="FormField flex flex-col" name="email">
-          <Form.Label className="FormLabel font-semibold">Email</Form.Label>
-          <Form.Message
-            className="FormMessage text-xs font-light text-red-500"
-            match="valueMissing"
-          >
-            Please enter your Email
-          </Form.Message>
-          <Form.Control asChild>
-            <input
-              className="Input mt-2 border-2 rounded"
-              type="text"
-              required
-            />
-          </Form.Control>
-        </Form.Field>
+import Button from '@/components/ui/Button';
+import TextField from '@/components/ui/TextField';
 
-        <Form.Field className="FormField flex flex-col mt-4" name="password">
-          <Form.Label className="FormLabel font-semibold">Password</Form.Label>
-          <Form.Message
-            className="FormMessage text-xs font-light text-red-500"
-            match="valueMissing"
-          >
-            Please enter your password
-          </Form.Message>
-          <Form.Control asChild>
-            <input
-              className="Input mt-2 border-2 rounded"
-              type="password"
-              required
-            />
-          </Form.Control>
-        </Form.Field>
-        <Form.Submit asChild>
-          <button className="Button px-2 py-1 bg-slate-900 rounded hover:bg-purple-600 text-white mt-4">
-            Login
-          </button>
-        </Form.Submit>
-      </Form.Root>
+const LoginForm = () => {
+  const [fieldValues, setFieldValues] = useState<{
+    email: string;
+    password: string;
+  }>({
+    email: '',
+    password: '',
+  });
+
+  const fieldOnChange = (event: React.ChangeEvent) => {
+    console.log(event);
+  };
+
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center gap-8 border-2 border-navyBlue px-24 pb-24 pt-32 rounded-3xl">
+        <h1 className="text-[2rem] font-semibold">LOGIN FORM</h1>
+        <form
+          className="w-[25rem] flex flex-col gap-4"
+          action="/auth/login"
+          method="post"
+        >
+          <TextField
+            label="Email"
+            name="email"
+            onChange={fieldOnChange}
+            value={fieldValues.email}
+          />
+
+          <TextField
+            label="Password"
+            name="password"
+            onChange={fieldOnChange}
+            value={fieldValues.password}
+          />
+          <div className="w-full flex justify-end mt-4">
+            <div className="w-[10rem]">
+              <Button type="submit" onClick={() => {}}>
+                Login
+              </Button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
