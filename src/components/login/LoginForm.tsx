@@ -14,8 +14,11 @@ const LoginForm = () => {
     password: '',
   });
 
-  const fieldOnChange = (event: React.ChangeEvent) => {
-    console.log(event);
+  const fieldOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFieldValues((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value,
+    }));
   };
 
   return (
