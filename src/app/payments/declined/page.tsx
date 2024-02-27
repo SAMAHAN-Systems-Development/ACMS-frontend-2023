@@ -1,3 +1,4 @@
+import React from 'react';
 import { cookies } from 'next/headers';
 
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
@@ -8,6 +9,7 @@ import {
 } from '@tanstack/react-query';
 
 import PaymentsPage from '@/components/payments/PaymentsPage';
+import Navigation from '@/components/ui/Navigation';
 import { fetchDeclinedPayments } from '@/utilities/fetch/payment';
 import { fetchUser } from '@/utilities/fetch/user';
 
@@ -30,6 +32,7 @@ const PageFinal = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      <Navigation />
       <PaymentsPage paymentPageType="declined" />
     </HydrationBoundary>
   );

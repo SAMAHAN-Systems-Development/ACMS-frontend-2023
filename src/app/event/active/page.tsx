@@ -8,21 +8,19 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 
-import PaymentsPage from '@/components/payments/PaymentsPage';
-import Navigation from '@/components/ui/Navigation';
-import { fetchPendingPayments } from '@/utilities/fetch/payment';
+import EventPage from '@/components/event/EventPage';
+import { fetchActiveEvents } from '@/utilities/fetch/event';
 import { fetchUser } from '@/utilities/fetch/user';
 
 const PageFinal = async () => {
   const queryClient = new QueryClient();
-
   const cookieStore = cookies();
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
   const user = await fetchUser(supabase);
 
   await queryClient.prefetchQuery({
-    queryKey: ['payments', 'pending', { page: 1 }],
-    queryFn: () => fetchPendingPayments(user.accessToken, 1),
+    queryKey: ['events', 'active', { page: 1 }],
+    queryFn: () => fetchActiveEvents(user.accessToken, 1),
   });
 
   await queryClient.prefetchQuery({
@@ -32,8 +30,7 @@ const PageFinal = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Navigation />
-      <PaymentsPage paymentPageType="pending" />
+      <EventPage eventType="active" />
     </HydrationBoundary>
   );
 };

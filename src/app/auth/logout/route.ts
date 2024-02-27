@@ -3,14 +3,14 @@ import { NextResponse } from 'next/server';
 
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
-export async function POST(request: Request) {
-  const requestUrl = new URL(request.url);
+export async function POST() {
+  const baseUrl = process.env.NEXT_APP_BASE_URL;
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
   await supabase.auth.signOut();
 
-  return NextResponse.redirect(`${requestUrl.origin}/login`, {
+  return NextResponse.redirect(`${baseUrl}/login`, {
     status: 301,
   });
 }
