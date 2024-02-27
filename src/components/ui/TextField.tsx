@@ -31,7 +31,7 @@ const TextFieldStyle = styled(BaseTextField)({
 type TextFieldProps = {
   label: string;
   name: string;
-  onChange: (event: React.ChangeEvent) => void;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   value: string;
   className?: string;
   id?: string;
