@@ -56,7 +56,10 @@ const StudentViewModal: React.FC<propTypes> = ({
         <Dialog.Overlay className="fixed top-0 right-0 bottom-0 left-0 bg-black/30 flex justify-center items-center z-[9999]">
           <Dialog.Content className="w-full h-[40rem] max-w-[50rem] overflow-y-auto rounded bg-white flex justify-center items-center">
             <div className="w-full h-full flex flex-col items-center gap-8 bg-white p-4">
-              <Button onClick={scanAgainButtonAction}>Scan Again</Button>
+              <div className="w-[10rem]">
+                <Button onClick={scanAgainButtonAction}>Scan Again</Button>
+              </div>
+
               {studentMutation &&
               typeof studentMutation === 'object' &&
               'isSuccess' in studentMutation &&
