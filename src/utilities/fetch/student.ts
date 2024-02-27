@@ -27,3 +27,47 @@ export const submitRegistration = async (
 
   return true;
 };
+
+export const fetchStudent = async (token: string, uuid: string) => {
+  const response = await fetch(`${backendUrl}/student/${uuid}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error in fetching student id. Status: ${response.status}`);
+  }
+
+  try {
+    const responseData = await response.json();
+    return { student: responseData, isFound: true };
+  } catch (err) {
+    return { student: {}, isFound: false };
+  }
+};
+
+export const fetchStudentOnEvent = async (
+  token: string,
+  uuid: string,
+  eventId: number
+) => {
+  const response = await fetch(`${backendUrl}/student/${uuid}/${eventId}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    return { student: {}, isFound: false };
+  }
+
+  try {
+    const responseData = await response.json();
+    return { student: responseData, isFound: true };
+  } catch (err) {
+    return { student: {}, isFound: false };
+  }
+};

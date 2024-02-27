@@ -1,47 +1,88 @@
 'use client';
 
 import type { FC } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
 
 import * as Dialog from '@radix-ui/react-dialog';
+import { useQuery } from '@tanstack/react-query';
 
 import ModalWrapper from '@/components/ui/ModalWrapper';
 
 import PaymentsCard from '@/components/payments/PaymentsCard';
 import Button from '@/components/ui/Button';
-import type { Payment } from '@/types/types';
+import Pagination from '@/components/ui/Pagination';
+import type { Student } from '@/types/types';
+import {
+  fetchAcceptedEventPayments,
+  fetchDeclinedEventPayments,
+} from '@/utilities/fetch/payment';
 
 type PaymentsModalProps = {
-  listOfPayments: Payment[];
-  type: string;
+  eventId: number;
+  paymentType: string;
+  token: string;
 };
 
-const PaymentsModal: FC<PaymentsModalProps> = ({ listOfPayments, type }) => {
+const PaymentsModal: FC<PaymentsModalProps> = ({
+  paymentType,
+  token,
+  eventId,
+}) => {
+  const [page, setPage] = useState(1);
+
+  const queryFn = () => {
+    if (paymentType === 'accepted') {
+      return fetchAcceptedEventPayments(token, page, eventId);
+    }
+
+    return fetchDeclinedEventPayments(token, page, eventId);
+  };
+
+  const paymentsQuery = useQuery({
+    queryKey: [`${paymentType}EventPayments`],
+    queryFn: queryFn,
+  });
+
+  const isEmpty =
+    paymentsQuery.data?.payments && paymentsQuery.data.payments.length == 0;
+
   return (
     <Dialog.Root>
       <Dialog.Trigger>
         <div className="w-fit">
-          <Button text={`View ${type} payments`} />
+          <Button onClick={() => {}}>{`View ${paymentType} payments`}</Button>
         </div>
       </Dialog.Trigger>
       <Dialog.Portal>
         <ModalWrapper>
-          <div className="bg-white p-5">
-            <div className="sticky top-0 bg-white/85 py-8">
+          <div className={`bg-white p-5 ${isEmpty && 'h-full'}`}>
+            <div className="sticky top-0 bg-white/85 py-2">
               <p className="capitalize  text-xl font-bold text-center">
-                {type} payments
+                {paymentType} payments
               </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-              {listOfPayments.map((payment: Payment) => (
-                <PaymentsCard
-                  key={payment.id}
-                  payment={payment}
-                  page={1}
-                  paymentPageType="accepted"
+              {!isEmpty && (
+                <Pagination
+                  maxPage={paymentsQuery.data?.maxPage}
+                  page={page}
+                  setPage={setPage}
                 />
-              ))}
+              )}
             </div>
+            {!isEmpty ? (
+              <div className="grid grid-cols-1 lg:grid-cols-2">
+                {paymentsQuery.data?.payments?.map((student: Student) => (
+                  <div key={student.id} className="cols-1 mx-auto py-2">
+                    <PaymentsCard
+                      student={student}
+                      page={1}
+                      paymentPageType="accepted"
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center">No payments.</div>
+            )}
           </div>
         </ModalWrapper>
       </Dialog.Portal>

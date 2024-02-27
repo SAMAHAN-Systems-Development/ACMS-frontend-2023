@@ -1,3 +1,4 @@
+import React from 'react';
 import { cookies } from 'next/headers';
 
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
@@ -14,6 +15,7 @@ import {
   fetchAllActiveTitleEvents,
 } from '@/utilities/fetch/event';
 import { fetchUser } from '@/utilities/fetch/user';
+import Navigation from '@/components/ui/Navigation';
 
 const Home = async () => {
   const queryClient = new QueryClient();
@@ -39,6 +41,7 @@ const Home = async () => {
   if (user.userType === 'facilitator') {
     return (
       <HydrationBoundary state={dehydrate(queryClient)}>
+        <Navigation />
         <FacilitatorHomePage />
       </HydrationBoundary>
     );
@@ -47,19 +50,13 @@ const Home = async () => {
   if (user.userType === 'cashier') {
     return (
       <HydrationBoundary state={dehydrate(queryClient)}>
+        <Navigation />
         <CashierHomePage />
       </HydrationBoundary>
     );
   }
 
-  return (
-    <form>
-      <p>{user.userType}</p>
-      <button formAction="/auth/logout" formMethod="post">
-        Logout
-      </button>
-    </form>
-  );
+  return <Navigation />;
 };
 
 export default Home;
