@@ -23,7 +23,6 @@ const TextFieldStyle = styled(BaseTextField)({
     },
   },
   '& input': {
-    fontWeight: 'bold',
     fontFamily: 'Work Sans, sans-serif',
     color: '#181842',
   },

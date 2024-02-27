@@ -20,13 +20,13 @@ const LoginForm = () => {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center relative">
-      <div className="flex flex-row gap-4 w-full border-navyBlue border-b-2 absolute top-0 py-2 px-4 items-center">
+      <div className="flex flex-row gap-2 w-full border-navyBlue border-b-2 absolute top-0 py-2 px-2 items-center">
         <Image
           src="/logo.png"
           alt="Logo Picture"
           height={200}
           width={200}
-          className="w-[2rem]"
+          className="w-[1.5rem]"
         />
         <h1 className="text-xl font-semibold">ACMS</h1>
       </div>

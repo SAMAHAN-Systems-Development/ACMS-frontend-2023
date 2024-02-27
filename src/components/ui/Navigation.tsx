@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import { useQuery } from '@tanstack/react-query';
@@ -32,9 +33,15 @@ function Navigation() {
 
   return (
     <nav className="w-full flex items-center border-b-2 justify-between">
-      <div className="flex items-center px-2">
-        <div className="h-6 w-6 bg-[#181842] rounded-full mr-2" />
-        <span className="text-lg color-#181842 font-bold">ACMS</span>
+      <div className="flex items-center px-2 gap-2">
+        <Image
+          src="/logo.png"
+          alt="Logo Picture"
+          height={200}
+          width={200}
+          className="w-[1.5rem]"
+        />
+        <h1 className="text-xl font-semibold">ACMS</h1>
       </div>
       <ul className="flex items-center">
         {navItems.map((item) => (
