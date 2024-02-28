@@ -4,21 +4,31 @@ import type { FormEvent } from 'react';
 import React, { useState } from 'react';
 
 import { createClient } from '@supabase/supabase-js';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import InputFile from '@/components/ui/InputFile';
+import { fetchEventData } from '@/utilities/fetch/event';
 import { submitRegistration } from '@/utilities/fetch/student';
 
-interface RegistrationFormProps {
-  eventName: string;
-  requiresPayment: boolean;
-}
-
-const RegistrationForm: React.FC<RegistrationFormProps> = ({
-  eventName,
+const RegistrationForm = ({
+  id,
   requiresPayment,
+}: {
+  id: string;
+  requiresPayment: Boolean;
 }) => {
+  const tokenQuery = useQuery<string>({
+    queryKey: ['jwt'],
+  });
+  const token = tokenQuery.data || '';
+
+  const eventData = useQuery({
+    queryKey: ['event'],
+    queryFn: () => fetchEventData(token, id),
+  });
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
   const [registrationData, setRegistrationData] = useState<{
     email: string;
     eventId: number;
@@ -33,16 +43,8 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
     year_and_course: '',
     email: '',
     isSubmittedByStudent: true,
-    photo_src: selectedFile!.name,
-    eventId: 0,
-  });
-  const tokenQuery = useQuery<string>({
-    queryKey: ['jwt'],
-  });
-
-  const token = tokenQuery.data || '';
-  const submitRegistrationMutation = useMutation({
-    mutationFn: submitRegistration(token, registrationData),
+    photo_src: selectedFile?.name || '',
+    eventId: eventData.data.title,
   });
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,13 +82,13 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    submitRegistrationMutation.mutate();
+    await submitRegistration(token, registrationData);
   };
 
   return (
     <>
       <div className="flex flex-col items-center border-y-2 py-5">
-        <h1 className="font-semibold text-2xl">{eventName}</h1>
+        <h1 className="font-semibold text-2xl">{eventData.data.title}</h1>
         <h1 className="font-semibold text-5xl">Registration Form</h1>
       </div>
       <div className="flex flex-col items-center mt-20">
