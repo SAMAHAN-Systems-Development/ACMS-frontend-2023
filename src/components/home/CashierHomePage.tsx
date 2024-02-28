@@ -1,8 +1,13 @@
 'use client';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
+import { MenuItem, type SelectChangeEvent } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
+import Button from '@/components/ui/Button';
+import Select from '@/components/ui/Select';
+import TextField from '@/components/ui/TextField';
 import { fetchAllActiveTitleEvents } from '@/utilities/fetch/event';
 import { submitRegistration } from '@/utilities/fetch/student';
 
@@ -41,17 +46,40 @@ const CashierHomePage = () => {
 
   const onFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    await submitRegistration(token, {
+
+    if (
+      inputData.email === '' ||
+      inputData.firstName === '' ||
+      inputData.lastName === '' ||
+      inputData.year_and_course === ''
+    ) {
+      toast.error('Please fill up all the fields');
+      return;
+    }
+
+    const hasSubmittedSuccessfully = await submitRegistration(token, {
       ...inputData,
       photo_src: '',
       isSubmittedByStudent: false,
     });
+
+    if (hasSubmittedSuccessfully) {
+      toast.success('Successfully submitted registration');
+      setInputData({
+        firstName: '',
+        lastName: '',
+        year_and_course: '',
+        email: '',
+        eventId: allEventTitle[0].id,
+      });
+    }
   };
 
   const inputOnChange = (
     event:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
+      | SelectChangeEvent<unknown>
   ) => {
     setInputData((prev) => ({
       ...prev,
@@ -60,68 +88,60 @@ const CashierHomePage = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col">
       <div className="p-8 w-full border-b-2">
         <h1 className="text-5xl text-navyBlue font-extrabold text-center">
           REGISTRATION FORM
         </h1>
       </div>
-      <div className="flex justify-center items-center flex-grow pb-12">
+      <div className="flex justify-center flex-grow pb-12">
         <form
-          className="flex flex-col gap-4 items-center"
+          className="flex flex-col gap-4 items-center mt-20"
           onSubmit={onFormSubmit}
         >
           <div className="flex gap-4 w-full">
-            <input
-              name="firstName"
-              placeholder="First Name"
-              type="text"
-              className="border-2 w-full"
-              onChange={inputOnChange}
+            <TextField
+              label="first name"
               value={inputData.firstName}
-            />
-            <input
-              name="lastName"
-              placeholder="Last Name"
-              type="text"
-              className="border-2 w-full"
+              name="firstName"
               onChange={inputOnChange}
+            />
+            <TextField
+              label="last name"
               value={inputData.lastName}
+              name="lastName"
+              onChange={inputOnChange}
             />
           </div>
-          <input
-            name="year_and_course"
-            placeholder="Year and Course"
-            type="text"
-            className="border-2 w-full"
-            onChange={inputOnChange}
+          <TextField
+            label="Year and Course"
             value={inputData.year_and_course}
-          />
-          <input
-            name="email"
-            placeholder="AdDU Email"
-            type="text"
-            className="border-2 w-full"
+            name="year_and_course"
             onChange={inputOnChange}
+          />
+          <TextField
+            label="AdDU Email"
             value={inputData.email}
-          />
-          <select
-            className="border-2"
-            name="event"
-            id="event"
+            name="email"
             onChange={inputOnChange}
+          />
+          <Select
             value={String(inputData.eventId)}
+            onChange={inputOnChange}
+            name="eventId"
           >
             {allEventTitle.map((event: EventTitle) => (
-              <option key={event.id} value={event.id}>
+              <MenuItem key={event.id} value={event.id}>
                 {event.title}
-              </option>
+              </MenuItem>
             ))}
-          </select>
+          </Select>
           <div className="flex w-full justify-end">
-            <button className="px-4 py-2 bg-blue rounded" type="submit">
-              Submit
-            </button>
+            <div className="w-[8rem]">
+              <Button type="submit" onClick={() => {}}>
+                Submit
+              </Button>
+            </div>
           </div>
         </form>
       </div>

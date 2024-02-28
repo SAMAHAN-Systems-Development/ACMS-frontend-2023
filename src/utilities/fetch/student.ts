@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify';
+
 const backendUrl =
   process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
 
@@ -22,6 +24,7 @@ export const submitRegistration = async (
   });
 
   if (!response.ok) {
+    toast.error('Error in submitting registration');
     throw new Error('Error in submitting registration');
   }
 

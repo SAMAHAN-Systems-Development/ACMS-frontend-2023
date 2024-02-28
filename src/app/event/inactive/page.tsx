@@ -11,6 +11,7 @@ import {
 import EventPage from '@/components/event/EventPage';
 import { fetchInactiveEvents } from '@/utilities/fetch/event';
 import { fetchUser } from '@/utilities/fetch/user';
+import Navigation from '@/components/ui/Navigation';
 
 const PageFinal = async () => {
   const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const PageFinal = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      <Navigation />
       <EventPage eventType="inactive" />
     </HydrationBoundary>
   );

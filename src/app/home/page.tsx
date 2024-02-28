@@ -10,12 +10,14 @@ import {
 
 import CashierHomePage from '@/components/home/CashierHomePage';
 import FacilitatorHomePage from '@/components/home/FacilitatorHomePage';
+import PaymentsPage from '@/components/payments/PaymentsPage';
+import Navigation from '@/components/ui/Navigation';
 import {
   fetchActiveEvents,
   fetchAllActiveTitleEvents,
 } from '@/utilities/fetch/event';
+import { fetchPendingPayments } from '@/utilities/fetch/payment';
 import { fetchUser } from '@/utilities/fetch/user';
-import Navigation from '@/components/ui/Navigation';
 
 const Home = async () => {
   const queryClient = new QueryClient();
@@ -38,6 +40,11 @@ const Home = async () => {
     queryFn: () => fetchAllActiveTitleEvents(user.accessToken),
   });
 
+  await queryClient.prefetchQuery({
+    queryKey: ['payments', 'pending', { page: 1 }],
+    queryFn: () => fetchPendingPayments(user.accessToken, 1),
+  });
+
   if (user.userType === 'facilitator') {
     return (
       <HydrationBoundary state={dehydrate(queryClient)}>
@@ -56,7 +63,12 @@ const Home = async () => {
     );
   }
 
-  return <Navigation />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Navigation />
+      <PaymentsPage paymentPageType="pending" />
+    </HydrationBoundary>
+  );
 };
 
 export default Home;
