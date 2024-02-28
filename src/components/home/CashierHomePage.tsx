@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 import { MenuItem, type SelectChangeEvent } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -17,6 +18,7 @@ type EventTitle = {
 };
 
 const CashierHomePage = () => {
+  const router = useRouter();
   const tokenQuery = useQuery<string>({
     queryKey: ['jwt'],
   });
@@ -57,21 +59,15 @@ const CashierHomePage = () => {
       return;
     }
 
-    const hasSubmittedSuccessfully = await submitRegistration(token, {
+    const studentData = await submitRegistration(token, {
       ...inputData,
       photo_src: '',
       isSubmittedByStudent: false,
     });
 
-    if (hasSubmittedSuccessfully) {
+    if (studentData) {
       toast.success('Successfully submitted registration');
-      setInputData({
-        firstName: '',
-        lastName: '',
-        year_and_course: '',
-        email: '',
-        eventId: allEventTitle[0].id,
-      });
+      router.push(`/student?uuid=${studentData.uuid}`);
     }
   };
 
@@ -123,6 +119,7 @@ const CashierHomePage = () => {
             label="AdDU Email"
             value={inputData.email}
             name="email"
+            type="email"
             onChange={inputOnChange}
           />
           <Select

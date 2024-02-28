@@ -28,7 +28,8 @@ export const submitRegistration = async (
     throw new Error('Error in submitting registration');
   }
 
-  return true;
+  const responseData = await response.json();
+  return responseData;
 };
 
 export const fetchStudent = async (token: string, uuid: string) => {
