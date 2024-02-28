@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 'use client';
 import type { FormEvent } from 'react';
 import React, { useState } from 'react';
