@@ -9,6 +9,7 @@ import {
 } from '@tanstack/react-query';
 
 import EventPage from '@/components/event/EventPage';
+import Navigation from '@/components/ui/Navigation';
 import { fetchActiveEvents } from '@/utilities/fetch/event';
 import { fetchUser } from '@/utilities/fetch/user';
 
@@ -30,6 +31,7 @@ const PageFinal = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      <Navigation />
       <EventPage eventType="active" />
     </HydrationBoundary>
   );

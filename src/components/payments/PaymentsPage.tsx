@@ -256,14 +256,14 @@ const getRedirectButtonProperties = (paymentPageType: string) => {
       return {
         upperButtonLabel: 'View Pending Payments',
         lowerButtonLabel: 'View Declined Payments',
-        upperButtonLocation: '/payments/pending',
+        upperButtonLocation: '/home',
         lowerButtonLocation: '/payments/declined',
       };
     case 'declined':
       return {
         upperButtonLabel: 'View Pending Payments',
         lowerButtonLabel: 'View Accepted Payments',
-        upperButtonLocation: '/payments/pending',
+        upperButtonLocation: '/home',
         lowerButtonLocation: '/payments/accepted',
       };
     case 'pending':

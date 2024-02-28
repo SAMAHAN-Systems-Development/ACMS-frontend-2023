@@ -25,7 +25,7 @@ function Navigation() {
   const eventsInfo = {
     label: 'Events',
     action: () => {
-      router.push('/payments/pending');
+      router.push('/event/active');
     },
   };
 

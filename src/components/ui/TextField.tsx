@@ -45,6 +45,7 @@ export default function TextField({
   type = 'text',
   onChange,
   name,
+  value,
 }: TextFieldProps) {
   return (
     <TextFieldStyle
@@ -52,6 +53,7 @@ export default function TextField({
       label={label}
       type={type}
       onChange={onChange}
+      value={value}
       className={className}
       name={name}
       size="small"
