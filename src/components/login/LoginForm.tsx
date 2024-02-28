@@ -1,50 +1,75 @@
 'use client';
-import * as Form from '@radix-ui/react-form';
+import { useState } from 'react';
+import Image from 'next/image';
+
+import Button from '@/components/ui/Button';
+import TextField from '@/components/ui/TextField';
 
 const LoginForm = () => {
-  return (
-    <div className="flex flex-col items-center justify-center mt-20">
-      <h1 className="font-semibold text-lg">Login Form</h1>
-      <Form.Root className="FormRoot mt-4" action="/auth/login" method="post">
-        <Form.Field className="FormField flex flex-col" name="email">
-          <Form.Label className="FormLabel font-semibold">Email</Form.Label>
-          <Form.Message
-            className="FormMessage text-xs font-light text-red-500"
-            match="valueMissing"
-          >
-            Please enter your Email
-          </Form.Message>
-          <Form.Control asChild>
-            <input
-              className="Input mt-2 border-2 rounded"
-              type="text"
-              required
-            />
-          </Form.Control>
-        </Form.Field>
+  const [fieldValues, setFieldValues] = useState<{
+    email: string;
+    password: string;
+  }>({
+    email: '',
+    password: '',
+  });
 
-        <Form.Field className="FormField flex flex-col mt-4" name="password">
-          <Form.Label className="FormLabel font-semibold">Password</Form.Label>
-          <Form.Message
-            className="FormMessage text-xs font-light text-red-500"
-            match="valueMissing"
-          >
-            Please enter your password
-          </Form.Message>
-          <Form.Control asChild>
-            <input
-              className="Input mt-2 border-2 rounded"
-              type="password"
-              required
-            />
-          </Form.Control>
-        </Form.Field>
-        <Form.Submit asChild>
-          <button className="Button px-2 py-1 bg-slate-900 rounded hover:bg-purple-600 text-white mt-4">
-            Login
-          </button>
-        </Form.Submit>
-      </Form.Root>
+  const fieldOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFieldValues((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center relative">
+      <div className="flex flex-row gap-2 w-full border-navyBlue border-b-2 absolute top-0 py-2 px-2 items-center">
+        <Image
+          src="/logo.png"
+          alt="Logo Picture"
+          height={200}
+          width={200}
+          className="w-[1.5rem]"
+        />
+        <h1 className="text-xl font-semibold">ACMS</h1>
+      </div>
+      <div className="flex flex-col items-center justify-center gap-8 border-2 border-navyBlue md:px-24 md:pb-24 md:pt-32 px-12 pb-12 pt-16 rounded-3xl relative mx-8">
+        <Image
+          src="/logo.png"
+          alt="Logo Picture"
+          height={200}
+          width={200}
+          className="absolute md:-inset-y-24 md:w-[12.5rem] w-[8rem] -inset-y-16"
+        />
+        <h1 className="text-[2rem] font-semibold text-center">LOGIN FORM</h1>
+        <form
+          className="md:w-[25rem] flex flex-col gap-4"
+          action="/auth/login"
+          method="post"
+        >
+          <TextField
+            label="Email"
+            name="email"
+            onChange={fieldOnChange}
+            value={fieldValues.email}
+          />
+
+          <TextField
+            label="Password"
+            name="password"
+            type="password"
+            onChange={fieldOnChange}
+            value={fieldValues.password}
+          />
+          <div className="w-full flex justify-end mt-4">
+            <div className="w-[10rem]">
+              <Button type="submit" onClick={() => {}}>
+                Login
+              </Button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

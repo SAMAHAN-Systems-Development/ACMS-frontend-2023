@@ -1,15 +1,35 @@
-import type { FC } from 'react';
 import React from 'react';
 
-type ButtonProps = {
-  text: string;
-};
+interface Props {
+  children: React.ReactNode;
+  onClick: () => void;
+  isDisabled?: boolean;
+  type?: 'button' | 'submit' | 'reset' | undefined;
+  variant?: string;
+}
 
-const Button: FC<ButtonProps> = ({ text }) => {
+const Button: React.FC<Props> = ({
+  children,
+  variant = 'primary',
+  type = 'button',
+  isDisabled = false,
+  onClick,
+}) => {
   return (
-    <div className="bg-red-500 font-bold capitalize w-fit py-2 px-4 rounded-xl">
-      {text}
-    </div>
+    <button
+      onClick={onClick}
+      type={type}
+      className={`w-full px-4 py-1 text-slate-50 font-semibold rounded-lg  
+        ${
+          variant === 'primary' && !isDisabled
+            ? 'bg-navyBlue text-white'
+            : isDisabled
+            ? 'bg-blue text-white border-none cursor-not-allowed disabled'
+            : 'bg-white text-navyBlue border-solid border-navyBlue border-2'
+        }`}
+    >
+      {children}
+    </button>
   );
 };
 

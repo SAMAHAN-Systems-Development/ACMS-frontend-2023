@@ -1,28 +1,64 @@
 'use client';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
+import { useQuery } from '@tanstack/react-query';
 
 function Navigation() {
-  const pathname = usePathname();
-  const isEventsPage = pathname.includes('/event');
-  const navItems = isEventsPage
-    ? ['Home', 'Logout']
-    : ['Home', 'Events', 'Logout'];
+  const router = useRouter();
+
+  const userQuery: {
+    data?: { accessToken: string; email: string; userType: string };
+  } = useQuery({
+    queryKey: ['user'],
+  });
+
+  const userType = userQuery.data?.userType || 'student';
+
+  const homeInfo = {
+    label: 'Home',
+    action: () => {
+      router.push('/');
+    },
+  };
+
+  const eventsInfo = {
+    label: 'Events',
+    action: () => {
+      router.push('/payments/pending');
+    },
+  };
+
+  const navItems = userType === 'admin' ? [homeInfo, eventsInfo] : [homeInfo];
 
   return (
-    <nav className="flex items-center border-2 justify-between">
-      <div className="flex items-center p-2">
-        <div className="h-6 w-6 bg-[#181842] rounded-full mr-2" />
-        <span className="text-lg color-#181842 font-bold">ACMS</span>
+    <nav className="w-full flex items-center border-b-2 justify-between">
+      <div className="flex items-center px-2 gap-2">
+        <Image
+          src="/logo.png"
+          alt="Logo Picture"
+          height={200}
+          width={200}
+          className="w-[1.5rem]"
+        />
+        <h1 className="text-xl font-semibold">ACMS</h1>
       </div>
       <ul className="flex items-center">
         {navItems.map((item) => (
-          <li className="color-#181842 font-bold border-l-2 p-2" key={item}>
-            <Link href={item === 'Home' ? '/' : `/${item.toLowerCase()}`}>
-              {item}
-            </Link>
+          <li
+            className="color-#181842 font-bold border-l-2 p-2"
+            key={item.label}
+          >
+            <button onClick={item.action}>{item.label}</button>
           </li>
         ))}
+        <li className="color-#181842 font-bold border-l-2 p-2">
+          <form>
+            <button formAction="/auth/logout" formMethod="post">
+              Logout
+            </button>
+          </form>
+        </li>
       </ul>
     </nav>
   );

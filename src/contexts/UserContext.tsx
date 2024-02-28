@@ -49,7 +49,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }
 
   // Checks if the URL is valid according to the usertype
-  if (allowedUrls[userType].includes(pathname) || pathname.includes('/events/')) {
+  //TODO: it should check if it contains the URL
+  if (
+    allowedUrls[userType].includes(pathname) ||
+    pathname.includes('/events/') ||
+    pathname.includes('/event/') ||
+    pathname.includes('/student')
+  ) {
     return (
       <UserContext.Provider value={{ user: userQuery.data }}>
         {children}
