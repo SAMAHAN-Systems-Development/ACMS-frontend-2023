@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 'use client';
 import type { FormEvent } from 'react';
 import React, { useState } from 'react';
@@ -19,12 +20,23 @@ const RegistrationForm = ({
   const tokenQuery = useQuery<string>({
     queryKey: ['jwt'],
   });
+
   const token = tokenQuery.data || '';
 
   const eventData = useQuery({
     queryKey: ['event'],
     queryFn: () => fetchEventData(token, id),
   });
+
+  const supabaseUrl =
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    'https://fjqloxpyknqccretzoyt.supabase.co';
+
+  const supabaseKey =
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqcWxveHB5a25xY2NyZXR6b3l0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDIzMDI1NjgsImV4cCI6MjAxNzg3ODU2OH0.s4upzMGDuRJ4l-kRK0HMCB6_iSy1ZKATYnzBW2dnoWA';
+
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -48,13 +60,17 @@ const RegistrationForm = ({
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedFile(event.target.files ? event.target.files[0] : null);
-    const supabaseUrl =
-      process.env.NEXT_PUBLIC_SUPABASE_URL ||
-      'https://acms-backend-2023.onrender.com';
-    const supabaseKey =
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqcWxveHB5a25xY2NyZXR6b3l0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDIzMDI1NjgsImV4cCI6MjAxNzg3ODU2OH0.s4upzMGDuRJ4l-kRK0HMCB6_iSy1ZKATYnzBW2dnoWA';
-    const supabase = createClient(supabaseUrl, supabaseKey);
+  };
+
+  const inputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRegistrationData((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
     try {
       if (selectedFile) {
@@ -70,17 +86,7 @@ const RegistrationForm = ({
     } catch (error) {
       console.error('Error during file upload:', error);
     }
-  };
 
-  const inputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRegistrationData((prev) => ({
-      ...prev,
-      [event.target.name]: event.target.value,
-    }));
-  };
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
     await submitRegistration(token, registrationData);
   };
 
