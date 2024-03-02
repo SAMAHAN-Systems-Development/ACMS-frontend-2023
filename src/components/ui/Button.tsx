@@ -2,8 +2,8 @@ import React from 'react';
 
 interface Props {
   children: React.ReactNode;
-  onClick: () => void;
   isDisabled?: boolean;
+  onClick?: () => void;
   type?: 'button' | 'submit' | 'reset' | undefined;
   variant?: string;
 }
@@ -13,7 +13,7 @@ const Button: React.FC<Props> = ({
   variant = 'primary',
   type = 'button',
   isDisabled = false,
-  onClick,
+  onClick = () => {},
 }) => {
   return (
     <button

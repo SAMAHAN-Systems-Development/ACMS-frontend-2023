@@ -207,31 +207,40 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
           </PaymentButton>
         </div>
       </div>
-      <div className="flex flex-col gap-8 flex-wrap justify-center px-16 pb-16">
+      <div className="flex flex-col gap-8 flex-wrap justify-center items-center px-16 pb-16">
         <div className="flex justify-center">
           <Pagination page={page} setPage={setPage} maxPage={maxPage} />
         </div>
-        <div className="flex gap-8 flex-wrap justify-center">
-          {listOfStudents.map((student: Student, index: number) => (
-            <PaymentsCard
-              key={student.paymentId + index}
-              hasRestoreButton={
-                paymentPageType === 'accepted' || paymentPageType === 'declined'
-              }
-              hasAcceptButton={paymentPageType === 'pending'}
-              hasDeclineButton={paymentPageType === 'pending'}
-              hasCheckbox={true}
-              checkedCards={checkedCards}
-              setCheckedCards={setCheckedCards}
-              student={student}
-              paymentPageType={paymentPageType}
-              page={page}
-            />
-          ))}
-        </div>
-        <div className="flex justify-center">
-          <Pagination page={page} setPage={setPage} maxPage={maxPage} />
-        </div>
+        {listOfStudents.length > 0 ? (
+          <>
+            <div className="flex gap-8 flex-wrap justify-center">
+              {listOfStudents.map((student: Student, index: number) => (
+                <PaymentsCard
+                  key={student.paymentId + index}
+                  hasRestoreButton={
+                    paymentPageType === 'accepted' ||
+                    paymentPageType === 'declined'
+                  }
+                  hasAcceptButton={paymentPageType === 'pending'}
+                  hasDeclineButton={paymentPageType === 'pending'}
+                  hasCheckbox={true}
+                  checkedCards={checkedCards}
+                  setCheckedCards={setCheckedCards}
+                  student={student}
+                  paymentPageType={paymentPageType}
+                  page={page}
+                />
+              ))}
+            </div>
+            <div className="flex justify-center">
+              <Pagination page={page} setPage={setPage} maxPage={maxPage} />
+            </div>
+          </>
+        ) : (
+          <h1 className="text-3xl text-navyBlue font-extrabold">
+            No payments found
+          </h1>
+        )}
       </div>
     </div>
   );

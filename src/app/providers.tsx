@@ -8,6 +8,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import 'react-toastify/dist/ReactToastify.css';
 
+import { EventProvider } from '@/contexts/EventContext';
 import { UserProvider } from '@/contexts/UserContext';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
@@ -15,7 +16,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={client}>
-      <UserProvider>{children}</UserProvider>
+      <EventProvider>
+        <UserProvider>{children}</UserProvider>
+      </EventProvider>
       <ReactQueryDevtools initialIsOpen={false} />
       <ToastContainer
         position="bottom-right"

@@ -10,21 +10,21 @@ import Unauthorized from '@/components/ui/Unauthorized';
 import { fetchUser } from '@/utilities/fetch/user';
 
 const allowedUrls = {
-  facilitator: ['/login', '/home', '/'],
-  cashier: ['/login', '/register-student', '/home', '/'],
+  facilitator: ['/home', '/', '/student', '/event/qr-scan/[id]'],
+  cashier: ['/home', 'register-student', '/'],
   admin: [
-    '/login',
+    '/',
     '/home',
     '/student',
-    '/events/[id]',
+    '/event/view/[id]',
     '/event/active',
     '/event/inactive',
-    '/payments/pending',
+    '/event/add',
+    '/event/edit/[id]',
     '/payments/declined',
     '/payments/accepted',
-    '/',
   ],
-  student: ['/events/register/'],
+  student: ['/events/register/', '/'],
 };
 
 export const UserContext = createContext({});
@@ -44,18 +44,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Path for students to register for events
-  if (allowedUrls['student'].includes(pathname) || pathname === '/login') {
+  if (pathname === '/login') {
     return children;
   }
 
-  // Checks if the URL is valid according to the usertype
-  //TODO: it should check if it contains the URL
-  if (
-    allowedUrls[userType].includes(pathname) ||
-    pathname.includes('/events/') ||
-    pathname.includes('/event/') ||
-    pathname.includes('/student')
-  ) {
+  if (isAllowed(pathname, userType)) {
     return (
       <UserContext.Provider value={{ user: userQuery.data }}>
         {children}
@@ -69,6 +62,25 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   return <Unauthorized />;
 }
+
+const isAllowed = (
+  pathname: string,
+  userType: 'facilitator' | 'student' | 'admin' | 'cashier'
+) => {
+  const pathnameSplitted = pathname.split('/');
+  for (const idx in allowedUrls[userType]) {
+    const url = allowedUrls[userType][idx].replace('[id]', '');
+    const urlSplitted = allowedUrls[userType][idx].split('/');
+
+    if (
+      pathname.includes(url) &&
+      pathnameSplitted.length === urlSplitted.length
+    ) {
+      return true;
+    }
+  }
+  return false;
+};
 
 export function useUser() {
   return useContext(UserContext);

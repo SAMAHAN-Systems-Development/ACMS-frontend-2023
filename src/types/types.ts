@@ -1,3 +1,5 @@
+import type { Dayjs } from 'dayjs';
+
 export type Student = {
   createdAt: string;
   email: string;
@@ -39,4 +41,13 @@ export type Payment = {
   photo_src: string;
   status: string;
   updatedAt: string;
+};
+
+export type EventDTO = {
+  date: Dayjs | null;
+  description: string;
+  max_participants: number;
+  price: string;
+  requires_payment: boolean;
+  title: string;
 };

@@ -1,3 +1,5 @@
+import type { EventDTO } from '@/types/types';
+
 const backendUrl =
   process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
 
@@ -100,4 +102,44 @@ export const activateEvents = async (token: string, eventId: number) => {
   }
 
   return true;
+};
+
+export const editEvent = async (
+  token: string,
+  eventId: number,
+  event: EventDTO
+) => {
+  const response = await fetch(`${backendUrl}/event/${eventId}`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(event),
+  });
+
+  if (!response.ok) {
+    throw new Error('Error in updating the event');
+  }
+  const data = await response.json();
+
+  return data;
+};
+
+export const addEvent = async (token: string, event: EventDTO) => {
+  const response = await fetch(`${backendUrl}/event`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(event),
+  });
+
+  if (!response.ok) {
+    throw new Error('Error in adding the event');
+  }
+  const data = await response.json();
+
+  return data;
 };

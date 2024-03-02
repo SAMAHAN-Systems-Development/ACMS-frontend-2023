@@ -21,14 +21,8 @@ type propTypes = {
 
 const EventCard: React.FC<propTypes> = ({
   event,
-  // eventId,
-  // eventTitle,
   eventPageType,
-  // eventPrice,
-  // maxParticipants,
-  // numberOfParticipantsRegistered,
   page,
-  // eventDescription,
   hasViewButton,
   hasEditButton,
   hasActivateButton,

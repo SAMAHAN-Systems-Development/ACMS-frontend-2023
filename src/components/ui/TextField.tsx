@@ -32,8 +32,9 @@ type TextFieldProps = {
   label: string;
   name: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  value: string;
+  value: string | number;
   className?: string;
+  defaultValue?: string;
   id?: string;
   type?: string;
 };

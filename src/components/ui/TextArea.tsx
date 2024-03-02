@@ -3,7 +3,7 @@ import * as React from 'react';
 import { TextField as BaseTextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-const TextArea = styled(BaseTextField)({
+const TextAreaStyle = styled(BaseTextField)({
   '& label.Mui-focused': {
     color: '#2B2B2B',
     fontFamily: 'Work Sans, sans-serif',
@@ -31,15 +31,35 @@ const TextArea = styled(BaseTextField)({
 });
 
 type TextAreaProps = {
-  className: string;
-  id: string;
-  label: string;
+  name: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  value: string;
+  className?: string;
+  id?: string;
+  label?: string;
+  type?: string;
 };
 
-export default function CustomizedInputsStyled({
+export default function TextArea({
   label,
   id,
   className,
+  value,
+  onChange,
+  name,
+  type = 'text',
 }: TextAreaProps) {
-  return <TextArea id={id} label={label} className={className} multiline />;
+  return (
+    <TextAreaStyle
+      id={id}
+      label={label}
+      className={className}
+      multiline
+      value={value}
+      onChange={onChange}
+      name={name}
+      type={type}
+      fullWidth
+    />
+  );
 }

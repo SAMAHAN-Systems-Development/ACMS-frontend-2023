@@ -46,7 +46,7 @@ const EventPage: React.FC<propTypes> = ({ eventType }) => {
   };
 
   const addEventButtonOnClick = () => {
-    router.push('/events/add');
+    router.push('/event/add');
   };
 
   return (
@@ -70,25 +70,35 @@ const EventPage: React.FC<propTypes> = ({ eventType }) => {
         <div className="flex justify-center">
           <Pagination page={page} setPage={setPage} maxPage={maxPage} />
         </div>
-        <div className="flex gap-8 flex-wrap justify-center">
-          {listOfEvents.map((event: Event) => {
-            return (
-              <EventCard
-                key={event.id}
-                eventPageType={eventType}
-                event={event}
-                page={page}
-                hasViewButton={true}
-                hasEditButton={true}
-                hasDeactivateButton={eventType === 'active'}
-                hasActivateButton={eventType === 'inactive'}
-              />
-            );
-          })}
-        </div>
-        <div className="flex justify-center">
-          <Pagination page={page} setPage={setPage} maxPage={maxPage} />
-        </div>
+        {listOfEvents.length > 0 ? (
+          <>
+            <div className="flex gap-8 flex-wrap justify-center">
+              {listOfEvents.map((event: Event) => {
+                return (
+                  <EventCard
+                    key={event.id}
+                    eventPageType={eventType}
+                    event={event}
+                    page={page}
+                    hasViewButton={true}
+                    hasEditButton={true}
+                    hasDeactivateButton={eventType === 'active'}
+                    hasActivateButton={eventType === 'inactive'}
+                  />
+                );
+              })}
+            </div>
+            <div className="flex justify-center">
+              <Pagination page={page} setPage={setPage} maxPage={maxPage} />
+            </div>
+          </>
+        ) : (
+          <div className="flex justify-center">
+            <h1 className="text-3xl text-navyBlue font-extrabold">
+              No events found
+            </h1>
+          </div>
+        )}
       </div>
     </div>
   );

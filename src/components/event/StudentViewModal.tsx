@@ -81,14 +81,16 @@ const StudentViewModal: React.FC<propTypes> = ({
                         <div>{student.firstName + ' ' + student.lastName}</div>
                         <div>{student.year_and_course}</div>
                       </div>
-                      <div>
-                        <Image
-                          src={student.payment.photo_src}
-                          alt="qr-code"
-                          width={200}
-                          height={200}
-                        />
-                      </div>
+                      {student.payment.photo_src && (
+                        <div>
+                          <Image
+                            src={student.payment.photo_src}
+                            alt="qr-code"
+                            width={200}
+                            height={200}
+                          />
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="text-navyBlue flex flex-col items-center justify-center text-center gap-2 rounded-lg p-5 ">

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import Button from '@/components/ui/Button';
+import TextField from '@/components/ui/TextField';
 import type { Student } from '@/types/types';
 
 const PAGE_SIZE = 10;
@@ -20,7 +21,8 @@ const StudentsTable = ({ list }: { list: Student[] }) => {
       (student: Student) =>
         student.firstName.toLowerCase().includes(inputValue) ||
         student.lastName.toLowerCase().includes(inputValue) ||
-        student.year_and_course.toLowerCase().includes(inputValue)
+        student.year_and_course.toLowerCase().includes(inputValue) ||
+        `${student.firstName} ${student.lastName}`.includes(inputValue)
     );
 
     setShownStudents(filteredList);
@@ -48,13 +50,13 @@ const StudentsTable = ({ list }: { list: Student[] }) => {
       <div className="flex justify-between">
         <p className="text-xl font-semibold">Registered Students</p>
         <div>
-          <input
-            type="text"
-            placeholder="Search"
+          <TextField
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               setQuery(event.target.value)
             }
             value={query}
+            label="Search"
+            name="search"
           />
         </div>
       </div>
@@ -80,7 +82,7 @@ const StudentsTable = ({ list }: { list: Student[] }) => {
                 </td>
                 <td>{student.year_and_course}</td>
                 <td className="border-l-2">
-                  <Link href={`/student/${student.uuid}`}>
+                  <Link href={`/student?uuid=${student.uuid}`}>
                     <Button onClick={() => {}}>View More</Button>
                   </Link>
                 </td>
