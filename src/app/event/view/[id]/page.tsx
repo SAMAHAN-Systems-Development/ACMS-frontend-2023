@@ -9,13 +9,13 @@ import {
 } from '@tanstack/react-query';
 
 import ViewEventPage from '@/components/event/ViewEventPage';
+import Navigation from '@/components/ui/Navigation';
 import { fetchEventData } from '@/utilities/fetch/event';
 import {
   fetchAcceptedEventPayments,
   fetchDeclinedEventPayments,
 } from '@/utilities/fetch/payment';
 import { fetchUser } from '@/utilities/fetch/user';
-import Navigation from '@/components/ui/Navigation';
 
 const EventsPage = async ({ params }: { params: { id: string } }) => {
   const queryClient = new QueryClient();
