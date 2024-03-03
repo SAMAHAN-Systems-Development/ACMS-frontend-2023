@@ -31,7 +31,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-toastify": "^10.0.4",
-    "supabase": "^1.131.4"
+    "supabase": "^1.131.4",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@cyrilolanolan/eslint-config-ts": "0.1.1",

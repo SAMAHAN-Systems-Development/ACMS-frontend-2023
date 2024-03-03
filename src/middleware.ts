@@ -11,7 +11,10 @@ export async function middleware(req: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  if (req.nextUrl.pathname.includes('/events/register/')) {
+  if (
+    req.nextUrl.pathname.includes('/register') ||
+    req.nextUrl.pathname.includes('/student')
+  ) {
     return res;
   }
 
@@ -31,6 +34,6 @@ export async function middleware(req: NextRequest) {
 // Ensure the middleware is only called for relevant paths.
 export const config = {
   matcher: [
-    '/((?!auth|_next/static|_next/image|assets|favicon.ico|logo.png|sw.js).*)',
+    '/((?!auth|_next/static|_next/image|assets|favicon.ico|logo.png|RegisterCoverPhoto.png|RegisterCoverPhoto768.png|sw.js).*)',
   ],
 };

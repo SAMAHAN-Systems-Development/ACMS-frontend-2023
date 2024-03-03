@@ -1,40 +1,50 @@
-/* eslint-disable linebreak-style */
 'use client';
 import type { FormEvent } from 'react';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { createClient } from '@supabase/supabase-js';
 import { useQuery } from '@tanstack/react-query';
+import { v4 as uuidv4 } from 'uuid';
 
+import Button from '@/components/ui/Button';
 import InputFile from '@/components/ui/InputFile';
-import { fetchEventData } from '@/utilities/fetch/event';
+import Loading from '@/components/ui/Loading';
+import TextField from '@/components/ui/TextField';
+import type { Event } from '@/types/types';
+import { VIEW_PORT_SIZES } from '@/utilities/constants';
+import { fetchEventByFormName } from '@/utilities/fetch/event';
 import { submitRegistration } from '@/utilities/fetch/student';
+import useWindowSize from '@/utilities/useWindowSize';
 
-const RegistrationForm = ({
-  id,
-  requiresPayment,
-}: {
-  id: string;
-  requiresPayment: Boolean;
-}) => {
+const getImageSrcByViewportSize = (width: number) => {
+  if (width >= VIEW_PORT_SIZES.md) {
+    return '/RegisterCoverPhoto.png';
+  }
+  return '/RegisterCoverPhoto768.png';
+};
+
+const RegistrationForm = ({ formName }: { formName: string }) => {
+  const { width } = useWindowSize();
+
   const tokenQuery = useQuery<string>({
     queryKey: ['jwt'],
   });
 
+  const router = useRouter();
+
   const token = tokenQuery.data || '';
 
-  const eventData = useQuery({
-    queryKey: ['event'],
-    queryFn: () => fetchEventData(token, id),
+  const eventQuery = useQuery<Event>({
+    queryKey: ['events', { formName: formName }],
+    queryFn: () => fetchEventByFormName(token, formName),
   });
 
-  const supabaseUrl =
-    process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    'https://fjqloxpyknqccretzoyt.supabase.co';
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 
-  const supabaseKey =
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqcWxveHB5a25xY2NyZXR6b3l0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDIzMDI1NjgsImV4cCI6MjAxNzg3ODU2OH0.s4upzMGDuRJ4l-kRK0HMCB6_iSy1ZKATYnzBW2dnoWA';
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
   const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -42,11 +52,9 @@ const RegistrationForm = ({
 
   const [registrationData, setRegistrationData] = useState<{
     email: string;
-    eventId: number;
     firstName: string;
     isSubmittedByStudent: boolean;
     lastName: string;
-    photo_src: string;
     year_and_course: string;
   }>({
     firstName: '',
@@ -54,8 +62,6 @@ const RegistrationForm = ({
     year_and_course: '',
     email: '',
     isSubmittedByStudent: true,
-    photo_src: selectedFile?.name || '',
-    eventId: eventData.data.title,
   });
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,100 +79,122 @@ const RegistrationForm = ({
     event.preventDefault();
 
     try {
-      if (selectedFile) {
-        const { data, error } = await supabase.storage
-          .from('payment')
-          .upload(selectedFile.name, selectedFile);
-        if (error) {
-          console.error('Error uploading file:', error);
-        } else {
-          console.log('File uploaded successfully: ', data);
-        }
-      }
-    } catch (error) {
-      console.error('Error during file upload:', error);
-    }
+      if (!selectedFile) throw new Error('No file selected');
+      const photoFileName = `${uuidv4()}-${selectedFile.name}`;
+      const { error } = await supabase.storage
+        .from('payment')
+        .upload(photoFileName, selectedFile, {
+          upsert: false,
+        });
 
-    await submitRegistration(token, registrationData);
+      const { data } = supabase.storage
+        .from('payment')
+        .getPublicUrl(photoFileName);
+
+      if (!eventQuery.data) {
+        throw new Error('Event not found');
+      }
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      const finalRegistrationData = {
+        ...registrationData,
+        photo_src: data.publicUrl,
+        eventId: eventQuery.data.id,
+      };
+      const studentData = await submitRegistration(
+        token,
+        finalRegistrationData
+      );
+      toast.success('Registration successful');
+      setRegistrationData({
+        firstName: '',
+        lastName: '',
+        year_and_course: '',
+        email: '',
+        isSubmittedByStudent: true,
+      });
+      router.push(`/student?uuid=${studentData.uuid}`);
+    } catch (error) {
+      toast.error('Error during file upload');
+    }
   };
 
-  return (
-    <>
-      <div className="flex flex-col items-center border-y-2 py-5">
-        <h1 className="font-semibold text-2xl">{eventData.data.title}</h1>
-        <h1 className="font-semibold text-5xl">Registration Form</h1>
-      </div>
-      <div className="flex flex-col items-center mt-20">
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-row gap-4">
-            <label className="flex flex-col font-semibold mt-4">
-              First Name
-              <input
-                className="mt-2 border-2 rounded"
-                type="text"
+  if (eventQuery.isFetched && eventQuery.data) {
+    return (
+      <div className="w-full">
+        <Image
+          src={getImageSrcByViewportSize(width)}
+          alt="Cover Photo"
+          width={3000}
+          height={3000}
+          className="w-full"
+        />
+        <div className="flex flex-col items-center border-y-2 py-5">
+          <h1 className="font-semibold md:text-2xl text-xl">
+            {eventQuery.data.title}
+          </h1>
+          <h1 className="font-semibold md:text-5xl text-4xl px-4">
+            Registration Form
+          </h1>
+        </div>
+        <div className="flex flex-col items-center mt-20">
+          <form
+            className=" flex flex-col justify-center gap-4"
+            onSubmit={handleSubmit}
+          >
+            <div className="flex md:flex-row flex-col gap-4">
+              <TextField
                 name="firstName"
                 onChange={inputOnChange}
                 value={registrationData.firstName}
-                required
+                label="First Name"
               />
-            </label>
 
-            <label className="flex flex-col font-semibold mt-4">
-              Last Name
-              <input
-                className=" mt-2 border-2 rounded"
-                type="text"
+              <TextField
                 name="lastName"
                 onChange={inputOnChange}
                 value={registrationData.lastName}
-                required
+                label="Last Name"
               />
-            </label>
-          </div>
+            </div>
 
-          <label className="flex flex-col font-semibold mt-4">
-            AdDU Email
-            <input
-              className="mt-2 border-2 rounded"
-              type="text"
+            <TextField
               name="email"
               onChange={inputOnChange}
               value={registrationData.email}
-              required
+              label="AdDU Email"
+              type="email"
             />
-          </label>
 
-          <label className="flex flex-col font-semibold mt-4">
-            Year and Course
-            <input
-              className="mt-2 border-2 rounded"
-              type="text"
+            <TextField
               name="year_and_course"
               onChange={inputOnChange}
               value={registrationData.year_and_course}
-              required
+              label="Year and Course"
             />
-          </label>
 
-          {requiresPayment && (
-            <InputFile
-              handleChange={handleChange}
-              selectedFile={selectedFile}
-            />
-          )}
-
-          <div className="flex justify-end mt-8">
-            <button
-              type="submit"
-              className="px-20 py-1 rounded bg-[#181842] text-white mt-4"
-            >
-              Submit
-            </button>
-          </div>
-        </form>
+            {eventQuery.data.requires_payment && (
+              <InputFile
+                handleChange={handleChange}
+                selectedFile={selectedFile}
+                label="Payment Photo"
+              />
+            )}
+            <div className="flex justify-end mt-4">
+              <div className="w-[10rem]">
+                <Button type="submit">Submit</Button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
-    </>
-  );
+    );
+  }
+
+  return <Loading />;
 };
 
 export default RegistrationForm;

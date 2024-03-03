@@ -50,50 +50,52 @@ export const StudentPage = () => {
 
   return (
     <div className="w-full min-h-full flex flex-col items-center justify-center gap-8">
-      <div className="w-full h-full flex items-center justify-center">
-        {isFound ? (
-          <div className="lg:w-4/12 md:w-6/12 w-8/12 flex flex-row items-center justify-center text-center gap-8 border-navyBlue border-solid border-2 rounded-3xl p-12">
-            <div className="flex flex-col items-center justify-center gap-2">
-              <div className="font-bold">{student.event.title}</div>
-              <div>
-                <Image
-                  src={QrCodeElem}
-                  alt="qr-code"
-                  width={300}
-                  height={300}
-                />
+      <div className="w-full max-w-[50rem] overflow-y-auto rounded bg-white flex flex-col justify-center items-center m-4">
+        <div className="flex items-center justify-center bg-white">
+          {isFound ? (
+            <div className="w-full h-full flex flex-col md:flex-row items-center justify-center text-center gap-8 border-navyBlue mb-8 border-solid border-2 rounded-3xl md:p-12 p-4">
+              <div className="flex flex-col items-center gap-2">
+                <div className="font-bold">{student.event.title}</div>
+                <div>
+                  <Image
+                    src={QrCodeElem}
+                    alt="qr-code"
+                    width={300}
+                    height={300}
+                  />
+                </div>
+                <div className="font-bold">{student.uuid}</div>
+                <div>{student.firstName + ' ' + student.lastName}</div>
+                <div>{student.year_and_course}</div>
               </div>
-              <div className="font-bold">{student.uuid}</div>
-              <div>{student.firstName + ' ' + student.lastName}</div>
-              <div>{student.year_and_course}</div>
+              {student.payment.photo_src && (
+                <div>
+                  <Image
+                    src={student.payment.photo_src}
+                    alt="qr-code"
+                    width={200}
+                    height={200}
+                  />
+                </div>
+              )}
             </div>
-            {student.payment.photo_src && (
-              <div>
+          ) : (
+            <div className="text-navyBlue flex flex-col items-center justify-center text-center gap-2 rounded-lg p-5">
+              <div className="font-bold">
                 <Image
-                  src={student.payment.photo_src}
-                  alt="qr-code"
+                  src="/ErrorIcon.svg"
+                  alt="Error Icon SVG"
                   width={200}
                   height={200}
                 />
               </div>
-            )}
-          </div>
-        ) : (
-          <div className="lg:w-4/12 md:w-6/12 w-8/12 text-navyBlue flex flex-col items-center justify-center text-center gap-2 border-navyBlue border-solid border-2 rounded-lg p-5 ">
-            <div className="font-bold">
-              <Image
-                src="/ErrorIcon.svg"
-                alt="Error Icon SVG"
-                width={200}
-                height={200}
-              />
+              <div className="font-bold">STUDENT NOT FOUND</div>
             </div>
-            <div className="font-bold">STUDENT NOT FOUND</div>
-          </div>
-        )}
-      </div>
-      <div className="w-[10rem]">
-        <Button onClick={backButtonAction}>Back</Button>
+          )}
+        </div>
+        <div className="w-[10rem]">
+          <Button onClick={backButtonAction}>Back</Button>
+        </div>
       </div>
     </div>
   );

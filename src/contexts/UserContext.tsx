@@ -24,7 +24,7 @@ const allowedUrls = {
     '/payments/declined',
     '/payments/accepted',
   ],
-  student: ['/events/register/', '/'],
+  student: ['/register/[id]', '/'],
 };
 
 export const UserContext = createContext({});
