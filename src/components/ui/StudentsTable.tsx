@@ -82,8 +82,11 @@ const StudentsTable = ({ list }: { list: Student[] }) => {
                 </td>
                 <td>{student.year_and_course}</td>
                 <td className="border-l-2">
-                  <Link href={`/student?uuid=${student.uuid}`}>
-                    <Button onClick={() => {}}>View More</Button>
+                  <Link
+                    href={`/student?uuid=${student.uuid}`}
+                    className="text-navyBlue underline"
+                  >
+                    View More
                   </Link>
                 </td>
               </tr>
