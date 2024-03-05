@@ -4,11 +4,14 @@ import React from 'react';
 import Link from 'next/link';
 
 import { useQuery } from '@tanstack/react-query';
+import dayjs from 'dayjs';
 
 import PaymentsModal from '@/components/payments/PaymentsModal';
 import Button from '@/components/ui/Button';
 import StudentsTable from '@/components/ui/StudentsTable';
+import type { Event } from '@/types/types';
 import { fetchEventData } from '@/utilities/fetch/event';
+import moneyFormatter from '@/utilities/moneyFormatter';
 
 const DetailLine = ({ title, detail }: { detail: string; title: string }) => {
   return (
@@ -30,6 +33,8 @@ const ViewEventPage = ({ id }: { id: string }) => {
     queryKey: ['event', id],
     queryFn: () => fetchEventData(token, id),
   });
+
+  const data: Event = eventQuery.data;
 
   return (
     <>
@@ -56,32 +61,37 @@ const ViewEventPage = ({ id }: { id: string }) => {
       </section>
       <section className="flex w-full my-10">
         <div className="flex flex-col gap-4 border-2 border-navyBlue mx-auto rounded-2xl p-5 md:w-4/5 w-96">
+          <DetailLine title={'Event Description'} detail={data.description} />
           <DetailLine
-            title={'Event Description'}
-            detail={eventQuery.data.description}
+            title={'Event Date'}
+            detail={dayjs(data.date).format('MMM DD, YYYY')}
           />
-          <DetailLine title={'Event Date'} detail={eventQuery.data.date} />
           <DetailLine
             title={'Crowd Limit'}
-            detail={eventQuery.data.max_participants}
+            detail={String(data.max_participants)}
           />
           <DetailLine
             title={'Students Registered'}
             detail={eventQuery.data.students.length}
           />
-          <DetailLine title={'Event Price:'} detail={eventQuery.data.price} />
+          <DetailLine
+            title={'Event Price:'}
+            detail={moneyFormatter(data.price)}
+          />
           <div className="flex md:flex-row flex-col gap-4 items-center mt-5 max-w-[50rem]">
             <PaymentsModal
               paymentType={'accepted'}
               token={token}
-              eventId={eventQuery.data.id}
+              eventId={data.id}
             />
             <PaymentsModal
               paymentType={'declined'}
               token={token}
-              eventId={eventQuery.data.id}
+              eventId={data.id}
             />
-            <Button onClick={() => {}}>View Registration Form</Button>
+            <Link href={`/register/${data.form_name}`} className="w-full">
+              <Button onClick={() => {}}>View Registration Form</Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -89,7 +99,7 @@ const ViewEventPage = ({ id }: { id: string }) => {
         {eventQuery.isFetching ? (
           <div className="flex justify-center">Loading...</div>
         ) : (
-          <StudentsTable list={eventQuery.data.students} />
+          <StudentsTable list={data.students} />
         )}
       </section>
     </>

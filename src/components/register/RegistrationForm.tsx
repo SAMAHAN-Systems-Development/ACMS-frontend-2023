@@ -77,33 +77,44 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    let finalRegistrationData;
     try {
-      if (!selectedFile) throw new Error('No file selected');
-      const photoFileName = `${uuidv4()}-${selectedFile.name}`;
-      const { error } = await supabase.storage
-        .from('payment')
-        .upload(photoFileName, selectedFile, {
-          upsert: false,
-        });
-
-      const { data } = supabase.storage
-        .from('payment')
-        .getPublicUrl(photoFileName);
-
       if (!eventQuery.data) {
         throw new Error('Event not found');
       }
 
-      if (error) {
-        throw new Error(error.message);
+      if (eventQuery.data.requires_payment) {
+        if (!selectedFile) throw new Error('No file selected');
+        const photoFileName = `${uuidv4()}-${selectedFile.name}`;
+        const { error } = await supabase.storage
+          .from('payment')
+          .upload(photoFileName, selectedFile, {
+            upsert: false,
+          });
+
+        const { data } = supabase.storage
+          .from('payment')
+          .getPublicUrl(photoFileName);
+
+        if (error) {
+          throw new Error(error.message);
+        }
+
+        finalRegistrationData = {
+          ...registrationData,
+          photo_src: data.publicUrl,
+          eventId: eventQuery.data.id,
+          event_requires_payment: eventQuery.data.requires_payment,
+        };
+      } else {
+        finalRegistrationData = {
+          ...registrationData,
+          photo_src: '',
+          eventId: eventQuery.data.id,
+          event_requires_payment: eventQuery.data.requires_payment,
+        };
       }
 
-      const finalRegistrationData = {
-        ...registrationData,
-        photo_src: data.publicUrl,
-        eventId: eventQuery.data.id,
-      };
       const studentData = await submitRegistration(
         token,
         finalRegistrationData
@@ -116,6 +127,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
         email: '',
         isSubmittedByStudent: true,
       });
+      setSelectedFile(null);
       router.push(`/student?uuid=${studentData.uuid}`);
     } catch (error) {
       toast.error('Error during file upload');

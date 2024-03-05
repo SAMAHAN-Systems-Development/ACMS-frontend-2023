@@ -10,8 +10,14 @@ import Unauthorized from '@/components/ui/Unauthorized';
 import { fetchUser } from '@/utilities/fetch/user';
 
 const allowedUrls = {
-  facilitator: ['/home', '/', '/student', '/event/qr-scan/[id]'],
-  cashier: ['/home', 'register-student', '/'],
+  facilitator: [
+    '/home',
+    '/',
+    '/student',
+    '/event/qr-scan/[id]',
+    '/register/[id]',
+  ],
+  cashier: ['/home', 'register-student', '/', '/register/[id]'],
   admin: [
     '/',
     '/home',
@@ -23,6 +29,7 @@ const allowedUrls = {
     '/event/edit/[id]',
     '/payments/declined',
     '/payments/accepted',
+    '/register/[id]',
   ],
   student: ['/register/[id]', '/'],
 };
@@ -48,7 +55,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     return children;
   }
 
-  if (isAllowed(pathname, userType)) {
+  if (isAllowed(pathname, userType) && userQuery.isFetched) {
     return (
       <UserContext.Provider value={{ user: userQuery.data }}>
         {children}
@@ -56,7 +63,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (userQuery.isLoading) {
+  if (userQuery.isFetching) {
     return <Loading />;
   }
 

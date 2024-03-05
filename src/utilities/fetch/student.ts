@@ -7,6 +7,7 @@ export const submitRegistration = async (
   token: string,
   studentInfo: {
     email: string;
+    event_requires_payment: boolean;
     eventId: number;
     firstName: string;
     isSubmittedByStudent: boolean;
