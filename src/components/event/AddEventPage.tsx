@@ -150,7 +150,7 @@ const AddEventPage = () => {
               />
             )}
           </div>
-          <div className="w-[9rem]">
+          <div className="w-[9rem] mb-8">
             <Button type="submit">Add Event</Button>
           </div>
         </form>

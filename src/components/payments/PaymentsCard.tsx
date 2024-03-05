@@ -12,6 +12,7 @@ import {
   declinePayments,
   restorePayments,
 } from '@/utilities/fetch/payment';
+import moneyFormatter from '@/utilities/moneyFormatter';
 
 type propTypes = {
   page: number;
@@ -141,7 +142,9 @@ const PaymentsCard: React.FC<propTypes> = ({
 
         <div className="flex flex-col items-center justify-between flex-grow">
           <div className="flex flex-col gap-4">
-            <p className="text-xl text-center font-bold">{eventPrice}</p>
+            <p className="text-xl text-center font-bold">
+              {moneyFormatter(eventPrice)}
+            </p>
             <div className="flex items-center justify-center">
               <Image
                 className="object-cover"

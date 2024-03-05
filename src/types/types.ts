@@ -28,7 +28,7 @@ export type Event = {
   id: number;
   is_active: boolean;
   max_participants: number;
-  price: string;
+  price: number;
   requires_payment: boolean;
   students: Student[];
   title: string;

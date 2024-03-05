@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import PaymentButton from '@/components/payments/PaymentButton';
 import type { Event } from '@/types/types';
 import { activateEvents, inactivateEvents } from '@/utilities/fetch/event';
+import moneyFormatter from '@/utilities/moneyFormatter';
 
 type propTypes = {
   event: Event;
@@ -95,9 +96,11 @@ const EventCard: React.FC<propTypes> = ({
     <div className="relative w-[25rem] md:h-[22rem] h-auto rounded-xl border-blue border-2 shadow-[2px_0px_4px_0px_rgba(0,0,0,0.25),0px_4px_4px_0px_rgba(0,0,0,0.25)]">
       <div className="flex flex-col p-4 gap-4 justify-between h-full">
         <div className="flex flex-col gap-4">
-          <div className="flex gap-4 justify-between md:mb-4">
+          <div className="flex gap-4 justify-between items-center md:mb-4">
             <h2 className="font-bold text-lg sm:text-xl">{event.title}</h2>
-            <h2 className="font-bold text-l">{event.price}</h2>
+            <h2 className="font-bold text-l text-right">
+              {moneyFormatter(event.price)}
+            </h2>
           </div>
           <div className="flex flex-col">
             <p className="text-sm sm:text-md">

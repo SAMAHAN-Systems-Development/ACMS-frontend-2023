@@ -23,29 +23,43 @@ const Home = async () => {
   const queryClient = new QueryClient();
   const cookieStore = cookies();
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
-  const user = await fetchUser(supabase);
+
+  await queryClient.prefetchQuery({
+    queryKey: ['user'],
+    queryFn: () => fetchUser(supabase),
+  });
+
+  const {
+    userType,
+    accessToken,
+  }: { accessToken: string; email: string; userType: string } =
+    queryClient.getQueryData(['user']) || {
+      email: '',
+      userType: 'student',
+      accessToken: '',
+    };
 
   await queryClient.prefetchQuery({
     queryKey: ['events', 'active', { page: 1 }],
-    queryFn: () => fetchActiveEvents(user.accessToken, 1),
+    queryFn: () => fetchActiveEvents(accessToken, 1),
   });
 
   await queryClient.prefetchQuery({
     queryKey: ['jwt'],
-    queryFn: () => user.accessToken,
+    queryFn: () => accessToken,
   });
 
   await queryClient.prefetchQuery({
     queryKey: ['events', 'active', 'all', 'title'],
-    queryFn: () => fetchAllActiveTitleEvents(user.accessToken),
+    queryFn: () => fetchAllActiveTitleEvents(accessToken),
   });
 
   await queryClient.prefetchQuery({
     queryKey: ['payments', 'pending', { page: 1 }],
-    queryFn: () => fetchPendingPayments(user.accessToken, 1),
+    queryFn: () => fetchPendingPayments(accessToken, 1),
   });
 
-  if (user.userType === 'facilitator') {
+  if (userType === 'facilitator') {
     return (
       <HydrationBoundary state={dehydrate(queryClient)}>
         <Navigation />
@@ -54,7 +68,7 @@ const Home = async () => {
     );
   }
 
-  if (user.userType === 'cashier') {
+  if (userType === 'cashier') {
     return (
       <HydrationBoundary state={dehydrate(queryClient)}>
         <Navigation />

@@ -59,6 +59,7 @@ const Pagination: React.FC<propTypes> = ({ page, setPage, maxPage }) => {
           height: '48px',
           color: '#181842',
           opacity: isPreviousDisabled ? 0.5 : 1,
+          cursor: isPreviousDisabled ? 'default' : 'pointer',
         }}
         onClick={isPreviousDisabled ? () => {} : previousClickAction}
         role="button"
@@ -79,6 +80,7 @@ const Pagination: React.FC<propTypes> = ({ page, setPage, maxPage }) => {
           height: '48px',
           color: '#181842',
           opacity: isNextDisabled ? 0.5 : 1,
+          cursor: isNextDisabled ? 'default' : 'pointer',
         }}
         onClick={isNextDisabled ? () => {} : nextClickAction}
         role="button"

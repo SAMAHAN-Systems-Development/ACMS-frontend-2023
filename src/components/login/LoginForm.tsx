@@ -33,13 +33,13 @@ const LoginForm = () => {
         />
         <h1 className="text-xl font-semibold">ACMS</h1>
       </div>
-      <div className="flex flex-col items-center justify-center gap-8 border-2 border-navyBlue md:px-24 md:pb-24 md:pt-32 px-12 pb-12 pt-16 rounded-3xl relative mx-8">
+      <div className="flex flex-col items-center justify-center gap-8 border-2 border-navyBlue md:px-20 md:pb-20 md:pt-28 px-12 pb-12 pt-16 rounded-3xl relative mx-8">
         <Image
           src="/logo.png"
           alt="Logo Picture"
           height={200}
           width={200}
-          className="absolute md:-inset-y-24 md:w-[12.5rem] w-[8rem] -inset-y-16"
+          className="absolute md:-inset-y-[5.3rem] md:w-[11rem] w-[8rem] -inset-y-16"
         />
         <h1 className="text-[2rem] font-semibold text-center">LOGIN FORM</h1>
         <form

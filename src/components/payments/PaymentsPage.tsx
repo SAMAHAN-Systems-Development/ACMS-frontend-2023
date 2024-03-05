@@ -149,45 +149,49 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
           <h1 className="text-5xl text-navyBlue font-extrabold">
             {paymentPageTitle}
           </h1>
-          <div
-            onClick={
-              listOfStudents.length === checkedCards.length &&
-              listOfStudents.length !== 0
-                ? unselectAllButtonAction
-                : selectAllButtonAction
-            }
-            role="button"
-            onKeyUp={() => {}}
-            tabIndex={0}
-            className="flex gap-2 cursor-pointer items-center"
-          >
-            <Checkbox
-              checked={
+          <div className="flex flex-col gap-4">
+            <div
+              onClick={
                 listOfStudents.length === checkedCards.length &&
                 listOfStudents.length !== 0
+                  ? unselectAllButtonAction
+                  : selectAllButtonAction
               }
-              onCheckedAction={() => {}}
-            />
-            <p className="pt-1 text-navyBlue font-medium text-md">Select All</p>
-          </div>
-          <div className="flex flex-row gap-4">
-            {(paymentPageType === 'accepted' ||
-              paymentPageType === 'declined') && (
-              <PaymentButton onClick={restoreAllButtonAction}>
-                RESTORE SELECTED
-              </PaymentButton>
-            )}
+              role="button"
+              onKeyUp={() => {}}
+              tabIndex={0}
+              className="flex gap-2 cursor-pointer items-center"
+            >
+              <Checkbox
+                checked={
+                  listOfStudents.length === checkedCards.length &&
+                  listOfStudents.length !== 0
+                }
+                onCheckedAction={() => {}}
+              />
+              <p className="pt-1 text-navyBlue font-medium text-md">
+                Select All
+              </p>
+            </div>
+            <div className="flex flex-row gap-4">
+              {(paymentPageType === 'accepted' ||
+                paymentPageType === 'declined') && (
+                <PaymentButton onClick={restoreAllButtonAction}>
+                  RESTORE SELECTED
+                </PaymentButton>
+              )}
 
-            {paymentPageType === 'pending' && (
-              <PaymentButton onClick={acceptAllButtonAction}>
-                ACCEPT SELECTED
-              </PaymentButton>
-            )}
-            {paymentPageType === 'pending' && (
-              <PaymentButton onClick={declineAllButtonAction}>
-                DECLINE SELECTED
-              </PaymentButton>
-            )}
+              {paymentPageType === 'pending' && (
+                <PaymentButton onClick={acceptAllButtonAction}>
+                  ACCEPT SELECTED
+                </PaymentButton>
+              )}
+              {paymentPageType === 'pending' && (
+                <PaymentButton onClick={declineAllButtonAction}>
+                  DECLINE SELECTED
+                </PaymentButton>
+              )}
+            </div>
           </div>
         </div>
         <div className="flex flex-col gap-4 flex-grow items-end p-16">

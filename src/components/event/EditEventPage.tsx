@@ -160,7 +160,7 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
               />
             )}
           </div>
-          <div className="w-[9rem]">
+          <div className="w-[9rem] mb-8">
             <Button type="submit">Edit Event</Button>
           </div>
         </form>
