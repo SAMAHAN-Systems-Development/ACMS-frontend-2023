@@ -37,7 +37,7 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
     date: Dayjs | null;
     description: string;
     max_participants: number;
-    price: string;
+    price: number;
     requires_payment: boolean;
     title: string;
   }>({
@@ -50,7 +50,10 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
   });
 
   const formDataOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.name === 'max_participants') {
+    if (
+      event.target.name === 'max_participants' ||
+      event.target.name === 'price'
+    ) {
       setFormData({
         ...formData,
         [event.target.name]: Number(event.target.value),
