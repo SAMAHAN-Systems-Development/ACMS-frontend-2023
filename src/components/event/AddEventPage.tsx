@@ -27,20 +27,23 @@ const AddEventPage = () => {
     date: Dayjs | null;
     description: string;
     max_participants: number;
-    price: string;
+    price: number;
     requires_payment: boolean;
     title: string;
   }>({
     title: '',
     description: '',
     date: dayjs().add(1, 'day'),
-    price: '0',
+    price: 0,
     max_participants: 0,
     requires_payment: false,
   });
 
   const formDataOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.name === 'max_participants') {
+    if (
+      event.target.name === 'max_participants' ||
+      event.target.name === 'price'
+    ) {
       setFormData({
         ...formData,
         [event.target.name]: Number(event.target.value),
@@ -67,6 +70,14 @@ const AddEventPage = () => {
       await queryClient.invalidateQueries({
         queryKey: ['events', 'active', { page: 1 }],
         exact: true,
+      });
+      setFormData({
+        title: '',
+        description: '',
+        date: dayjs().add(1, 'day'),
+        price: 0,
+        max_participants: 0,
+        requires_payment: false,
       });
       toast.success('Added the event successfully');
     },

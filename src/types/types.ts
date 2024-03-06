@@ -47,7 +47,7 @@ export type EventDTO = {
   date: Dayjs | null;
   description: string;
   max_participants: number;
-  price: string;
+  price: number;
   requires_payment: boolean;
   title: string;
 };

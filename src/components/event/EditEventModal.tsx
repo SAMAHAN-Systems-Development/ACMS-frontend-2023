@@ -25,7 +25,7 @@ const EditEventModal: React.FC<propTypes> = ({
     title: '',
     description: '',
     date: dayjs(),
-    price: '',
+    price: 0,
     max_participants: 0,
     requires_payment: false,
   });
@@ -35,7 +35,7 @@ const EditEventModal: React.FC<propTypes> = ({
       title: event.title,
       description: event.description,
       date: dayjs(event.date),
-      price: event.price,
+      price: Number(event.price),
       max_participants: event.max_participants,
       requires_payment: event.requires_payment,
     });
