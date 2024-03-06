@@ -157,6 +157,5 @@ export const fetchEventByFormName = async (token: string, formName: string) => {
   }
 
   const data = await response.json();
-  console.log(data);
   return data;
 };

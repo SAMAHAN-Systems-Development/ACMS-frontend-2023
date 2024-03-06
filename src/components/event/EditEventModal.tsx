@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 
 import * as Dialog from '@radix-ui/react-dialog';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 
 import Button from '@/components/ui/Button';
+import DatePicker from '@/components/ui/DatePicker';
 import TextArea from '@/components/ui/TextArea';
 import TextField from '@/components/ui/TextField';
 import type { EventDTO } from '@/types/types';
-import DatePicker from '@/components/ui/DatePicker';
-import dayjs, { Dayjs } from 'dayjs';
 
 type propTypes = {
   event: EventDTO;
@@ -29,24 +30,23 @@ const EditEventModal: React.FC<propTypes> = ({
     requires_payment: false,
   });
 
-  // useEffect(() => {
-  //   setFormData({
-  //     title: event.title,
-  //     description: event.description,
-  //     date: event.date,
-  //     price: event.price,
-  //     max_participants: event.max_participants,
-  //     requires_payment: event.requires_payment,
-  //   });
-  // }, [event]);
+  useEffect(() => {
+    setFormData({
+      title: event.title,
+      description: event.description,
+      date: dayjs(event.date),
+      price: event.price,
+      max_participants: event.max_participants,
+      requires_payment: event.requires_payment,
+    });
+  }, [event]);
 
   const formDataOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
   const dateOnChange = (date: Dayjs) => {
-    console.log(date);
-    // setFormData({ ...formData, date });
+    setFormData({ ...formData, date });
   };
 
   const onSubmit = (event: React.FormEvent) => {
