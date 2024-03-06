@@ -4,7 +4,6 @@ import type { ChangeEvent } from 'react';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-import Button from '@/components/ui/Button';
 import TextField from '@/components/ui/TextField';
 import type { Student } from '@/types/types';
 

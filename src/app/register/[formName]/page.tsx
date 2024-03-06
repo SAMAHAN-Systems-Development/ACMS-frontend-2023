@@ -7,12 +7,7 @@ import RegistrationForm from '@/components/register/RegistrationForm';
 import { fetchEventByFormName } from '@/utilities/fetch/event';
 import { fetchUser } from '@/utilities/fetch/user';
 
-const Page = async ({
-  params,
-}: {
-  params: { formName: string };
-  requiresPayment: Boolean;
-}) => {
+const Page = async ({ params }: { params: { formName: string } }) => {
   const queryClient = new QueryClient();
   const cookieStore = cookies();
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
