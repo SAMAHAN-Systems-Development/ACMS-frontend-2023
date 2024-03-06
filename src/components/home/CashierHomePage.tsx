@@ -63,6 +63,7 @@ const CashierHomePage = () => {
       ...inputData,
       photo_src: '',
       isSubmittedByStudent: false,
+      event_requires_payment: null,
     });
 
     if (studentData) {
