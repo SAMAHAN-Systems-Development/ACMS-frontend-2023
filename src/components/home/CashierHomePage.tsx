@@ -87,16 +87,16 @@ const CashierHomePage = () => {
   return (
     <div className="flex flex-col">
       <div className="p-8 w-full border-b-2">
-        <h1 className="text-5xl text-navyBlue font-extrabold text-center">
+        <h1 className="md:text-5xl text-4xl text-navyBlue font-extrabold text-center">
           REGISTRATION FORM
         </h1>
       </div>
-      <div className="flex justify-center flex-grow pb-12">
+      <div className="flex justify-center flex-grow mt-20">
         <form
-          className="flex flex-col gap-4 items-center mt-20"
+          className="flex flex-col gap-4 items-center"
           onSubmit={onFormSubmit}
         >
-          <div className="flex gap-4 w-full">
+          <div className="flex md:flex-row flex-col gap-4 w-full">
             <TextField
               label="first name"
               value={inputData.firstName}

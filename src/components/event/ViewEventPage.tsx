@@ -10,8 +10,10 @@ import PaymentsModal from '@/components/payments/PaymentsModal';
 import Button from '@/components/ui/Button';
 import StudentsTable from '@/components/ui/StudentsTable';
 import type { Event } from '@/types/types';
+import { VIEW_PORT_SIZES } from '@/utilities/constants';
 import { fetchEventData } from '@/utilities/fetch/event';
 import moneyFormatter from '@/utilities/moneyFormatter';
+import useWindowSize from '@/utilities/useWindowSize';
 
 const DetailLine = ({ title, detail }: { detail: string; title: string }) => {
   return (
@@ -27,6 +29,8 @@ const ViewEventPage = ({ id }: { id: string }) => {
     queryKey: ['jwt'],
   });
 
+  const { width } = useWindowSize();
+
   const token = tokenQuery.data || '';
 
   const eventQuery = useQuery({
@@ -40,19 +44,21 @@ const ViewEventPage = ({ id }: { id: string }) => {
     <>
       <section className="p-8 w-full border-b-2 relative">
         <div className="absolute">
-          <Link href={'/event/active'} className="">
-            <span
-              className="icon-[material-symbols--arrow-back-rounded]"
-              style={{
-                width: '48px',
-                height: '48px',
-                color: '#181842',
-              }}
-              role="button"
-              onKeyUp={() => {}}
-              tabIndex={0}
-            />
-          </Link>
+          {width >= VIEW_PORT_SIZES.md && (
+            <Link href={'/event/active'} className="">
+              <span
+                className="icon-[material-symbols--arrow-back-rounded]"
+                style={{
+                  width: '48px',
+                  height: '48px',
+                  color: '#181842',
+                }}
+                role="button"
+                onKeyUp={() => {}}
+                tabIndex={0}
+              />
+            </Link>
+          )}
         </div>
 
         <h1 className="text-5xl text-navyBlue font-extrabold text-center capitalize">

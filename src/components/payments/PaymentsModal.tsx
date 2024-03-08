@@ -55,7 +55,20 @@ const PaymentsModal: FC<PaymentsModalProps> = ({
       </Dialog.Trigger>
       <Dialog.Portal>
         <ModalWrapper>
-          <div className={`bg-white p-5 ${isEmpty && 'h-full'}`}>
+          <div className="w-full h-full flex flex-col items-center gap-8 bg-white p-4 relative">
+            <div className="absolute top-0 right-0 m-2">
+              <Dialog.Close>
+                <span
+                  className="icon-[material-symbols--close-rounded]"
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    color: '#181842',
+                  }}
+                />
+              </Dialog.Close>
+            </div>
+
             <div className="sticky top-0 bg-white/85 py-2">
               <p className="capitalize  text-xl font-bold text-center">
                 {paymentType} payments
@@ -69,7 +82,7 @@ const PaymentsModal: FC<PaymentsModalProps> = ({
               )}
             </div>
             {!isEmpty ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2">
+              <div className="flex flex-row gap-4 flex-wrap justify-center items-center">
                 {paymentsQuery.data?.payments?.map((student: Student) => (
                   <div key={student.id} className="cols-1 mx-auto py-2">
                     <PaymentsCard

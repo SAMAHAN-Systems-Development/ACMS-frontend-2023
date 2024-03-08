@@ -51,12 +51,12 @@ const EventPage: React.FC<propTypes> = ({ eventType }) => {
 
   return (
     <div className="flex flex-col gap-8 w-full">
-      <div className="flex flex-col border-b-2 w-full">
-        <div className="flex flex-row gap-4 p-12 justify-between">
-          <h1 className="text-5xl text-navyBlue font-extrabold">
+      <div className="flex flex-col border-b-2 w-full px-4">
+        <div className="flex flex-row gap-4 md:p-12 p-4 items-center justify-between">
+          <h1 className="md:text-5xl text-4xl text-navyBlue font-extrabold">
             {eventTitle}
           </h1>
-          <div className="flex gap-2 cursor-pointer items-center">
+          <div className="flex h-full md:flex-row flex-col gap-2 cursor-pointer items-end justify-center">
             <PaymentButton onClick={viewInactivatedButtonOnClick}>
               {viewButtonLabel}
             </PaymentButton>
@@ -66,13 +66,13 @@ const EventPage: React.FC<propTypes> = ({ eventType }) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-8 flex-wrap justify-center w-full px-16 pb-16">
+      <div className="flex flex-col gap-8 flex-wrap justify-center w-full md:px-8 md:pb-8 px-4 pb-4">
         <div className="flex justify-center">
           <Pagination page={page} setPage={setPage} maxPage={maxPage} />
         </div>
         {listOfEvents.length > 0 ? (
           <>
-            <div className="flex gap-8 flex-wrap justify-center">
+            <div className="w-full flex gap-8 flex-wrap justify-center items-center">
               {listOfEvents.map((event: Event) => {
                 return (
                   <EventCard

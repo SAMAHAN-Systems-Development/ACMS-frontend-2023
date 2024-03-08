@@ -93,7 +93,7 @@ const EventCard: React.FC<propTypes> = ({
   };
 
   return (
-    <div className="relative w-[25rem] md:h-[22rem] h-auto rounded-xl border-blue border-2 shadow-[2px_0px_4px_0px_rgba(0,0,0,0.25),0px_4px_4px_0px_rgba(0,0,0,0.25)]">
+    <div className="relative md:w-[25rem] w-[22rem] md:h-[22rem] h-auto rounded-xl border-blue border-2 shadow-[2px_0px_4px_0px_rgba(0,0,0,0.25),0px_4px_4px_0px_rgba(0,0,0,0.25)]">
       <div className="flex flex-col p-4 gap-4 justify-between h-full">
         <div className="flex flex-col gap-4">
           <div className="flex gap-4 justify-between items-center md:mb-4">

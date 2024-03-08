@@ -121,7 +121,7 @@ const PaymentsCard: React.FC<propTypes> = ({
 
   return (
     <div
-      className="w-[24rem] h-[44rem] cursor-pointer p-8 rounded-xl border-blue border-2 shadow-[2px_0px_4px_0px_rgba(0,0,0,0.25),0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+      className="md:w-[24rem] w-[20rem] h-[44rem] cursor-pointer p-8 rounded-xl border-blue border-2 shadow-[2px_0px_4px_0px_rgba(0,0,0,0.25),0px_4px_4px_0px_rgba(0,0,0,0.25)]"
       onClick={onCheckedAction}
       role="button"
       onKeyUp={onCheckedAction}

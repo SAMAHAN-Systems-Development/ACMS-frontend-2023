@@ -13,7 +13,9 @@ import DatePicker from '@/components/ui/DatePicker';
 import TextArea from '@/components/ui/TextArea';
 import TextField from '@/components/ui/TextField';
 import { Toggle } from '@/components/ui/Toggle';
+import { VIEW_PORT_SIZES } from '@/utilities/constants';
 import { editEvent, fetchEventData } from '@/utilities/fetch/event';
+import useWindowSize from '@/utilities/useWindowSize';
 
 type propTypes = {
   eventId: string;
@@ -25,6 +27,7 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
   const tokenQuery = useQuery<string>({
     queryKey: ['jwt'],
   });
+  const { width } = useWindowSize();
 
   const token = tokenQuery.data || '';
 
@@ -94,20 +97,22 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
     <div className="flex flex-col">
       <div className="p-8 w-full border-b-2 relative">
         <div className="absolute">
-          <span
-            className="icon-[material-symbols--arrow-back-rounded]"
-            style={{
-              width: '48px',
-              height: '48px',
-              color: '#181842',
-            }}
-            onClick={() => {
-              router.back();
-            }}
-            role="button"
-            onKeyUp={() => {}}
-            tabIndex={0}
-          />
+          {width >= VIEW_PORT_SIZES.md && (
+            <span
+              className="icon-[material-symbols--arrow-back-rounded]"
+              style={{
+                width: '48px',
+                height: '48px',
+                color: '#181842',
+              }}
+              onClick={() => {
+                router.back();
+              }}
+              role="button"
+              onKeyUp={() => {}}
+              tabIndex={0}
+            />
+          )}
         </div>
 
         <h1 className="text-5xl text-navyBlue font-extrabold text-center">
@@ -116,7 +121,7 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
       </div>
       <div className="w-full flex flex-col justify-start items-center flex-grow mt-20">
         <form
-          className="w-[30rem] flex flex-col gap-8 items-center"
+          className="md:w-[30rem] w-[20rem] flex flex-col gap-8 items-center"
           onSubmit={onSubmit}
         >
           <div className="w-full flex flex-col gap-8 items-center">

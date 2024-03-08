@@ -144,8 +144,8 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
           height={3000}
           className="w-full"
         />
-        <div className="flex flex-col items-center border-y-2 py-5">
-          <h1 className="font-semibold md:text-2xl text-xl">
+        <div className="flex flex-col items-center border-y-2 py-5 px-4">
+          <h1 className="font-semibold md:text-2xl text-xl text-center">
             {eventQuery.data.title}
           </h1>
           <h1 className="font-semibold md:text-5xl text-4xl px-4">

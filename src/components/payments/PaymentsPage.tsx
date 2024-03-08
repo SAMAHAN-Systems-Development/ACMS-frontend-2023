@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import PaymentButton from '@/components/payments/PaymentButton';
 import PaymentsCard from '@/components/payments/PaymentsCard';
+import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import Pagination from '@/components/ui/Pagination';
 import type { Student } from '@/types/types';
@@ -145,8 +145,8 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-row border-b-2 w-full">
-        <div className="flex flex-col gap-4 p-12">
-          <h1 className="text-5xl text-navyBlue font-extrabold">
+        <div className="flex flex-col gap-4 md:p-12 p-2">
+          <h1 className="md:text-5xl text-3xl text-navyBlue font-extrabold">
             {paymentPageTitle}
           </h1>
           <div className="flex flex-col gap-4">
@@ -176,42 +176,52 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
             <div className="flex flex-row gap-4">
               {(paymentPageType === 'accepted' ||
                 paymentPageType === 'declined') && (
-                <PaymentButton onClick={restoreAllButtonAction}>
-                  RESTORE SELECTED
-                </PaymentButton>
+                <div>
+                  <Button onClick={restoreAllButtonAction}>
+                    RESTORE SELECTED
+                  </Button>
+                </div>
               )}
 
               {paymentPageType === 'pending' && (
-                <PaymentButton onClick={acceptAllButtonAction}>
-                  ACCEPT SELECTED
-                </PaymentButton>
+                <div>
+                  <Button onClick={acceptAllButtonAction}>
+                    ACCEPT SELECTED
+                  </Button>
+                </div>
               )}
               {paymentPageType === 'pending' && (
-                <PaymentButton onClick={declineAllButtonAction}>
-                  DECLINE SELECTED
-                </PaymentButton>
+                <div>
+                  <Button onClick={declineAllButtonAction}>
+                    DECLINE SELECTED
+                  </Button>
+                </div>
               )}
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-4 flex-grow items-end p-16">
-          <PaymentButton
-            onClick={() => {
-              push(upperButtonLocation);
-            }}
-          >
-            {upperButtonLabel}
-          </PaymentButton>
-          <PaymentButton
-            onClick={() => {
-              push(lowerButtonLocation);
-            }}
-          >
-            {lowerButtonLabel}
-          </PaymentButton>
+        <div className="flex flex-col gap-4 flex-grow items-end md:p-16 p-2">
+          <div>
+            <Button
+              onClick={() => {
+                push(upperButtonLocation);
+              }}
+            >
+              {upperButtonLabel}
+            </Button>
+          </div>
+          <div>
+            <Button
+              onClick={() => {
+                push(lowerButtonLocation);
+              }}
+            >
+              {lowerButtonLabel}
+            </Button>
+          </div>
         </div>
       </div>
-      <div className="flex flex-col gap-8 flex-wrap justify-center items-center px-16 pb-16">
+      <div className="flex flex-col gap-8 flex-wrap justify-center items-center md:px-16 md:pb-16 px-4 pb-4">
         <div className="flex justify-center">
           <Pagination page={page} setPage={setPage} maxPage={maxPage} />
         </div>
