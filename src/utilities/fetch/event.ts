@@ -144,18 +144,15 @@ export const addEvent = async (token: string, event: EventDTO) => {
   return data;
 };
 
-export const fetchEventByFormName = async (token: string, formName: string) => {
+export const fetchEventByFormName = async (formName: string) => {
   const response = await fetch(`${backendUrl}/event/form-name/${formName}`, {
     method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
 
   if (!response.ok) {
     throw new Error('Error in fetching the event');
   }
-
   const data = await response.json();
+  console.log(data);
   return data;
 };

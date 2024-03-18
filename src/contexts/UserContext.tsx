@@ -51,6 +51,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Path for students to register for events
+  if (userType === 'student' && isAllowed(pathname, 'student')) {
+    return children;
+  }
+
   if (pathname === '/login') {
     return children;
   }

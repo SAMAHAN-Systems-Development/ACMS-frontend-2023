@@ -1,12 +1,13 @@
 'use client';
 import type { FormEvent } from 'react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-import { createClient } from '@supabase/supabase-js';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useQuery } from '@tanstack/react-query';
+import { io } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 
 import Button from '@/components/ui/Button';
@@ -28,25 +29,21 @@ const getImageSrcByViewportSize = (width: number) => {
 
 const RegistrationForm = ({ formName }: { formName: string }) => {
   const { width } = useWindowSize();
-
-  const tokenQuery = useQuery<string>({
-    queryKey: ['jwt'],
-  });
+  useEffect(() => {
+    const socket = io('ws://localhost:3000');
+    socket.on('ticketsLeft', (value) => {
+      console.log(value);
+    });
+  }, []);
 
   const router = useRouter();
 
-  const token = tokenQuery.data || '';
-
   const eventQuery = useQuery<Event>({
     queryKey: ['events', { formName: formName }],
-    queryFn: () => fetchEventByFormName(token, formName),
+    queryFn: () => fetchEventByFormName(formName),
   });
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  const supabase = createClientComponentClient();
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -115,10 +112,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
         };
       }
 
-      const studentData = await submitRegistration(
-        token,
-        finalRegistrationData
-      );
+      const studentData = await submitRegistration(finalRegistrationData);
       toast.success('Registration successful');
       setRegistrationData({
         firstName: '',
