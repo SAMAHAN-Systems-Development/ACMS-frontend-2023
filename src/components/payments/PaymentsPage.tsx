@@ -10,7 +10,7 @@ import PaymentsCard from '@/components/payments/PaymentsCard';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import Pagination from '@/components/ui/Pagination';
-import type { Student } from '@/types/types';
+import type { Payment } from '@/types/types';
 import {
   acceptPayments,
   declinePayments,
@@ -55,7 +55,7 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
     return fetchDeclinedPayments(token, page);
   };
 
-  const paymentsQuery = useQuery<{ maxPage: number; payments: Student[] }>({
+  const paymentsQuery = useQuery<{ maxPage: number; payments: Payment[] }>({
     queryKey: ['payments', paymentPageType, { page }],
     queryFn: queryFn,
   });
@@ -66,7 +66,7 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
   };
 
   const selectAllButtonAction = () => {
-    setCheckedCards(listOfStudents.map((student) => student.paymentId));
+    setCheckedCards(listOfStudents.map((payment) => payment.id));
   };
 
   const unselectAllButtonAction = () => {
@@ -228,9 +228,9 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
         {listOfStudents.length > 0 ? (
           <>
             <div className="flex gap-8 flex-wrap justify-center">
-              {listOfStudents.map((student: Student, index: number) => (
+              {listOfStudents.map((payment: Payment, index: number) => (
                 <PaymentsCard
-                  key={student.paymentId + index}
+                  key={payment.id + index}
                   hasRestoreButton={
                     paymentPageType === 'accepted' ||
                     paymentPageType === 'declined'
@@ -240,7 +240,7 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
                   hasCheckbox={true}
                   checkedCards={checkedCards}
                   setCheckedCards={setCheckedCards}
-                  student={student}
+                  payment={payment}
                   paymentPageType={paymentPageType}
                   page={page}
                 />

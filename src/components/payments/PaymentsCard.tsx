@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import PaymentButton from '@/components/payments/PaymentButton';
 import Checkbox from '@/components/ui/Checkbox';
-import type { Student } from '@/types/types';
+import type { Payment } from '@/types/types';
 import {
   acceptPayments,
   declinePayments,
@@ -16,8 +16,8 @@ import moneyFormatter from '@/utilities/moneyFormatter';
 
 type propTypes = {
   page: number;
+  payment: Payment;
   paymentPageType: 'accepted' | 'declined' | 'pending';
-  student: Student;
   checkedCards?: number[];
   hasAcceptButton?: boolean;
   hasCheckbox?: boolean;
@@ -30,17 +30,18 @@ const PaymentsCard: React.FC<propTypes> = ({
   hasRestoreButton,
   hasCheckbox,
   checkedCards,
-  student,
+  payment,
   setCheckedCards,
   paymentPageType,
   page,
   hasDeclineButton,
   hasAcceptButton,
 }) => {
-  const eventPrice = student.event.price;
-  const eventTitle = student.event.title;
-  const studentName = `${student.firstName} ${student.lastName}`;
-  const paymentPhotoUrl = student.payment.photo_src;
+  const eventPrice = payment.eventPrice;
+  const eventTitle = payment.event.title;
+  const studentName = `${payment.student.firstName} ${payment.student.lastName}`;
+  const paymentPhotoUrl = payment.photo_src;
+  const eventTier = payment.eventTier.name;
   const tokenQuery = useQuery<string>({
     queryKey: ['jwt'],
   });
@@ -50,7 +51,7 @@ const PaymentsCard: React.FC<propTypes> = ({
 
   const restorePaymentsMutation = useMutation({
     mutationFn: async () => {
-      await restorePayments(token, [student.paymentId]);
+      await restorePayments(token, [payment.id]);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -63,7 +64,7 @@ const PaymentsCard: React.FC<propTypes> = ({
 
   const acceptPaymentsMutation = useMutation({
     mutationFn: async () => {
-      await acceptPayments(token, [student.paymentId]);
+      await acceptPayments(token, [payment.id]);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -76,7 +77,7 @@ const PaymentsCard: React.FC<propTypes> = ({
 
   const declinePaymentsMutation = useMutation({
     mutationFn: async () => {
-      await declinePayments(token, [student.paymentId]);
+      await declinePayments(token, [payment.id]);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -105,16 +106,14 @@ const PaymentsCard: React.FC<propTypes> = ({
   let checked = false;
   let onCheckedAction = () => {};
   if (checkedCards && setCheckedCards) {
-    checked = checkedCards.includes(student.paymentId);
+    checked = checkedCards.includes(payment.id);
     onCheckedAction = () => {
-      if (checkedCards.includes(student.paymentId)) {
+      if (checkedCards.includes(payment.id)) {
         setCheckedCards(
-          checkedCards.filter(
-            (checkedCard) => checkedCard !== student.paymentId
-          )
+          checkedCards.filter((checkedCard) => checkedCard !== payment.id)
         );
       } else {
-        setCheckedCards([...checkedCards, student.paymentId]);
+        setCheckedCards([...checkedCards, payment.id]);
       }
     };
   }
@@ -133,7 +132,7 @@ const PaymentsCard: React.FC<propTypes> = ({
             <p className="font-body text-sm text-left font-bold">
               {eventTitle}
             </p>
-            <p className="text-sm text-left">{studentName}</p>
+            <p className="text-sm text-left">{`${studentName} (${eventTier})`}</p>
           </div>
           {hasCheckbox && (
             <Checkbox checked={checked} onCheckedAction={onCheckedAction} />

@@ -24,7 +24,7 @@ export type Event = {
   createdAt: string;
   date: string;
   description: string;
-  form_name: boolean;
+  form_name: string;
   id: number;
   is_active: boolean;
   max_participants: number;
@@ -37,9 +37,46 @@ export type Event = {
 
 export type Payment = {
   createdAt: string;
-  id: string;
+  event: EventPayment;
+  eventPrice: number;
+  eventTier: EventTierPayment;
+  id: number;
   photo_src: string;
   status: string;
+  student: StudentPayment;
+  updatedAt: string;
+};
+
+export type StudentPayment = {
+  createdAt: string;
+  email: string;
+  eventTierOnEventId: number;
+  firstName: string;
+  id: number;
+  lastName: string;
+  paymentId: number;
+  requires_payment: boolean;
+  updatedAt: string;
+  uuid: string;
+  year_and_course: string;
+};
+
+export type EventPayment = {
+  createdAt: string;
+  date: string;
+  desciption: string;
+  form_name: string;
+  id: number;
+  is_active: boolean;
+  title: string;
+  updatedAt: string;
+};
+
+export type EventTierPayment = {
+  createdAt: string;
+  id: number;
+  is_active: boolean;
+  name: string;
   updatedAt: string;
 };
 

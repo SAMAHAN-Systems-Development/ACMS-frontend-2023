@@ -11,7 +11,7 @@ import ModalWrapper from '@/components/ui/ModalWrapper';
 import PaymentsCard from '@/components/payments/PaymentsCard';
 import Button from '@/components/ui/Button';
 import Pagination from '@/components/ui/Pagination';
-import type { Student } from '@/types/types';
+import type { Payment } from '@/types/types';
 import {
   fetchAcceptedEventPayments,
   fetchDeclinedEventPayments,
@@ -83,10 +83,10 @@ const PaymentsModal: FC<PaymentsModalProps> = ({
             </div>
             {!isEmpty ? (
               <div className="flex flex-row gap-4 flex-wrap justify-center items-center">
-                {paymentsQuery.data?.payments?.map((student: Student) => (
-                  <div key={student.id} className="cols-1 mx-auto py-2">
+                {paymentsQuery.data?.payments?.map((payment: Payment) => (
+                  <div key={payment.id} className="cols-1 mx-auto py-2">
                     <PaymentsCard
-                      student={student}
+                      payment={payment}
                       page={1}
                       paymentPageType="accepted"
                     />
