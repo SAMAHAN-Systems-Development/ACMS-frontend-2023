@@ -10,7 +10,7 @@ import {
 
 import EditEventPage from '@/components/event/EditEventPage';
 import Navigation from '@/components/ui/Navigation';
-import { fetchEventData } from '@/utilities/fetch/event';
+import { fetchEventData, fetchEventTiers } from '@/utilities/fetch/event';
 import { fetchUser } from '@/utilities/fetch/user';
 
 const FinalPage = async ({ params }: { params: { eventId: string } }) => {
@@ -25,6 +25,11 @@ const FinalPage = async ({ params }: { params: { eventId: string } }) => {
   await queryClient.prefetchQuery({
     queryKey: ['event', eventId],
     queryFn: () => fetchEventData(user.accessToken, eventId),
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ['event-tiers'],
+    queryFn: () => fetchEventTiers(user.accessToken),
   });
 
   await queryClient.prefetchQuery({

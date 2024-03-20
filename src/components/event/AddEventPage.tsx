@@ -7,14 +7,24 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 
+import EventTierField from '@/components/event/EventTierField';
 import Button from '@/components/ui/Button';
 import DatePicker from '@/components/ui/DatePicker';
 import TextArea from '@/components/ui/TextArea';
 import TextField from '@/components/ui/TextField';
 import { Toggle } from '@/components/ui/Toggle';
+import type { EventTierPayment } from '@/types/types';
 import { VIEW_PORT_SIZES } from '@/utilities/constants';
-import { addEvent } from '@/utilities/fetch/event';
+import { addEvent, fetchEventTiers } from '@/utilities/fetch/event';
 import useWindowSize from '@/utilities/useWindowSize';
+
+export type FormData = {
+  date: Dayjs | null;
+  description: string;
+  eventTiers: { id: number; max_participants: number; price: number }[];
+  requires_payment: boolean;
+  title: string;
+};
 
 const AddEventPage = () => {
   const queryClient = useQueryClient();
@@ -27,34 +37,26 @@ const AddEventPage = () => {
 
   const token = tokenQuery.data || '';
 
-  const [formData, setFormData] = React.useState<{
-    date: Dayjs | null;
-    description: string;
-    max_participants: number;
-    price: number;
-    requires_payment: boolean;
-    title: string;
-  }>({
+  const eventTiersQuery = useQuery<EventTierPayment[]>({
+    queryKey: ['event-tiers'],
+    queryFn: () => fetchEventTiers(token),
+  });
+
+  const eventTiers = eventTiersQuery.data || [];
+
+  const [formData, setFormData] = React.useState<FormData>({
     title: '',
     description: '',
     date: dayjs().add(1, 'day'),
-    price: 0,
-    max_participants: 0,
     requires_payment: false,
+    eventTiers: eventTiers.map((tier) => ({
+      id: tier.id,
+      max_participants: 0,
+      price: 0,
+    })),
   });
 
   const formDataOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (
-      event.target.name === 'max_participants' ||
-      event.target.name === 'price'
-    ) {
-      setFormData({
-        ...formData,
-        [event.target.name]: Number(event.target.value),
-      });
-      return;
-    }
-
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
@@ -79,8 +81,7 @@ const AddEventPage = () => {
         title: '',
         description: '',
         date: dayjs().add(1, 'day'),
-        price: 0,
-        max_participants: 0,
+        eventTiers: [],
         requires_payment: false,
       });
       toast.success('Added the event successfully');
@@ -142,13 +143,6 @@ const AddEventPage = () => {
               label="Event Date"
               name="date"
             />
-            <TextField
-              label="Crowd Limit"
-              name="max_participants"
-              type="number"
-              value={formData.max_participants}
-              onChange={formDataOnChange}
-            />
             <div className="flex justify-start w-full pl-4">
               <Toggle
                 value={Boolean(formData.requires_payment)}
@@ -157,15 +151,15 @@ const AddEventPage = () => {
                 name="requires_payment"
               />
             </div>
-            {Boolean(formData.requires_payment) && (
-              <TextField
-                label="Event Price"
-                name="price"
-                type="string"
-                value={formData.price}
-                onChange={formDataOnChange}
+
+            {eventTiers.map((eventTier) => (
+              <EventTierField
+                key={eventTier.id}
+                eventTier={eventTier}
+                formData={formData}
+                setFormData={setFormData}
               />
-            )}
+            ))}
           </div>
           <div className="w-[9rem] mb-8">
             <Button type="submit">Add Event</Button>

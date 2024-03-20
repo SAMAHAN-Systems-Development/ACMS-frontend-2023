@@ -6,13 +6,13 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 
+import EventTierTable from '@/components/event/EventTierTable';
 import PaymentsModal from '@/components/payments/PaymentsModal';
 import Button from '@/components/ui/Button';
 import StudentsTable from '@/components/ui/StudentsTable';
-import type { Event } from '@/types/types';
+import type { ViewEvent } from '@/types/types';
 import { VIEW_PORT_SIZES } from '@/utilities/constants';
 import { fetchEventData } from '@/utilities/fetch/event';
-import moneyFormatter from '@/utilities/moneyFormatter';
 import useWindowSize from '@/utilities/useWindowSize';
 
 const DetailLine = ({ title, detail }: { detail: string; title: string }) => {
@@ -38,7 +38,7 @@ const ViewEventPage = ({ id }: { id: string }) => {
     queryFn: () => fetchEventData(token, id),
   });
 
-  const data: Event = eventQuery.data;
+  const data: ViewEvent = eventQuery.data;
 
   return (
     <>
@@ -73,16 +73,16 @@ const ViewEventPage = ({ id }: { id: string }) => {
             detail={dayjs(data.date).format('MMM DD, YYYY')}
           />
           <DetailLine
-            title={'Crowd Limit'}
-            detail={String(data.max_participants)}
+            title={'Total People Registered'}
+            detail={String(data.students.length)}
           />
           <DetailLine
-            title={'Students Registered'}
-            detail={eventQuery.data.students.length}
+            title={'Status'}
+            detail={data.is_active ? 'Active' : 'Inactive'}
           />
           <DetailLine
-            title={'Event Price:'}
-            detail={moneyFormatter(data.price)}
+            title={'Requires Payment'}
+            detail={String(data.requires_payment)}
           />
           <div className="flex md:flex-row flex-col gap-4 items-center mt-5 max-w-[50rem]">
             <PaymentsModal
@@ -101,7 +101,12 @@ const ViewEventPage = ({ id }: { id: string }) => {
           </div>
         </div>
       </section>
-      <section className="md:w-4/5 w-96 mx-auto my-10">
+      <section className="flex w-full my-10">
+        <div className="flex flex-col gap-4 border-2 border-navyBlue mx-auto rounded-2xl md:w-4/5 w-96">
+          <EventTierTable eventTiers={data.eventTiers} />
+        </div>
+      </section>
+      <section className="md:w-4/5 w-96 mx-auto my-10 pb-8">
         {eventQuery.isFetching ? (
           <div className="flex justify-center">Loading...</div>
         ) : (

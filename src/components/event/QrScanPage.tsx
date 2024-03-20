@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 
 import StudentViewModal from '@/components/event/StudentViewModal';
-import type { Event } from '@/types/types';
+import type { ViewEvent } from '@/types/types';
 import { fetchEventData } from '@/utilities/fetch/event';
 import { fetchStudentOnEvent } from '@/utilities/fetch/student';
 
@@ -22,7 +22,7 @@ const QrScanPage: React.FC<propTypes> = ({ eventId }) => {
 
   const token = tokenQuery.data || '';
 
-  const eventDataQuery = useQuery<Event>({
+  const eventDataQuery = useQuery<ViewEvent>({
     queryKey: ['events', eventId],
     queryFn: () => fetchEventData(token, eventId),
   });
@@ -62,7 +62,7 @@ const QrScanPage: React.FC<propTypes> = ({ eventId }) => {
   }, [hasScanned]);
 
   const studentData = studentMutation.data || { student: {}, isFound: false };
-
+  console.log(studentData);
   return (
     <div className="flex flex-col items-center justify-center w-full h-full bg-white">
       <div className="flex flex-col items-center justify-center w-full">

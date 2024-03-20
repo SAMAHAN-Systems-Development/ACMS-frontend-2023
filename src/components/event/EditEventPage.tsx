@@ -14,8 +14,22 @@ import TextArea from '@/components/ui/TextArea';
 import TextField from '@/components/ui/TextField';
 import { Toggle } from '@/components/ui/Toggle';
 import { VIEW_PORT_SIZES } from '@/utilities/constants';
-import { editEvent, fetchEventData } from '@/utilities/fetch/event';
+import {
+  editEvent,
+  fetchEventData,
+  fetchEventTiers,
+} from '@/utilities/fetch/event';
 import useWindowSize from '@/utilities/useWindowSize';
+import type { EventTierPayment, EventTierViewEvent } from '@/types/types';
+import EventTierField from '@/components/event/EventTierField';
+
+export type FormData = {
+  date: Dayjs | null;
+  description: string;
+  eventTiers: { id: number; max_participants: number; price: number }[];
+  requires_payment: boolean;
+  title: string;
+};
 
 type propTypes = {
   eventId: string;
@@ -31,25 +45,28 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
 
   const token = tokenQuery.data || '';
 
+  const eventTiersQuery = useQuery<EventTierPayment[]>({
+    queryKey: ['event-tiers'],
+    queryFn: () => fetchEventTiers(token),
+  });
+
+  const eventTiers = eventTiersQuery.data || [];
+
   const eventQuery = useQuery({
     queryKey: ['event', eventId],
     queryFn: () => fetchEventData(token, eventId),
   });
 
-  const [formData, setFormData] = React.useState<{
-    date: Dayjs | null;
-    description: string;
-    max_participants: number;
-    price: number;
-    requires_payment: boolean;
-    title: string;
-  }>({
+  const [formData, setFormData] = React.useState<FormData>({
     title: eventQuery.data.title,
     description: eventQuery.data.description,
     date: dayjs(eventQuery.data.date),
-    price: eventQuery.data.price,
-    max_participants: eventQuery.data.max_participants,
     requires_payment: eventQuery.data.requires_payment,
+    eventTiers: eventQuery.data.eventTiers.map((tier: EventTierViewEvent) => ({
+      id: tier.id,
+      max_participants: tier.crowdLimit,
+      price: tier.price,
+    })),
   });
 
   const formDataOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,13 +160,6 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
               label="Event Date"
               name="date"
             />
-            <TextField
-              label="Crowd Limit"
-              name="max_participants"
-              type="number"
-              value={formData.max_participants}
-              onChange={formDataOnChange}
-            />
             <div className="flex justify-start w-full pl-4">
               <Toggle
                 value={Boolean(formData.requires_payment)}
@@ -158,15 +168,14 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
                 name="requires_payment"
               />
             </div>
-            {Boolean(formData.requires_payment) && (
-              <TextField
-                label="Event Price"
-                name="price"
-                type="string"
-                value={formData.price}
-                onChange={formDataOnChange}
+            {eventTiers.map((eventTier) => (
+              <EventTierField
+                key={eventTier.id}
+                eventTier={eventTier}
+                formData={formData}
+                setFormData={setFormData}
               />
-            )}
+            ))}
           </div>
           <div className="w-[9rem] mb-8">
             <Button type="submit">Edit Event</Button>

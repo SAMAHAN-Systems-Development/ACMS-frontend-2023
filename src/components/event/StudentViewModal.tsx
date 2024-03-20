@@ -68,7 +68,8 @@ const StudentViewModal: React.FC<propTypes> = ({
                   {isFound ? (
                     <div className="w-full h-full flex flex-col items-center justify-center text-center gap-8 border-navyBlue mb-8 border-solid border-2 rounded-3xl p-12">
                       <div className="flex flex-col items-center gap-2">
-                        <div className="font-bold">{student.event.title}</div>
+                        <div className="text-3xl font-bold">{`${student.eventTier.name}`}</div>
+                        <div className="font-bold">{`(${student.event.title})`}</div>
                         <div>
                           <Image
                             src={QrCodeElem}

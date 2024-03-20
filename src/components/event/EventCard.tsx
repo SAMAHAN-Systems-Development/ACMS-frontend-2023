@@ -7,7 +7,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import PaymentButton from '@/components/payments/PaymentButton';
 import type { Event } from '@/types/types';
 import { activateEvents, inactivateEvents } from '@/utilities/fetch/event';
-import moneyFormatter from '@/utilities/moneyFormatter';
 
 type propTypes = {
   event: Event;
@@ -63,7 +62,7 @@ const EventCard: React.FC<propTypes> = ({
       toast.success('Event activated successfully');
     },
   });
-  const descriptionLength = event.title.length > 50 ? 100 : 150;
+  const descriptionLength = event.title.length > 50 ? 150 : 200;
 
   const editedDescription =
     event.description.length > descriptionLength
@@ -98,21 +97,7 @@ const EventCard: React.FC<propTypes> = ({
         <div className="flex flex-col gap-4">
           <div className="flex gap-4 justify-between items-center md:mb-4">
             <h2 className="font-bold text-lg sm:text-xl">{event.title}</h2>
-            <h2 className="font-bold text-l text-right">
-              {moneyFormatter(event.price)}
-            </h2>
           </div>
-          <div className="flex flex-col">
-            <p className="text-sm sm:text-md">
-              Crowd Limit:{' '}
-              <span className="font-bold">{event.max_participants}</span>
-            </p>
-            <p className="text-sm sm:text-md">
-              Students Registered:{' '}
-              <span className="font-bold">{event.students.length}</span>
-            </p>
-          </div>
-
           <p className="text-sm sm:text-md">{editedDescription}</p>
         </div>
         <div className="flex gap-4">

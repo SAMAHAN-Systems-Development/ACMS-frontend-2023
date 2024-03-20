@@ -1,4 +1,4 @@
-import type { EventDTO } from '@/types/types';
+import type { AddEditEventDTO } from '@/types/types';
 
 const backendUrl =
   process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
@@ -107,7 +107,7 @@ export const activateEvents = async (token: string, eventId: number) => {
 export const editEvent = async (
   token: string,
   eventId: number,
-  event: EventDTO
+  event: AddEditEventDTO
 ) => {
   const response = await fetch(`${backendUrl}/event/${eventId}`, {
     method: 'PUT',
@@ -126,7 +126,7 @@ export const editEvent = async (
   return data;
 };
 
-export const addEvent = async (token: string, event: EventDTO) => {
+export const addEvent = async (token: string, event: AddEditEventDTO) => {
   const response = await fetch(`${backendUrl}/event`, {
     method: 'POST',
     headers: {
@@ -153,6 +153,23 @@ export const fetchEventByFormName = async (formName: string) => {
     throw new Error('Error in fetching the event');
   }
   const data = await response.json();
-  console.log(data);
   return data;
+};
+
+export const fetchEventTiers = async (token: string) => {
+  const response = await fetch(`${backendUrl}/event-tier`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error in fetching the event tiers');
+  }
+
+  const responseData = await response.json();
+  const eventTiers = responseData;
+
+  return eventTiers;
 };

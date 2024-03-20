@@ -5,19 +5,19 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import TextField from '@/components/ui/TextField';
-import type { Student } from '@/types/types';
+import type { StudentViewEvent } from '@/types/types';
 
 const PAGE_SIZE = 10;
 
-const StudentsTable = ({ list }: { list: Student[] }) => {
+const StudentsTable = ({ list }: { list: StudentViewEvent[] }) => {
   const [query, setQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [shownStudents, setShownStudents] = useState<Student[]>([]);
+  const [shownStudents, setShownStudents] = useState<StudentViewEvent[]>([]);
 
-  const handleSearchStudents = (list: Student[], query: string) => {
+  const handleSearchStudents = (list: StudentViewEvent[], query: string) => {
     const inputValue = query.trim().toLowerCase();
     const filteredList = list.filter(
-      (student: Student) =>
+      (student: StudentViewEvent) =>
         student.firstName.toLowerCase().includes(inputValue) ||
         student.lastName.toLowerCase().includes(inputValue) ||
         student.year_and_course.toLowerCase().includes(inputValue) ||
@@ -63,23 +63,25 @@ const StudentsTable = ({ list }: { list: Student[] }) => {
         <table className="w-full text-center">
           <thead className="border-b-2">
             <tr>
-              <th className="w-[30%] py-5">UUID</th>
-              <th className="w-[30%]">Name</th>
-              <th className="w-[30%]">Year & Course</th>
-              <th className="w-[10%]">{''}</th>
+              <th className="w-[22%] py-5">UUID</th>
+              <th className="w-[22%]">Name</th>
+              <th className="w-[22%]">Year & Course</th>
+              <th className="w-[22%]">Event Tier</th>
+              <th className="w-[12%]">{''}</th>
             </tr>
           </thead>
           <tbody>
-            {renderStudentsForPage().map((student: Student) => (
+            {renderStudentsForPage().map((student: StudentViewEvent) => (
               <tr
                 key={student.uuid}
-                className="even:bg-slate-600 odd:bg-slate-400 border-t-2"
+                className="even:bg-slate-600 odd:bg-slate-400 border-t-2 hover:bg-blue"
               >
                 <td>{student.uuid}</td>
                 <td>
                   {student.firstName} {student.lastName}
                 </td>
                 <td>{student.year_and_course}</td>
+                <td>{student.eventTier}</td>
                 <td className="border-l-2">
                   <Link
                     href={`/student?uuid=${student.uuid}`}

@@ -55,13 +55,14 @@ export const StudentPage = () => {
           {isFound ? (
             <div className="w-full h-full flex flex-col md:flex-row items-center justify-center text-center gap-8 border-navyBlue mb-8 border-solid border-2 rounded-3xl md:p-12 p-4">
               <div className="flex flex-col items-center gap-2">
-                <div className="font-bold">{student.event.title}</div>
+                <div className="text-3xl font-bold">{`${student.eventTier.name}`}</div>
+                <div className="font-bold">{`(${student.event.title})`}</div>
                 <div>
                   <Image
                     src={QrCodeElem}
                     alt="qr-code"
-                    width={300}
-                    height={300}
+                    width={250}
+                    height={250}
                   />
                 </div>
                 <div className="font-bold">{student.uuid}</div>

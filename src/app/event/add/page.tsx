@@ -10,6 +10,7 @@ import {
 
 import AddEventPage from '@/components/event/AddEventPage';
 import Navigation from '@/components/ui/Navigation';
+import { fetchEventTiers } from '@/utilities/fetch/event';
 import { fetchUser } from '@/utilities/fetch/user';
 
 const FinalPage = async () => {
@@ -18,6 +19,11 @@ const FinalPage = async () => {
   const cookieStore = cookies();
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
   const user = await fetchUser(supabase);
+
+  await queryClient.prefetchQuery({
+    queryKey: ['event-tiers'],
+    queryFn: () => fetchEventTiers(user.accessToken),
+  });
 
   await queryClient.prefetchQuery({
     queryKey: ['jwt'],

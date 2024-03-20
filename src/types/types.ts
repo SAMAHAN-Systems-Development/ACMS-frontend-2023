@@ -3,16 +3,45 @@ import type { Dayjs } from 'dayjs';
 export type Student = {
   createdAt: string;
   email: string;
-  event: Event;
+  event: EventStudent;
   eventId: number;
+  eventTier: EventTierStudent;
   firstName: string;
   id: string;
   lastName: string;
-  payment: Payment;
+  payment: PaymentStudent;
   paymentId: number;
   updatedAt: string;
   uuid: string;
   year_and_course: string;
+};
+
+export type PaymentStudent = {
+  createdAt: string;
+  id: number;
+  photo_src: string;
+  status: string;
+  updatedAt: string;
+};
+
+export type EventStudent = {
+  createdAt: string;
+  date: string;
+  description: string;
+  form_name: string;
+  id: number;
+  is_active: boolean;
+  requires_payment: boolean;
+  title: string;
+  updatedAt: string;
+};
+
+export type EventTierStudent = {
+  createdAt: string;
+  id: number;
+  is_active: boolean;
+  name: string;
+  updatedAt: string;
 };
 
 export type Facilitator = {
@@ -27,12 +56,44 @@ export type Event = {
   form_name: string;
   id: number;
   is_active: boolean;
-  max_participants: number;
-  price: number;
   requires_payment: boolean;
-  students: Student[];
   title: string;
   updatedAt: string;
+};
+
+export type ViewEvent = {
+  date: string;
+  description: string;
+  eventTiers: EventTierViewEvent[];
+  form_name: string;
+  id: number;
+  is_active: boolean;
+  requires_payment: boolean;
+  students: StudentViewEvent[];
+  title: string;
+};
+
+export type StudentViewEvent = {
+  email: string;
+  eventTier: string;
+  firstName: string;
+  id: number;
+  lastName: string;
+  requires_payment: boolean;
+  uuid: string;
+  year_and_course: string;
+};
+
+export type EventTierViewEvent = {
+  created_at: string;
+  crowdLimit: number;
+  id: number;
+  is_active: boolean;
+  name: string;
+  numberOfPeopleRegistered: number;
+  numberOfTicketsLeft: number;
+  price: number;
+  updataed_at: string;
 };
 
 export type Payment = {
@@ -80,11 +141,16 @@ export type EventTierPayment = {
   updatedAt: string;
 };
 
-export type EventDTO = {
+export type AddEditEventDTO = {
   date: Dayjs | null;
   description: string;
-  max_participants: number;
-  price: number;
+  eventTiers: EventTierAddEditEventDTO[];
   requires_payment: boolean;
   title: string;
+};
+
+export type EventTierAddEditEventDTO = {
+  id: number;
+  max_participants: number;
+  price: number;
 };

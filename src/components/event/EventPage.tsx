@@ -31,12 +31,12 @@ const EventPage: React.FC<propTypes> = ({ eventType }) => {
 
   const token = tokenQuery.data || '';
 
-  const paymentsQuery = useQuery<{ events: Event[]; maxPage: number }>({
+  const eventsQuery = useQuery<{ events: Event[]; maxPage: number }>({
     queryKey: ['events', eventType, { page }],
     queryFn: () => fetchFunction(token, page),
   });
 
-  const { events: listOfEvents, maxPage } = paymentsQuery.data || {
+  const { events: listOfEvents, maxPage } = eventsQuery.data || {
     events: [],
     maxPage: 1,
   };
