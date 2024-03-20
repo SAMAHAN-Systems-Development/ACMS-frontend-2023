@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+import type { SelectChangeEvent } from '@mui/material';
+import { MenuItem } from '@mui/material';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useQuery } from '@tanstack/react-query';
 import { io } from 'socket.io-client';
@@ -13,10 +15,15 @@ import { v4 as uuidv4 } from 'uuid';
 import Button from '@/components/ui/Button';
 import InputFile from '@/components/ui/InputFile';
 import Loading from '@/components/ui/Loading';
+import Select from '@/components/ui/Select';
 import TextField from '@/components/ui/TextField';
-import type { Event } from '@/types/types';
+import { Toggle } from '@/components/ui/Toggle';
+import type { Event, EventTierStudent } from '@/types/types';
 import { VIEW_PORT_SIZES } from '@/utilities/constants';
-import { fetchEventByFormName } from '@/utilities/fetch/event';
+import {
+  fetchEventByFormName,
+  fetchEventTiersBasedOnEventId,
+} from '@/utilities/fetch/event';
 import { submitRegistration } from '@/utilities/fetch/student';
 import useWindowSize from '@/utilities/useWindowSize';
 
@@ -43,13 +50,24 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     queryFn: () => fetchEventByFormName(formName),
   });
 
+  const eventId = eventQuery.isSuccess ? eventQuery.data.id : 1;
+
+  const eventTiersQuery = useQuery<EventTierStudent[]>({
+    queryKey: ['event-tiers', eventId],
+    queryFn: () => fetchEventTiersBasedOnEventId(eventId),
+  });
+
+  const eventTiers = eventTiersQuery.data || [];
+
   const supabase = createClientComponentClient();
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const [registrationData, setRegistrationData] = useState<{
     email: string;
+    eventTierId: number;
     firstName: string;
+    is_addu_student: boolean;
     isSubmittedByStudent: boolean;
     lastName: string;
     year_and_course: string;
@@ -58,7 +76,9 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     lastName: '',
     year_and_course: '',
     email: '',
+    is_addu_student: true,
     isSubmittedByStudent: true,
+    eventTierId: eventTiers[0]?.id || 1,
   });
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,6 +90,20 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
       ...prev,
       [event.target.name]: event.target.value,
     }));
+  };
+
+  const selectInputOnChange = (event: SelectChangeEvent<unknown>) => {
+    setRegistrationData((prev) => ({
+      ...prev,
+      [event.target.name]: Number(event.target.value),
+    }));
+  };
+
+  const toggleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRegistrationData({
+      ...registrationData,
+      [event.target.name]: event.target.checked,
+    });
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -120,6 +154,8 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
         year_and_course: '',
         email: '',
         isSubmittedByStudent: true,
+        eventTierId: eventTiers[0]?.id || 1,
+        is_addu_student: true,
       });
       setSelectedFile(null);
       router.push(`/student?uuid=${studentData.uuid}`);
@@ -167,11 +203,30 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
               />
             </div>
 
+            <div className="w-full flex justify-start items-center gap-4 h-full">
+              <Toggle
+                value={Boolean(registrationData.is_addu_student)}
+                label="Are you an AdDU student?"
+                onChange={toggleOnChange}
+                name="is_addu_student"
+                labelPlacement="start"
+              />
+              <p className="text-l font-bold">
+                {Boolean(registrationData.is_addu_student)
+                  ? 'Yes, I am'
+                  : 'No, I am not'}
+              </p>
+            </div>
+
             <TextField
               name="email"
               onChange={inputOnChange}
               value={registrationData.email}
-              label="AdDU Email"
+              label={
+                Boolean(registrationData.is_addu_student)
+                  ? 'AdDU Email'
+                  : 'Personal Email'
+              }
               type="email"
             />
 
@@ -181,6 +236,19 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
               value={registrationData.year_and_course}
               label="Year and Course"
             />
+
+            <Select
+              value={registrationData.eventTierId}
+              onChange={selectInputOnChange}
+              name="eventTierId"
+            >
+              {eventTiersQuery.isSuccess &&
+                eventTiers.map((eventTier: EventTierStudent) => (
+                  <MenuItem key={eventTier.id} value={eventTier.id}>
+                    {eventTier.name}
+                  </MenuItem>
+                ))}
+            </Select>
 
             {eventQuery.data.requires_payment && (
               <InputFile

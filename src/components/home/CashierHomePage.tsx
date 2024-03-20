@@ -1,16 +1,21 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
 import { MenuItem, type SelectChangeEvent } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import Button from '@/components/ui/Button';
 import Select from '@/components/ui/Select';
 import TextField from '@/components/ui/TextField';
-import { fetchAllActiveTitleEvents } from '@/utilities/fetch/event';
+import type { EventTierStudent } from '@/types/types';
+import {
+  fetchAllActiveTitleEvents,
+  fetchEventTiersBasedOnEventId,
+} from '@/utilities/fetch/event';
 import { submitRegistration } from '@/utilities/fetch/student';
+import { Toggle } from '@/components/ui/Toggle';
 
 type EventTitle = {
   id: number;
@@ -32,10 +37,26 @@ const CashierHomePage = () => {
 
   const allEventTitle = activeEventsQuery.data || [];
 
+  const eventTierMutation = useMutation({
+    mutationFn: async (eventId: number) => {
+      return await fetchEventTiersBasedOnEventId(eventId);
+    },
+    onSuccess: (data: EventTierStudent[]) => {
+      setInputData((prev) => ({
+        ...prev,
+        eventTierId: data[0].id,
+      }));
+    },
+  });
+
+  const eventTierData = eventTierMutation.data || [];
+
   const [inputData, setInputData] = useState<{
     email: string;
     eventId: number;
+    eventTierId: number;
     firstName: string;
+    is_addu_student: boolean;
     lastName: string;
     year_and_course: string;
   }>({
@@ -44,6 +65,8 @@ const CashierHomePage = () => {
     year_and_course: '',
     email: '',
     eventId: allEventTitle[0].id,
+    eventTierId: eventTierData[0] ? eventTierData[0].id : 1,
+    is_addu_student: true,
   });
 
   const onFormSubmit = async (event: React.FormEvent) => {
@@ -59,7 +82,7 @@ const CashierHomePage = () => {
       return;
     }
 
-    const studentData = await submitRegistration(token, {
+    const studentData = await submitRegistration({
       ...inputData,
       photo_src: '',
       isSubmittedByStudent: false,
@@ -73,16 +96,32 @@ const CashierHomePage = () => {
   };
 
   const inputOnChange = (
-    event:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLSelectElement>
-      | SelectChangeEvent<unknown>
+    event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<unknown>
   ) => {
     setInputData((prev) => ({
       ...prev,
       [event.target.name]: event.target.value,
     }));
   };
+
+  const selectEventInputOnChange = (event: SelectChangeEvent<unknown>) => {
+    eventTierMutation.mutate(Number(event.target.value));
+    setInputData((prev) => ({
+      ...prev,
+      eventId: Number(event.target.value),
+    }));
+  };
+
+  const toggleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputData({
+      ...inputData,
+      [event.target.name]: event.target.checked,
+    });
+  };
+
+  useEffect(() => {
+    eventTierMutation.mutate(allEventTitle[0].id);
+  }, []);
 
   return (
     <div className="flex flex-col">
@@ -116,8 +155,26 @@ const CashierHomePage = () => {
             name="year_and_course"
             onChange={inputOnChange}
           />
+          <div className="w-full flex justify-start items-center gap-4 h-full">
+            <Toggle
+              value={Boolean(inputData.is_addu_student)}
+              label="Are you an AdDU student?"
+              onChange={toggleOnChange}
+              name="is_addu_student"
+              labelPlacement="start"
+            />
+            <p className="text-l font-bold">
+              {Boolean(inputData.is_addu_student)
+                ? 'Yes, I am'
+                : 'No, I am not'}
+            </p>
+          </div>
           <TextField
-            label="AdDU Email"
+            label={
+              Boolean(inputData.is_addu_student)
+                ? 'AdDU Email'
+                : 'Personal Email'
+            }
             value={inputData.email}
             name="email"
             type="email"
@@ -125,7 +182,7 @@ const CashierHomePage = () => {
           />
           <Select
             value={String(inputData.eventId)}
-            onChange={inputOnChange}
+            onChange={selectEventInputOnChange}
             name="eventId"
           >
             {allEventTitle.map((event: EventTitle) => (
@@ -134,6 +191,20 @@ const CashierHomePage = () => {
               </MenuItem>
             ))}
           </Select>
+          {
+            <Select
+              value={String(inputData.eventTierId)}
+              onChange={inputOnChange}
+              name="eventTierId"
+            >
+              {eventTierMutation.isSuccess &&
+                eventTierData.map((eventTier: EventTierStudent) => (
+                  <MenuItem key={eventTier.id} value={eventTier.id}>
+                    {eventTier.name}
+                  </MenuItem>
+                ))}
+            </Select>
+          }
           <div className="flex w-full justify-end">
             <div className="w-[8rem]">
               <Button type="submit" onClick={() => {}}>

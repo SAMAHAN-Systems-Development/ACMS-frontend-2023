@@ -42,6 +42,9 @@ const PaymentsCard: React.FC<propTypes> = ({
   const studentName = `${payment.student.firstName} ${payment.student.lastName}`;
   const paymentPhotoUrl = payment.photo_src;
   const eventTier = payment.eventTier.name;
+  const isAteneanText = payment.student.is_addu_student
+    ? 'Atenean'
+    : 'Non-Atenean';
   const tokenQuery = useQuery<string>({
     queryKey: ['jwt'],
   });
@@ -120,7 +123,7 @@ const PaymentsCard: React.FC<propTypes> = ({
 
   return (
     <div
-      className="md:w-[24rem] w-[20rem] h-[44rem] cursor-pointer p-8 rounded-xl border-blue border-2 shadow-[2px_0px_4px_0px_rgba(0,0,0,0.25),0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+      className="md:w-[24rem] w-[20rem] h-[46rem] cursor-pointer p-8 rounded-xl border-blue border-2 shadow-[2px_0px_4px_0px_rgba(0,0,0,0.25),0px_4px_4px_0px_rgba(0,0,0,0.25)]"
       onClick={onCheckedAction}
       role="button"
       onKeyUp={onCheckedAction}
@@ -132,7 +135,7 @@ const PaymentsCard: React.FC<propTypes> = ({
             <p className="font-body text-sm text-left font-bold">
               {eventTitle}
             </p>
-            <p className="text-sm text-left">{`${studentName} (${eventTier})`}</p>
+            <p className="text-sm text-left">{`${studentName} (${eventTier}) (${isAteneanText})`}</p>
           </div>
           {hasCheckbox && (
             <Checkbox checked={checked} onCheckedAction={onCheckedAction} />

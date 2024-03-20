@@ -8,6 +8,7 @@ export type Student = {
   eventTier: EventTierStudent;
   firstName: string;
   id: string;
+  is_addu_student: boolean;
   lastName: string;
   payment: PaymentStudent;
   paymentId: number;
@@ -78,6 +79,7 @@ export type StudentViewEvent = {
   eventTier: string;
   firstName: string;
   id: number;
+  is_addu_student: boolean;
   lastName: string;
   requires_payment: boolean;
   uuid: string;
@@ -85,14 +87,15 @@ export type StudentViewEvent = {
 };
 
 export type EventTierViewEvent = {
+  adduPrice: number;
   created_at: string;
   crowdLimit: number;
   id: number;
   is_active: boolean;
   name: string;
+  nonAdduPrice: number;
   numberOfPeopleRegistered: number;
   numberOfTicketsLeft: number;
-  price: number;
   updataed_at: string;
 };
 
@@ -114,6 +117,7 @@ export type StudentPayment = {
   eventTierOnEventId: number;
   firstName: string;
   id: number;
+  is_addu_student: boolean;
   lastName: string;
   paymentId: number;
   requires_payment: boolean;
@@ -150,7 +154,8 @@ export type AddEditEventDTO = {
 };
 
 export type EventTierAddEditEventDTO = {
+  adduPrice: number;
   id: number;
   max_participants: number;
-  price: number;
+  nonAdduPrice: number;
 };

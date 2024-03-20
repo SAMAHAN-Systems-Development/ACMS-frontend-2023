@@ -7,8 +7,10 @@ export const submitRegistration = async (studentInfo: {
   email: string;
   event_requires_payment: boolean | null;
   eventId: number;
+  eventTierId: number;
   firstName: string;
   isSubmittedByStudent: boolean;
+  lastName: string;
   photo_src: string;
   year_and_course: string;
 }) => {

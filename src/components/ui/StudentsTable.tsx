@@ -63,11 +63,11 @@ const StudentsTable = ({ list }: { list: StudentViewEvent[] }) => {
         <table className="w-full text-center">
           <thead className="border-b-2">
             <tr>
-              <th className="w-[22%] py-5">UUID</th>
+              <th className="w-[24%] py-5">UUID</th>
               <th className="w-[22%]">Name</th>
               <th className="w-[22%]">Year & Course</th>
               <th className="w-[22%]">Event Tier</th>
-              <th className="w-[12%]">{''}</th>
+              <th className="w-[10%]">{''}</th>
             </tr>
           </thead>
           <tbody>
@@ -76,13 +76,13 @@ const StudentsTable = ({ list }: { list: StudentViewEvent[] }) => {
                 key={student.uuid}
                 className="even:bg-slate-600 odd:bg-slate-400 border-t-2 hover:bg-blue"
               >
-                <td>{student.uuid}</td>
-                <td>
+                <td className="py-2">{student.uuid}</td>
+                <td className="p-2">
                   {student.firstName} {student.lastName}
                 </td>
-                <td>{student.year_and_course}</td>
-                <td>{student.eventTier}</td>
-                <td className="border-l-2">
+                <td className="py-2">{student.year_and_course}</td>
+                <td className="py-2">{student.eventTier}</td>
+                <td className="border-l-2 py-2">
                   <Link
                     href={`/student?uuid=${student.uuid}`}
                     className="text-navyBlue underline"

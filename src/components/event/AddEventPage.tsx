@@ -21,7 +21,12 @@ import useWindowSize from '@/utilities/useWindowSize';
 export type FormData = {
   date: Dayjs | null;
   description: string;
-  eventTiers: { id: number; max_participants: number; price: number }[];
+  eventTiers: {
+    adduPrice: number;
+    id: number;
+    max_participants: number;
+    nonAdduPrice: number;
+  }[];
   requires_payment: boolean;
   title: string;
 };
@@ -52,7 +57,8 @@ const AddEventPage = () => {
     eventTiers: eventTiers.map((tier) => ({
       id: tier.id,
       max_participants: 0,
-      price: 0,
+      adduPrice: 0,
+      nonAdduPrice: 0,
     })),
   });
 

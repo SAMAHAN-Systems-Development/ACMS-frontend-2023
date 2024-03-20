@@ -11,6 +11,7 @@ type propTypes = {
   name: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   value: boolean;
+  labelPlacement?: 'start' | 'end' | 'top' | 'bottom';
 };
 
 export const Toggle: React.FC<propTypes> = ({
@@ -18,6 +19,7 @@ export const Toggle: React.FC<propTypes> = ({
   onChange,
   label,
   name,
+  labelPlacement = 'end',
 }) => {
   return (
     <FormGroup>
@@ -31,6 +33,7 @@ export const Toggle: React.FC<propTypes> = ({
           />
         }
         label={label}
+        labelPlacement={labelPlacement}
       />
     </FormGroup>
   );

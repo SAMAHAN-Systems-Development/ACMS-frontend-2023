@@ -34,7 +34,7 @@ const EventTierField: React.FC<propTypes> = ({
   return (
     <div className="flex flex-col gap-4 w-full">
       <h3 className="text-lg font-bold">{eventTier.name}</h3>
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-4">
         <TextField
           label="Crowd Limit"
           name={`max_participants`}
@@ -46,15 +46,26 @@ const EventTierField: React.FC<propTypes> = ({
         />
 
         {Boolean(formData.requires_payment) && (
-          <TextField
-            label="Price"
-            name={`price`}
-            onChange={handleEventTierFieldChange}
-            value={
-              formData.eventTiers.find((tier) => tier.id === eventTier.id)
-                ?.price || 0
-            }
-          />
+          <div className="flex gap-4">
+            <TextField
+              label="AdDU Price"
+              name={`adduPrice`}
+              onChange={handleEventTierFieldChange}
+              value={
+                formData.eventTiers.find((tier) => tier.id === eventTier.id)
+                  ?.adduPrice || 0
+              }
+            />
+            <TextField
+              label="Non-AdDU Price"
+              name={`nonAdduPrice`}
+              onChange={handleEventTierFieldChange}
+              value={
+                formData.eventTiers.find((tier) => tier.id === eventTier.id)
+                  ?.nonAdduPrice || 0
+              }
+            />
+          </div>
         )}
       </div>
     </div>

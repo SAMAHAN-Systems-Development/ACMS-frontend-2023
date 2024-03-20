@@ -62,7 +62,6 @@ const QrScanPage: React.FC<propTypes> = ({ eventId }) => {
   }, [hasScanned]);
 
   const studentData = studentMutation.data || { student: {}, isFound: false };
-  console.log(studentData);
   return (
     <div className="flex flex-col items-center justify-center w-full h-full bg-white">
       <div className="flex flex-col items-center justify-center w-full">

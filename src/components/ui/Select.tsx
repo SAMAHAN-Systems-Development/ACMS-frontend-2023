@@ -26,7 +26,7 @@ type propTypes = {
   children: React.ReactNode;
   name: string;
   onChange: (event: SelectChangeEvent<unknown>) => void;
-  value: string;
+  value: string | number;
 };
 
 const Select: React.FC<propTypes> = ({ children, value, onChange, name }) => {

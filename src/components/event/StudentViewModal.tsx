@@ -59,7 +59,6 @@ const StudentViewModal: React.FC<propTypes> = ({
               <div className="w-[10rem]">
                 <Button onClick={scanAgainButtonAction}>Scan Again</Button>
               </div>
-
               {studentMutation &&
               typeof studentMutation === 'object' &&
               'isSuccess' in studentMutation &&

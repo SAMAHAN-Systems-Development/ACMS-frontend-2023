@@ -8,11 +8,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 
+import EventTierField from '@/components/event/EventTierField';
 import Button from '@/components/ui/Button';
 import DatePicker from '@/components/ui/DatePicker';
 import TextArea from '@/components/ui/TextArea';
 import TextField from '@/components/ui/TextField';
 import { Toggle } from '@/components/ui/Toggle';
+import type { EventTierPayment, EventTierViewEvent } from '@/types/types';
 import { VIEW_PORT_SIZES } from '@/utilities/constants';
 import {
   editEvent,
@@ -20,13 +22,16 @@ import {
   fetchEventTiers,
 } from '@/utilities/fetch/event';
 import useWindowSize from '@/utilities/useWindowSize';
-import type { EventTierPayment, EventTierViewEvent } from '@/types/types';
-import EventTierField from '@/components/event/EventTierField';
 
 export type FormData = {
   date: Dayjs | null;
   description: string;
-  eventTiers: { id: number; max_participants: number; price: number }[];
+  eventTiers: {
+    adduPrice: number;
+    id: number;
+    max_participants: number;
+    nonAdduPrice: number;
+  }[];
   requires_payment: boolean;
   title: string;
 };
@@ -65,7 +70,8 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
     eventTiers: eventQuery.data.eventTiers.map((tier: EventTierViewEvent) => ({
       id: tier.id,
       max_participants: tier.crowdLimit,
-      price: tier.price,
+      adduPrice: tier.adduPrice,
+      nonAdduPrice: tier.nonAdduPrice,
     })),
   });
 

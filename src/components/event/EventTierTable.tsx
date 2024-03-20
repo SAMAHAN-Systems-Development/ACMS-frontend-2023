@@ -12,10 +12,11 @@ const EventTierTable: React.FC<propTypes> = ({ eventTiers }) => {
     <table className="w-full text-center">
       <thead className="border-b-2">
         <tr>
-          <th className="w-[30%] p-2">Tier Name</th>
-          <th className="w-[15%] p-2">Price</th>
+          <th className="w-[20%] p-2">Tier Name</th>
+          <th className="w-[15%] p-2">AdDU Price</th>
+          <th className="w-[15%] p-2">Non-AdDU Price</th>
           <th className="w-[15%] p-2">Crowd Limit</th>
-          <th className="w-[25%] p-2">Number Of People Registered</th>
+          <th className="w-[20%] p-2">Number Of People Registered</th>
           <th className="w-[15%] p-2">Number of tickets left</th>
         </tr>
       </thead>
@@ -26,7 +27,8 @@ const EventTierTable: React.FC<propTypes> = ({ eventTiers }) => {
             className="even:bg-slate-600 odd:bg-slate-400 border-t-2 hover:bg-blue"
           >
             <td className="p-2">{eventTier.name}</td>
-            <td className="p-2">{moneyFormatter(eventTier.price)}</td>
+            <td className="p-2">{moneyFormatter(eventTier.adduPrice)}</td>
+            <td className="p-2">{moneyFormatter(eventTier.nonAdduPrice)}</td>
             <td className="p-2">{eventTier.crowdLimit}</td>
             <td className="p-2">{eventTier.numberOfPeopleRegistered}</td>
             <td className="p-2">{eventTier.numberOfTicketsLeft}</td>

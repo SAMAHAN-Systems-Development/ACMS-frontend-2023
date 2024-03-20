@@ -173,3 +173,18 @@ export const fetchEventTiers = async (token: string) => {
 
   return eventTiers;
 };
+
+export const fetchEventTiersBasedOnEventId = async (eventId: number) => {
+  const response = await fetch(`${backendUrl}/event-tier/${eventId}`, {
+    method: 'GET',
+  });
+
+  if (!response.ok) {
+    throw new Error('Error in fetching the event tiers');
+  }
+
+  const responseData = await response.json();
+  const eventTiers = responseData;
+
+  return eventTiers;
+};
