@@ -11,6 +11,7 @@ type propTypes = {
   name: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   value: boolean;
+  labelBesideToggle?: string;
   labelPlacement?: 'start' | 'end' | 'top' | 'bottom';
 };
 
@@ -20,19 +21,23 @@ export const Toggle: React.FC<propTypes> = ({
   label,
   name,
   labelPlacement = 'end',
+  labelBesideToggle = '',
 }) => {
   return (
     <FormGroup>
       <FormControlLabel
         control={
-          <IOSSwitch
-            checked={value}
-            onChange={onChange}
-            sx={{ margin: 1 }}
-            name={name}
-          />
+          <div className="flex gap-2 items-center w-full">
+            <IOSSwitch
+              checked={value}
+              onChange={onChange}
+              sx={{ margin: 1 }}
+              name={name}
+            />
+            <h3 className="text-md font-bold">{labelBesideToggle}</h3>
+          </div>
         }
-        label={label}
+        label={<p className="text-md w-[13rem] text-left w-full">{label}</p>}
         labelPlacement={labelPlacement}
       />
     </FormGroup>
