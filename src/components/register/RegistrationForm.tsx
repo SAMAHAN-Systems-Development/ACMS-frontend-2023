@@ -12,13 +12,14 @@ import { useQuery } from '@tanstack/react-query';
 import { io } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 
+import RegistrationEventTiersTable from '@/components/register/RegistrationEventTiersTable';
 import Button from '@/components/ui/Button';
 import InputFile from '@/components/ui/InputFile';
 import Loading from '@/components/ui/Loading';
 import Select from '@/components/ui/Select';
 import TextField from '@/components/ui/TextField';
 import { Toggle } from '@/components/ui/Toggle';
-import type { Event, EventTierStudent } from '@/types/types';
+import type { Event, EventTierRegistration } from '@/types/types';
 import { VIEW_PORT_SIZES } from '@/utilities/constants';
 import {
   fetchEventByFormName,
@@ -52,7 +53,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
 
   const eventId = eventQuery.isSuccess ? eventQuery.data.id : 1;
 
-  const eventTiersQuery = useQuery<EventTierStudent[]>({
+  const eventTiersQuery = useQuery<EventTierRegistration[]>({
     queryKey: ['event-tiers', eventId],
     queryFn: () => fetchEventTiersBasedOnEventId(eventId),
   });
@@ -182,6 +183,11 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
             Registration Form
           </h1>
         </div>
+        <div className="flex border-navyBlue justify-center mt-12">
+          <div className="w-[60rem] border-2">
+            <RegistrationEventTiersTable eventTiers={eventTiers} />
+          </div>
+        </div>
         <div className="flex flex-col items-center mt-20">
           <form
             className=" flex flex-col justify-center gap-4"
@@ -243,7 +249,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
               name="eventTierId"
             >
               {eventTiersQuery.isSuccess &&
-                eventTiers.map((eventTier: EventTierStudent) => (
+                eventTiers.map((eventTier: EventTierRegistration) => (
                   <MenuItem key={eventTier.id} value={eventTier.id}>
                     {eventTier.name}
                   </MenuItem>
@@ -263,6 +269,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
               </div>
             </div>
           </form>
+          R
         </div>
       </div>
     );

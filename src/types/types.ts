@@ -159,3 +159,11 @@ export type EventTierAddEditEventDTO = {
   max_participants: number;
   nonAdduPrice: number;
 };
+
+export type EventTierRegistration = {
+  adduPrice: number;
+  id: number;
+  name: string;
+  nonAdduPrice: number;
+  numberOfTicketsLeft: number;
+};
