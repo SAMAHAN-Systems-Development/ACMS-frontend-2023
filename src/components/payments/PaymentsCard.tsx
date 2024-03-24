@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import PaymentButton from '@/components/payments/PaymentButton';
+import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import type { Payment } from '@/types/types';
 import {
@@ -160,23 +160,17 @@ const PaymentsCard: React.FC<propTypes> = ({
           <div className="flex flex-row gap-4 justify-between w-full">
             {hasRestoreButton && (
               <div className="flex items-center justify-center my-3 w-full">
-                <PaymentButton onClick={restoreButtonAction}>
-                  Restore
-                </PaymentButton>
+                <Button onClick={restoreButtonAction}>Restore</Button>
               </div>
             )}
             {hasAcceptButton && (
               <div className="flex items-center justify-center my-3 w-full">
-                <PaymentButton onClick={acceptButtonAction}>
-                  Accept
-                </PaymentButton>
+                <Button onClick={acceptButtonAction}>Accept</Button>
               </div>
             )}
             {hasDeclineButton && (
               <div className="flex items-center justify-center my-3 w-full">
-                <PaymentButton onClick={declineButtonAction}>
-                  Decline
-                </PaymentButton>
+                <Button onClick={declineButtonAction}>Decline</Button>
               </div>
             )}
           </div>

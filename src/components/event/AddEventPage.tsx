@@ -149,7 +149,7 @@ const AddEventPage = () => {
               label="Event Date"
               name="date"
             />
-            <div className="flex justify-start w-full pl-4">
+            <div className="flex justify-start w-full">
               <Toggle
                 value={Boolean(formData.requires_payment)}
                 label="Requires Payment"

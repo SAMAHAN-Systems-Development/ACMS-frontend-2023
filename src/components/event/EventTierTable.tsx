@@ -1,23 +1,32 @@
 import React from 'react';
 
 import type { EventTierViewEvent } from '@/types/types';
+import { VIEW_PORT_SIZES } from '@/utilities/constants';
 import moneyFormatter from '@/utilities/moneyFormatter';
+import useWindowSize from '@/utilities/useWindowSize';
 
 type propTypes = {
   eventTiers: EventTierViewEvent[];
 };
 
 const EventTierTable: React.FC<propTypes> = ({ eventTiers }) => {
+  const { width } = useWindowSize();
+  const isWidthSmall = width < VIEW_PORT_SIZES.sm;
+
   return (
     <table className="w-full text-center">
       <thead className="border-b-2">
         <tr>
-          <th className="w-[20%] p-2">Tier Name</th>
-          <th className="w-[15%] p-2">AdDU Price</th>
-          <th className="w-[15%] p-2">Non-AdDU Price</th>
-          <th className="w-[15%] p-2">Crowd Limit</th>
-          <th className="w-[20%] p-2">Number Of People Registered</th>
-          <th className="w-[15%] p-2">Number of tickets left</th>
+          <th className="w-[20%] sm:p-2">Tier Name</th>
+          <th className="w-[15%] sm:p-2">AdDU Price</th>
+          <th className="w-[15%] sm:p-2">Non-AdDU Price</th>
+          <th className="w-[15%] sm:p-2">Crowd Limit</th>
+          <th className="w-[2 0%] sm:p-2 break-all">
+            {isWidthSmall ? 'Registrants' : 'Number Of People Registered'}
+          </th>
+          <th className="w-[15%] sm:p-2 break-all">
+            {isWidthSmall ? 'Tickets Left' : 'Number Of Tickets Left'}
+          </th>
         </tr>
       </thead>
       <tbody>

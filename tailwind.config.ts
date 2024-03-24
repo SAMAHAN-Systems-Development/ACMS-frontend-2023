@@ -21,6 +21,7 @@ const config: Config = {
       blue: '#7A92C2',
       white: '#ffffff',
       black: '#000000',
+      gray: '#EBEBE4',
     },
   },
   plugins: [addDynamicIconSelectors()],

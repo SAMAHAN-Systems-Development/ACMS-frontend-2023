@@ -103,6 +103,37 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (
+      registrationData.email === '' ||
+      registrationData.firstName === '' ||
+      registrationData.lastName === '' ||
+      registrationData.year_and_course === ''
+    ) {
+      toast.error('Please fill up all the fields', { autoClose: 4000 });
+      return;
+    }
+
+    const validRegex = /@addu.edu.ph\s*$/;
+    if (
+      registrationData.is_addu_student &&
+      !validRegex.test(registrationData.email)
+    ) {
+      toast.error('Please use your Ateneo email', { autoClose: 4000 });
+      return;
+    }
+
+    if (
+      !registrationData.is_addu_student &&
+      validRegex.test(registrationData.email)
+    ) {
+      toast.error(
+        'This email is from Ateneo, please check the "Are you an AdDU student?" checkbox',
+        { autoClose: 8000 }
+      );
+      return;
+    }
+
     let finalRegistrationData;
     try {
       if (!eventQuery.data) {
@@ -110,7 +141,10 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
       }
 
       if (eventQuery.data.requires_payment) {
-        if (!selectedFile) throw new Error('No file selected');
+        if (!selectedFile) {
+          toast.error('Please add an payment photo');
+          return;
+        }
         const photoFileName = `${uuidv4()}-${selectedFile.name}`;
         const { error } = await supabase.storage
           .from('payment')

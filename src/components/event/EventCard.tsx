@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import PaymentButton from '@/components/payments/PaymentButton';
+import Button from '@/components/ui/Button';
 import type { Event } from '@/types/types';
 import { activateEvents, inactivateEvents } from '@/utilities/fetch/event';
 
@@ -102,23 +102,17 @@ const EventCard: React.FC<propTypes> = ({
         </div>
         <div className="flex gap-4">
           {hasScanQrButton && (
-            <PaymentButton onClick={scanQrButtonAction}>Scan QR</PaymentButton>
+            <div className="w-[8rem]">
+              <Button onClick={scanQrButtonAction}>Scan QR</Button>
+            </div>
           )}
-          {hasViewButton && (
-            <PaymentButton onClick={viewButtonOnClick}>View</PaymentButton>
-          )}
-          {hasEditButton && (
-            <PaymentButton onClick={editButtonOnClick}>Edit</PaymentButton>
-          )}
+          {hasViewButton && <Button onClick={viewButtonOnClick}>View</Button>}
+          {hasEditButton && <Button onClick={editButtonOnClick}>Edit</Button>}
           {hasActivateButton && (
-            <PaymentButton onClick={activateButtonAction}>
-              Activate
-            </PaymentButton>
+            <Button onClick={activateButtonAction}>Activate</Button>
           )}
           {hasDeactivateButton && (
-            <PaymentButton onClick={deactivateButtonAction}>
-              Deactivate
-            </PaymentButton>
+            <Button onClick={deactivateButtonAction}>Deactivate</Button>
           )}
         </div>
       </div>

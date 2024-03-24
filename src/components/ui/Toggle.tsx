@@ -1,7 +1,5 @@
 import React from 'react';
 
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
 import { styled } from '@mui/material/styles';
 import type { SwitchProps } from '@mui/material/Switch';
 import Switch from '@mui/material/Switch';
@@ -23,24 +21,48 @@ export const Toggle: React.FC<propTypes> = ({
   labelPlacement = 'end',
   labelBesideToggle = '',
 }) => {
+  // return (
+  //   <FormGroup>
+  //     <FormControlLabel
+  //       control={
+  //         <div className="flex gap-2 items-center w-full">
+  //           <div>
+  //           <IOSSwitch
+  //             checked={value}
+  //             onChange={onChange}
+  //             sx={{ margin: 1 }}
+  //             name={name}
+  //           />
+  //           <h3 className="text-md font-bold">{labelBesideToggle}</h3>
+  //           </div>
+  //         </div>
+  //       }
+  //       label={<p className="text-md w-[13rem] text-left w-full">{label}</p>}
+  //       labelPlacement={labelPlacement}
+  //     />
+  //   </FormGroup>
+  // );
+
+  const classNamebyLabelPlacement = () => {
+    if (labelPlacement === 'start') return 'flex-row items-center';
+    if (labelPlacement === 'end') return 'flex-row-reverse items-center';
+    if (labelPlacement === 'top') return 'flex-col';
+    return 'flex-col-reverse';
+  };
+
   return (
-    <FormGroup>
-      <FormControlLabel
-        control={
-          <div className="flex gap-2 items-center w-full">
-            <IOSSwitch
-              checked={value}
-              onChange={onChange}
-              sx={{ margin: 1 }}
-              name={name}
-            />
-            <h3 className="text-md font-bold">{labelBesideToggle}</h3>
-          </div>
-        }
-        label={<p className="text-md w-[13rem] text-left w-full">{label}</p>}
-        labelPlacement={labelPlacement}
-      />
-    </FormGroup>
+    <div className={`flex ${classNamebyLabelPlacement()} gap-2`}>
+      <h3 className="text-md">{label}</h3>
+      <div className="flex gap-2 items-center">
+        <IOSSwitch
+          checked={value}
+          onChange={onChange}
+          sx={{ margin: 1 }}
+          name={name}
+        />
+        <h3 className="text-md font-bold">{labelBesideToggle}</h3>
+      </div>
+    </div>
   );
 };
 

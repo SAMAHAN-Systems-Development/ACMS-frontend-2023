@@ -62,7 +62,7 @@ const LoginForm = () => {
             value={fieldValues.password}
           />
           <div className="w-full flex justify-end mt-4">
-            <div className="w-[10rem]">
+            <div className="w-[8rem]">
               <Button type="submit" onClick={() => {}}>
                 Login
               </Button>

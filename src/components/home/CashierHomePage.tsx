@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import { MenuItem, type SelectChangeEvent } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { io } from 'socket.io-client';
 
 import RegistrationEventTiersTable from '@/components/register/RegistrationEventTiersTable';
 import Button from '@/components/ui/Button';
@@ -12,13 +13,13 @@ import Select from '@/components/ui/Select';
 import TextField from '@/components/ui/TextField';
 import { Toggle } from '@/components/ui/Toggle';
 import type { EventTierRegistration } from '@/types/types';
+import { VIEW_PORT_SIZES } from '@/utilities/constants';
 import {
   fetchAllActiveTitleEvents,
   fetchEventTiersBasedOnEventId,
 } from '@/utilities/fetch/event';
 import { submitRegistration } from '@/utilities/fetch/student';
 import useWindowSize from '@/utilities/useWindowSize';
-import { VIEW_PORT_SIZES } from '@/utilities/constants';
 
 type EventTitle = {
   id: number;
@@ -86,6 +87,19 @@ const CashierHomePage = () => {
       return;
     }
 
+    const validRegex = /@addu.edu.ph\s*$/;
+    if (inputData.is_addu_student && !validRegex.test(inputData.email)) {
+      toast.error('Please use your Ateneo email');
+      return;
+    }
+
+    if (!inputData.is_addu_student && validRegex.test(inputData.email)) {
+      toast.error(
+        'This email is from Ateneo, please check the "Are you an AdDU student?" checkbox'
+      );
+      return;
+    }
+
     const studentData = await submitRegistration({
       ...inputData,
       photo_src: '',
@@ -126,6 +140,15 @@ const CashierHomePage = () => {
   useEffect(() => {
     eventTierMutation.mutate(allEventTitle[0].id);
   }, []);
+
+  useEffect(() => {
+    const socket = io(String(process.env.NEXT_PUBLIC_WS_URL));
+    socket.on('sendStudentRegisteredSignal', async (wsEventId: number) => {
+      if (inputData.eventId === wsEventId) {
+        eventTierMutation.mutate(inputData.eventId);
+      }
+    });
+  }, [inputData.eventId, eventTierMutation]);
 
   return (
     <div className="w-full">

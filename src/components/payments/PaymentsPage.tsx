@@ -144,7 +144,7 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-row border-b-2 w-full">
+      <div className="flex sm:flex-row flex-col border-b-2 w-full">
         <div className="flex flex-col gap-4 md:p-12 p-2">
           <h1 className="md:text-5xl text-3xl text-navyBlue font-extrabold">
             {paymentPageTitle}
@@ -200,8 +200,8 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-4 flex-grow items-end md:p-16 p-2">
-          <div>
+        <div className="flex flex-col gap-4 flex-grow sm:items-end md:p-16 p-2">
+          <div className="w-[14rem]">
             <Button
               onClick={() => {
                 push(upperButtonLocation);
@@ -210,7 +210,7 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
               {upperButtonLabel}
             </Button>
           </div>
-          <div>
+          <div className="w-[14rem]">
             <Button
               onClick={() => {
                 push(lowerButtonLocation);

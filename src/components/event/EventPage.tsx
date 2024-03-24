@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 
 import EventCard from '@/components/event/EventCard';
-import PaymentButton from '@/components/payments/PaymentButton';
+import Button from '@/components/ui/Button';
 import Pagination from '@/components/ui/Pagination';
 import type { Event } from '@/types/types';
 import {
@@ -52,17 +52,19 @@ const EventPage: React.FC<propTypes> = ({ eventType }) => {
   return (
     <div className="flex flex-col gap-8 w-full">
       <div className="flex flex-col border-b-2 w-full px-4">
-        <div className="flex flex-row gap-4 md:p-12 p-4 items-center justify-between">
-          <h1 className="md:text-5xl text-4xl text-navyBlue font-extrabold">
+        <div className="flex sm:flex-row flex-col gap-4 md:p-12 p-4 items-center justify-between">
+          <h1 className="md:text-5xl text-4xl text-navyBlue font-extrabold sm:text-left text-center">
             {eventTitle}
           </h1>
-          <div className="flex h-full md:flex-row flex-col gap-2 cursor-pointer items-end justify-center">
-            <PaymentButton onClick={viewInactivatedButtonOnClick}>
-              {viewButtonLabel}
-            </PaymentButton>
-            <PaymentButton onClick={addEventButtonOnClick}>
-              Add Event
-            </PaymentButton>
+          <div className="flex h-full lg:flex-row flex-col gap-2 cursor-pointer sm:items-end items-center justify-center w-[20rem]">
+            <div className="w-[15rem]">
+              <Button onClick={viewInactivatedButtonOnClick}>
+                {viewButtonLabel}
+              </Button>
+            </div>
+            <div className="w-[15rem]">
+              <Button onClick={addEventButtonOnClick}>Add Event</Button>
+            </div>
           </div>
         </div>
       </div>

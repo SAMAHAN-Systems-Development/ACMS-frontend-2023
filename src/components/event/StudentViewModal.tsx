@@ -79,6 +79,11 @@ const StudentViewModal: React.FC<propTypes> = ({
                         </div>
                         <div className="font-bold">{student.uuid}</div>
                         <div>{student.firstName + ' ' + student.lastName}</div>
+                        <div>{`(${
+                          student.is_addu_student
+                            ? 'AdDU Student'
+                            : 'Non-AdDU Student'
+                        })`}</div>
                         <div>{student.year_and_course}</div>
                       </div>
                       {student.payment.photo_src && (

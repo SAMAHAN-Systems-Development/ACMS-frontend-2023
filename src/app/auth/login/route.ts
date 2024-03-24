@@ -16,6 +16,9 @@ export async function POST(request: Request) {
     password,
   });
 
+  formData.delete('email');
+  formData.delete('password');
+
   return NextResponse.redirect(`${baseUrl}/home`, {
     status: 301,
   });

@@ -17,8 +17,8 @@ import useWindowSize from '@/utilities/useWindowSize';
 
 const DetailLine = ({ title, detail }: { detail: string; title: string }) => {
   return (
-    <div className="flex justify-between text-sm">
-      <p className="font-semibold w-1/5">{title}</p>
+    <div className="flex justify-between text-sm w-full">
+      <p className="font-semibold w-2/5">{title}</p>
       <p className="w-4/5">{detail}</p>
     </div>
   );
@@ -42,6 +42,7 @@ const ViewEventPage = ({ id }: { id: string }) => {
 
   return (
     <>
+      {' '}
       <section className="p-8 w-full border-b-2 relative">
         <div className="absolute">
           {width >= VIEW_PORT_SIZES.md && (
@@ -84,7 +85,7 @@ const ViewEventPage = ({ id }: { id: string }) => {
             title={'Requires Payment'}
             detail={String(data.requires_payment)}
           />
-          <div className="flex md:flex-row flex-col gap-4 items-center mt-5 max-w-[50rem]">
+          <div className="flex md:flex-row flex-col gap-4 items-center mt-5 max-w-[70rem]">
             <PaymentsModal
               paymentType={'accepted'}
               token={token}
@@ -97,6 +98,10 @@ const ViewEventPage = ({ id }: { id: string }) => {
             />
             <Link href={`/register/${data.form_name}`} className="w-full">
               <Button onClick={() => {}}>View Registration Form</Button>
+            </Link>
+
+            <Link href={`/event/edit/${data.id}`} className="w-full">
+              <Button onClick={() => {}}>Edit Event</Button>
             </Link>
           </div>
         </div>
