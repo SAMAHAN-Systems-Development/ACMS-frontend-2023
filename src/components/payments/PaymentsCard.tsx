@@ -160,17 +160,23 @@ const PaymentsCard: React.FC<propTypes> = ({
           <div className="flex flex-row gap-4 justify-between w-full">
             {hasRestoreButton && (
               <div className="flex items-center justify-center my-3 w-full">
-                <Button onClick={restoreButtonAction}>Restore</Button>
+                <div className="w-[8rem]">
+                  <Button onClick={restoreButtonAction}>Restore</Button>
+                </div>
               </div>
             )}
             {hasAcceptButton && (
               <div className="flex items-center justify-center my-3 w-full">
-                <Button onClick={acceptButtonAction}>Accept</Button>
+                <div className="w-[8rem]">
+                  <Button onClick={acceptButtonAction}>Accept</Button>
+                </div>
               </div>
             )}
             {hasDeclineButton && (
               <div className="flex items-center justify-center my-3 w-full">
-                <Button onClick={declineButtonAction}>Decline</Button>
+                <div className="w-[8rem]">
+                  <Button onClick={declineButtonAction}>Decline</Button>
+                </div>
               </div>
             )}
           </div>
