@@ -23,11 +23,16 @@ export const submitRegistration = async (studentInfo: {
   });
 
   if (!response.ok) {
-    toast.error('Error in submitting registration');
     throw new Error('Error in submitting registration');
   }
 
   const responseData = await response.json();
+  if (
+    responseData.message &&
+    responseData.message === 'maxParticipantsReached'
+  ) {
+    throw new Error('maxParticipantsReached');
+  }
   return responseData;
 };
 

@@ -21,28 +21,6 @@ export const Toggle: React.FC<propTypes> = ({
   labelPlacement = 'end',
   labelBesideToggle = '',
 }) => {
-  // return (
-  //   <FormGroup>
-  //     <FormControlLabel
-  //       control={
-  //         <div className="flex gap-2 items-center w-full">
-  //           <div>
-  //           <IOSSwitch
-  //             checked={value}
-  //             onChange={onChange}
-  //             sx={{ margin: 1 }}
-  //             name={name}
-  //           />
-  //           <h3 className="text-md font-bold">{labelBesideToggle}</h3>
-  //           </div>
-  //         </div>
-  //       }
-  //       label={<p className="text-md w-[13rem] text-left w-full">{label}</p>}
-  //       labelPlacement={labelPlacement}
-  //     />
-  //   </FormGroup>
-  // );
-
   const classNamebyLabelPlacement = () => {
     if (labelPlacement === 'start') return 'flex-row items-center';
     if (labelPlacement === 'end') return 'flex-row-reverse items-center';

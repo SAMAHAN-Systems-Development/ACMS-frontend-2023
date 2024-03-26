@@ -189,7 +189,15 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
       setSelectedFile(null);
       router.push(`/student?uuid=${studentData.uuid}`);
     } catch (error) {
-      toast.error('Error during file upload');
+      if (error instanceof Error) {
+        if (error.message === 'maxParticipantsReached') {
+          toast.error('The ticket limit has been reached');
+          return;
+        }
+      }
+
+      toast.error('Error in submitting registration');
+      return;
     }
   };
 
