@@ -1,5 +1,3 @@
-import { toast } from 'react-toastify';
-
 const backendUrl =
   process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
 
@@ -27,11 +25,14 @@ export const submitRegistration = async (studentInfo: {
   }
 
   const responseData = await response.json();
-  if (
-    responseData.message &&
-    responseData.message === 'maxParticipantsReached'
-  ) {
-    throw new Error('maxParticipantsReached');
+  if (responseData.message) {
+    if (responseData.message === 'maxParticipantsReached') {
+      throw new Error('maxParticipantsReached');
+    }
+
+    if (responseData.message === 'emailIsExisting') {
+      throw new Error('emailIsExisting');
+    }
   }
   return responseData;
 };

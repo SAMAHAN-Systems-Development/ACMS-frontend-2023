@@ -194,6 +194,11 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
           toast.error('The ticket limit has been reached');
           return;
         }
+
+        if (error.message === 'emailIsExisting') {
+          toast.error('The email is used in this event already');
+          return;
+        }
       }
 
       toast.error('Error in submitting registration');
