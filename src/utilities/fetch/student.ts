@@ -10,6 +10,7 @@ export const submitRegistration = async (studentInfo: {
   isSubmittedByStudent: boolean;
   lastName: string;
   photo_src: string;
+  required_payment: number;
   year_and_course: string;
 }) => {
   const response = await fetch(`${backendUrl}/student/submit-registration`, {

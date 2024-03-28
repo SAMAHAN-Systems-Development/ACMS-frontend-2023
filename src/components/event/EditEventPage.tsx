@@ -26,12 +26,14 @@ import useWindowSize from '@/utilities/useWindowSize';
 export type FormData = {
   date: Dayjs | null;
   description: string;
+  earlyBirdAccessDate: Dayjs | null;
   eventTiers: {
-    adduPrice: number;
+    earlyBirdPrice: number;
     id: number;
     max_participants: number;
-    nonAdduPrice: number;
+    originalPrice: number;
   }[];
+  hasEarlyBirdAccess: boolean;
   requires_payment: boolean;
   title: string;
 };
@@ -66,27 +68,18 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
     title: eventQuery.data.title,
     description: eventQuery.data.description,
     date: dayjs(eventQuery.data.date),
+    earlyBirdAccessDate: dayjs(eventQuery.data.earlyBirdAccessDate),
     requires_payment: eventQuery.data.requires_payment,
+    hasEarlyBirdAccess: eventQuery.data.hasEarlyBirdAccess,
     eventTiers: eventQuery.data.eventTiers.map((tier: EventTierViewEvent) => ({
       id: tier.id,
       max_participants: tier.crowdLimit,
-      adduPrice: tier.adduPrice,
-      nonAdduPrice: tier.nonAdduPrice,
+      earlyBirdPrice: tier.earlyBirdPrice,
+      originalPrice: tier.originalPrice,
     })),
   });
 
   const formDataOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (
-      event.target.name === 'max_participants' ||
-      event.target.name === 'price'
-    ) {
-      setFormData({
-        ...formData,
-        [event.target.name]: Number(event.target.value),
-      });
-      return;
-    }
-
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
@@ -174,6 +167,25 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
                 name="requires_payment"
               />
             </div>
+            {Boolean(formData.requires_payment) && (
+              <div className="flex justify-start w-full">
+                <Toggle
+                  value={Boolean(formData.hasEarlyBirdAccess)}
+                  label="Early Bird Access"
+                  onChange={toggleOnChange}
+                  name="hasEarlyBirdAccess"
+                />
+              </div>
+            )}
+            {Boolean(formData.requires_payment) &&
+              Boolean(formData.hasEarlyBirdAccess) && (
+                <DatePicker
+                  value={formData.earlyBirdAccessDate}
+                  onChange={dateOnChange}
+                  label="Early Bird Access Date"
+                  name="earlyBirdAccessDate"
+                />
+              )}
             {eventTiers.map((eventTier) => (
               <EventTierField
                 key={eventTier.id}

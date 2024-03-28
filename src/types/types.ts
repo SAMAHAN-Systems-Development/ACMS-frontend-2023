@@ -65,8 +65,10 @@ export type Event = {
 export type ViewEvent = {
   date: string;
   description: string;
+  earlyBirdAccessDate: string;
   eventTiers: EventTierViewEvent[];
   form_name: string;
+  hasEarlyBirdAccess: boolean;
   id: number;
   is_active: boolean;
   requires_payment: boolean;
@@ -87,25 +89,25 @@ export type StudentViewEvent = {
 };
 
 export type EventTierViewEvent = {
-  adduPrice: number;
   created_at: string;
   crowdLimit: number;
+  earlyBirdPrice: number;
   id: number;
   is_active: boolean;
   name: string;
-  nonAdduPrice: number;
   numberOfPeopleRegistered: number;
   numberOfTicketsLeft: number;
+  originalPrice: number;
   updataed_at: string;
 };
 
 export type Payment = {
   createdAt: string;
   event: EventPayment;
-  eventPrice: number;
   eventTier: EventTierPayment;
   id: number;
   photo_src: string;
+  required_payment: number;
   status: string;
   student: StudentPayment;
   updatedAt: string;
@@ -130,7 +132,9 @@ export type EventPayment = {
   createdAt: string;
   date: string;
   desciption: string;
+  earlyBirdAccessDate: string;
   form_name: string;
+  hasEarlyBirdAccess: boolean;
   id: number;
   is_active: boolean;
   title: string;
@@ -148,22 +152,23 @@ export type EventTierPayment = {
 export type AddEditEventDTO = {
   date: Dayjs | null;
   description: string;
+  earlyBirdAccessDate: Dayjs | null;
   eventTiers: EventTierAddEditEventDTO[];
+  hasEarlyBirdAccess: boolean;
   requires_payment: boolean;
   title: string;
 };
 
 export type EventTierAddEditEventDTO = {
-  adduPrice: number;
+  earlyBirdPrice: number;
   id: number;
   max_participants: number;
-  nonAdduPrice: number;
+  originalPrice: number;
 };
 
 export type EventTierRegistration = {
-  adduPrice: number;
   id: number;
   name: string;
-  nonAdduPrice: number;
   numberOfTicketsLeft: number;
+  price: number;
 };

@@ -42,7 +42,6 @@ const ViewEventPage = ({ id }: { id: string }) => {
 
   return (
     <>
-      {' '}
       <section className="p-8 w-full border-b-2 relative">
         <div className="absolute">
           {width >= VIEW_PORT_SIZES.md && (
@@ -85,6 +84,12 @@ const ViewEventPage = ({ id }: { id: string }) => {
             title={'Requires Payment'}
             detail={String(data.requires_payment)}
           />
+          {data.earlyBirdAccessDate && (
+            <DetailLine
+              title={'Early Bird Access Date'}
+              detail={dayjs(data.earlyBirdAccessDate).format('MMM DD, YYYY')}
+            />
+          )}
           <div className="flex md:flex-row flex-col gap-4 items-center mt-5 max-w-[70rem]">
             <PaymentsModal
               paymentType={'accepted'}

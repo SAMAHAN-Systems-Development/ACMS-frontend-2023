@@ -37,7 +37,7 @@ const PaymentsCard: React.FC<propTypes> = ({
   hasDeclineButton,
   hasAcceptButton,
 }) => {
-  const eventPrice = payment.eventPrice;
+  const required_payment = payment.required_payment;
   const eventTitle = payment.event.title;
   const studentName = `${payment.student.firstName} ${payment.student.lastName}`;
   const paymentPhotoUrl = payment.photo_src;
@@ -145,7 +145,7 @@ const PaymentsCard: React.FC<propTypes> = ({
         <div className="flex flex-col items-center justify-between flex-grow">
           <div className="flex flex-col gap-4">
             <p className="text-xl text-center font-bold">
-              {moneyFormatter(eventPrice)}
+              {moneyFormatter(required_payment)}
             </p>
             <div className="flex items-center justify-center">
               <Image

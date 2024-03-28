@@ -160,11 +160,17 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
           throw new Error(error.message);
         }
 
+        const required_payment =
+          eventTiers.find(
+            (eventTier) => eventTier.id === registrationData.eventTierId
+          )?.price || 0;
+
         finalRegistrationData = {
           ...registrationData,
           photo_src: data.publicUrl,
           eventId: eventQuery.data.id,
           event_requires_payment: eventQuery.data.requires_payment,
+          required_payment: required_payment,
         };
       } else {
         finalRegistrationData = {
@@ -172,6 +178,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
           photo_src: '',
           eventId: eventQuery.data.id,
           event_requires_payment: eventQuery.data.requires_payment,
+          required_payment: 0,
         };
       }
 

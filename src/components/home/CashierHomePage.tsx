@@ -100,11 +100,16 @@ const CashierHomePage = () => {
       return;
     }
 
+    const required_payment =
+      eventTierData.find((eventTier) => eventTier.id === inputData.eventTierId)
+        ?.price || 0;
+
     const studentData = await submitRegistration({
       ...inputData,
       photo_src: '',
       isSubmittedByStudent: false,
       event_requires_payment: null,
+      required_payment: required_payment,
     });
 
     if (studentData) {

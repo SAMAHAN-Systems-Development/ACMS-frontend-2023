@@ -21,12 +21,14 @@ import useWindowSize from '@/utilities/useWindowSize';
 export type FormData = {
   date: Dayjs | null;
   description: string;
+  earlyBirdAccessDate: Dayjs | null;
   eventTiers: {
-    adduPrice: number;
+    earlyBirdPrice: number;
     id: number;
     max_participants: number;
-    nonAdduPrice: number;
+    originalPrice: number;
   }[];
+  hasEarlyBirdAccess: boolean;
   requires_payment: boolean;
   title: string;
 };
@@ -54,11 +56,13 @@ const AddEventPage = () => {
     description: '',
     date: dayjs().add(1, 'day'),
     requires_payment: false,
+    hasEarlyBirdAccess: false,
+    earlyBirdAccessDate: dayjs().add(1, 'day'),
     eventTiers: eventTiers.map((tier) => ({
       id: tier.id,
       max_participants: 0,
-      adduPrice: 0,
-      nonAdduPrice: 0,
+      earlyBirdPrice: 0,
+      originalPrice: 0,
     })),
   });
 
@@ -89,6 +93,8 @@ const AddEventPage = () => {
         date: dayjs().add(1, 'day'),
         eventTiers: [],
         requires_payment: false,
+        hasEarlyBirdAccess: false,
+        earlyBirdAccessDate: dayjs().add(1, 'day'),
       });
       toast.success('Added the event successfully');
     },
@@ -157,6 +163,26 @@ const AddEventPage = () => {
                 name="requires_payment"
               />
             </div>
+            {Boolean(formData.requires_payment) && (
+              <div className="flex justify-start w-full">
+                <Toggle
+                  value={Boolean(formData.hasEarlyBirdAccess)}
+                  label="Early Bird Access"
+                  onChange={toggleOnChange}
+                  name="hasEarlyBirdAccess"
+                />
+              </div>
+            )}
+
+            {Boolean(formData.requires_payment) &&
+              Boolean(formData.hasEarlyBirdAccess) && (
+                <DatePicker
+                  value={formData.earlyBirdAccessDate}
+                  onChange={dateOnChange}
+                  label="Early Bird Access Date"
+                  name="earlyBirdAccessDate"
+                />
+              )}
 
             {eventTiers.map((eventTier) => (
               <EventTierField

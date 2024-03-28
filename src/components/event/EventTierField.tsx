@@ -47,22 +47,24 @@ const EventTierField: React.FC<propTypes> = ({
 
         {Boolean(formData.requires_payment) && (
           <div className="flex gap-4">
+            {Boolean(formData.hasEarlyBirdAccess) && (
+              <TextField
+                label="Early Bird Price"
+                name={`earlyBirdPrice`}
+                onChange={handleEventTierFieldChange}
+                value={
+                  formData.eventTiers.find((tier) => tier.id === eventTier.id)
+                    ?.earlyBirdPrice || 0
+                }
+              />
+            )}
             <TextField
-              label="AdDU Price"
-              name={`adduPrice`}
+              label="Original Price"
+              name={`originalPrice`}
               onChange={handleEventTierFieldChange}
               value={
                 formData.eventTiers.find((tier) => tier.id === eventTier.id)
-                  ?.adduPrice || 0
-              }
-            />
-            <TextField
-              label="Non-AdDU Price"
-              name={`nonAdduPrice`}
-              onChange={handleEventTierFieldChange}
-              value={
-                formData.eventTiers.find((tier) => tier.id === eventTier.id)
-                  ?.nonAdduPrice || 0
+                  ?.originalPrice || 0
               }
             />
           </div>
