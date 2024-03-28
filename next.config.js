@@ -11,8 +11,8 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'aws-0-ap-southeast-1.pooler.supabase.com',
-        port: '5432',
+        hostname: 'fjqloxpyknqccretzoyt.supabase.co',
+        port: '',
         pathname: '/storage/v1/object/public/payment/*.*',
       },
     ],
