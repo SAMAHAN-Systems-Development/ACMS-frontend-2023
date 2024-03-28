@@ -94,8 +94,8 @@ const StudentsTable = ({ list }: { list: StudentViewEvent[] }) => {
             ))}
             {shownStudents.length === 0 && (
               <tr>
-                <td colSpan={4} className="text-center py-5">
-                  <p className="me-0">&quot;{query}&quot; not found</p>
+                <td colSpan={5} className="text-center py-5">
+                  <p className="me-0">No Student/s Found</p>
                 </td>
               </tr>
             )}

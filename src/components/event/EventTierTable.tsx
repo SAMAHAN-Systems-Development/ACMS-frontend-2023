@@ -13,6 +13,8 @@ const EventTierTable: React.FC<propTypes> = ({ eventTiers }) => {
   const { width } = useWindowSize();
   const isWidthSmall = width < VIEW_PORT_SIZES.sm;
 
+  const eventTiersSorted = eventTiers.sort((et1, et2) => et1.id - et2.id);
+
   return (
     <table className="w-full text-center">
       <thead className="border-b-2">
@@ -30,7 +32,7 @@ const EventTierTable: React.FC<propTypes> = ({ eventTiers }) => {
         </tr>
       </thead>
       <tbody>
-        {eventTiers.map((eventTier: EventTierViewEvent) => (
+        {eventTiersSorted.map((eventTier: EventTierViewEvent) => (
           <tr
             key={eventTier.id}
             className="even:bg-slate-600 odd:bg-slate-400 border-t-2 hover:bg-blue"

@@ -42,9 +42,7 @@ const PaymentsCard: React.FC<propTypes> = ({
   const studentName = `${payment.student.firstName} ${payment.student.lastName}`;
   const paymentPhotoUrl = payment.photo_src;
   const eventTier = payment.eventTier.name;
-  const isAteneanText = payment.student.is_addu_student
-    ? 'Atenean'
-    : 'Non-Atenean';
+  const studentEmail = payment.student.email;
   const tokenQuery = useQuery<string>({
     queryKey: ['jwt'],
   });
@@ -133,9 +131,9 @@ const PaymentsCard: React.FC<propTypes> = ({
         <div className="flex justify-between gap-12 items-start">
           <div className="flex flex-col items-start justify-start">
             <p className="font-body text-sm text-left font-bold">
-              {eventTitle}
+              {`${eventTitle} (${eventTier})`}
             </p>
-            <p className="text-sm text-left">{`${studentName} (${eventTier}) (${isAteneanText})`}</p>
+            <p className="text-sm text-left">{`${studentName} (${studentEmail})`}</p>
           </div>
           {hasCheckbox && (
             <Checkbox checked={checked} onCheckedAction={onCheckedAction} />

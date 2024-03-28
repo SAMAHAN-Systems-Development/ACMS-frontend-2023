@@ -8,6 +8,8 @@ type propTypes = {
 };
 
 const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
+  const eventTiersSorted = eventTiers.sort((et1, et2) => et2.price - et1.price);
+
   return (
     <table className="w-full text-center">
       <thead className="border-b-2">
@@ -18,7 +20,7 @@ const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
         </tr>
       </thead>
       <tbody>
-        {eventTiers.map((eventTier: EventTierRegistration) => (
+        {eventTiersSorted.map((eventTier: EventTierRegistration) => (
           <tr
             key={eventTier.id}
             className="even:bg-slate-600 odd:bg-slate-400 border-t-2 hover:bg-blue"
