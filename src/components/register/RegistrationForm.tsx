@@ -30,9 +30,9 @@ import useWindowSize from '@/utilities/useWindowSize';
 
 const getImageSrcByViewportSize = (width: number) => {
   if (width >= VIEW_PORT_SIZES.md) {
-    return '/RegisterCoverPhoto.png';
+    return '/RegisterCoverPhoto-lg.png';
   }
-  return '/RegisterCoverPhoto768.png';
+  return '/RegisterCoverPhoto-sm.png';
 };
 
 const RegistrationForm = ({ formName }: { formName: string }) => {
