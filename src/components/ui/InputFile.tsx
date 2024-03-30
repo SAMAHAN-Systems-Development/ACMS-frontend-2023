@@ -4,21 +4,29 @@ type propTypes = {
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   label: string;
   selectedFile: File | null;
+  color?: string;
+  textColor?: string;
 };
 
 const InputFile: React.FC<propTypes> = ({
   handleChange,
   selectedFile,
   label,
+  color = 'navyBlue',
+  textColor = 'navyBlue',
 }) => {
   return (
     <div>
-      <p className="font-medium text-navyBlue">{label}</p>
-      <div className="flex items-center border-2 rounded border-[#181842] h-[2.3rem]">
-        <div className="flex items-center bg-[#C4C4C4] h-full border-[#181842] border-r-2">
+      <p className={`font-medium text-${textColor}`}>{label}</p>
+      <div
+        className={`flex items-center border-2 rounded border-${color} h-[2.3rem]`}
+      >
+        <div
+          className={`flex items-center bg-lightBrown h-full border-${color} border-r-2`}
+        >
           <label
             htmlFor="file-input"
-            className="font-bold text-[#181842] cursor-pointer whitespace-nowrap p-2"
+            className={`font-bold text-${textColor} cursor-pointer whitespace-nowrap p-2`}
           >
             <input
               type="file"

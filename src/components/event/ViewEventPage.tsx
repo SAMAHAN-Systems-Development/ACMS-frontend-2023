@@ -51,7 +51,7 @@ const ViewEventPage = ({ id }: { id: string }) => {
                 style={{
                   width: '48px',
                   height: '48px',
-                  color: '#181842',
+                  color: '#724700',
                 }}
                 role="button"
                 onKeyUp={() => {}}

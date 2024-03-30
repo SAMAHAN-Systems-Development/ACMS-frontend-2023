@@ -334,7 +334,15 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     );
   }
 
-  return <Loading />;
+  if (eventQuery.isFetching) {
+    return <Loading />;
+  }
+
+  return (
+    <div className="w-full h-full flex justify-center items-center">
+      <h1 className="text-2xl font-bold">Event is currently not available</h1>
+    </div>
+  );
 };
 
 export default RegistrationForm;

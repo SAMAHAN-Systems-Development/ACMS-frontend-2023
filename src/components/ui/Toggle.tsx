@@ -30,7 +30,7 @@ export const Toggle: React.FC<propTypes> = ({
 
   return (
     <div className={`flex ${classNamebyLabelPlacement()} gap-2`}>
-      <h3 className="text-md">{label}</h3>
+      <h3 className="text-md text-brown">{label}</h3>
       <div className="flex gap-2 items-center">
         <IOSSwitch
           checked={value}
@@ -38,7 +38,7 @@ export const Toggle: React.FC<propTypes> = ({
           sx={{ margin: 1 }}
           name={name}
         />
-        <h3 className="text-md font-bold">{labelBesideToggle}</h3>
+        <h3 className="text-md text-brown font-bold">{labelBesideToggle}</h3>
       </div>
     </div>
   );
@@ -58,7 +58,7 @@ const IOSSwitch = styled((props: SwitchProps) => (
       transform: 'translateX(16px)',
       color: '#fff',
       '& + .MuiSwitch-track': {
-        backgroundColor: theme.palette.mode === 'dark' ? '#7A92C2' : '#181842',
+        backgroundColor: theme.palette.mode === 'dark' ? '#EBEBE4' : '#724700',
         opacity: 1,
         border: 0,
       },
@@ -87,7 +87,7 @@ const IOSSwitch = styled((props: SwitchProps) => (
   },
   '& .MuiSwitch-track': {
     borderRadius: 26 / 2,
-    backgroundColor: theme.palette.mode === 'light' ? '#7A92C2' : '#181842',
+    backgroundColor: theme.palette.mode === 'light' ? '#EBEBE4' : '#724700',
     opacity: 1,
     transition: theme.transitions.create(['background-color'], {
       duration: 500,

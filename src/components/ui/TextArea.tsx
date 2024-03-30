@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 
 const TextAreaStyle = styled(BaseTextField)({
   '& label.Mui-focused': {
-    color: '#2B2B2B',
+    color: '#724700',
     fontFamily: 'Work Sans, sans-serif',
   },
   '& .MuiOutlinedInput-root': {
@@ -15,18 +15,18 @@ const TextAreaStyle = styled(BaseTextField)({
     alignItems: 'flex-start',
     '&.Mui-focused fieldset': {
       boxSizing: 'border-box',
-      borderColor: '#181842',
+      borderColor: '#724700',
       borderWidth: '2px',
     },
   },
   '& fieldset': {
-    borderColor: '#181842',
+    borderColor: '#724700',
     borderWidth: '2px',
-    color: '#181842',
+    color: '#724700',
   },
   '& input': {
     fontFamily: 'Work Sans, sans-serif',
-    color: '#181842',
+    color: '#724700',
   },
 });
 

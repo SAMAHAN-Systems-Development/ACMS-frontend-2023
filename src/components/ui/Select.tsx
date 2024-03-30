@@ -8,16 +8,16 @@ import {
 
 const SelectStyle = styled(BaseSelect)({
   '& fieldset': {
-    borderColor: '#181842',
+    borderColor: '#724700',
     borderWidth: '2px',
-    color: '#181842',
+    color: '#724700',
   },
   '& input': {
     fontFamily: 'Work Sans, sans-serif',
-    color: '#181842',
+    color: '#724700',
   },
   '& .MuiSelect-select': {
-    color: '#181842',
+    color: '#724700',
     fontFamily: 'Work Sans, sans-serif',
   },
 });

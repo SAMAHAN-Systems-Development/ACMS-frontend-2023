@@ -57,7 +57,7 @@ const Pagination: React.FC<propTypes> = ({ page, setPage, maxPage }) => {
         style={{
           width: '48px',
           height: '48px',
-          color: '#181842',
+          color: '#724700',
           opacity: isPreviousDisabled ? 0.5 : 1,
           cursor: isPreviousDisabled ? 'default' : 'pointer',
         }}
@@ -78,7 +78,7 @@ const Pagination: React.FC<propTypes> = ({ page, setPage, maxPage }) => {
         style={{
           width: '48px',
           height: '48px',
-          color: '#181842',
+          color: '#724700',
           opacity: isNextDisabled ? 0.5 : 1,
           cursor: isNextDisabled ? 'default' : 'pointer',
         }}

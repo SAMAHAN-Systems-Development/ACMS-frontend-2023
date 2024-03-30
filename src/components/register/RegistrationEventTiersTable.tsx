@@ -12,22 +12,24 @@ const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
 
   return (
     <table className="w-full text-center">
-      <thead className="border-b-2">
+      <thead className="border-b-2 border-brown">
         <tr>
-          <th className="w-[20%] p-2">Tier Name</th>
-          <th className="w-[15%] p-2">Price</th>
-          <th className="w-[15%] p-2">Number of tickets left</th>
+          <th className="w-[20%] p-2 text-brown">Tier Name</th>
+          <th className="w-[15%] p-2 text-brown">Price</th>
+          <th className="w-[15%] p-2 text-brown">Number of tickets left</th>
         </tr>
       </thead>
       <tbody>
         {eventTiersSorted.map((eventTier: EventTierRegistration) => (
           <tr
             key={eventTier.id}
-            className="even:bg-slate-600 odd:bg-slate-400 border-t-2 hover:bg-blue"
+            className="border-t-2 border-brown hover:bg-lightBrown"
           >
-            <td className="p-2">{eventTier.name}</td>
-            <td className="p-2">{moneyFormatter(eventTier.price)}</td>
-            <td className="p-2">{eventTier.numberOfTicketsLeft}</td>
+            <td className="p-2 text-brown">{eventTier.name}</td>
+            <td className="p-2 text-brown">
+              {moneyFormatter(eventTier.price)}
+            </td>
+            <td className="p-2 text-brown">{eventTier.numberOfTicketsLeft}</td>
           </tr>
         ))}
         {eventTiers.length === 0 && (

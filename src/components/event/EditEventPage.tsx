@@ -119,7 +119,7 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
               style={{
                 width: '48px',
                 height: '48px',
-                color: '#181842',
+                color: '#724700',
               }}
               onClick={() => {
                 router.back();

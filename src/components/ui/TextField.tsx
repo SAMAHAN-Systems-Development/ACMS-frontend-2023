@@ -5,26 +5,26 @@ import { styled } from '@mui/material/styles';
 
 const TextFieldStyle = styled(BaseTextField)({
   '& label.Mui-focused': {
-    color: '#2B2B2B',
+    color: '#724700',
     fontFamily: 'Work Sans, sans-serif',
   },
   '& .MuiOutlinedInput-root': {
     borderRadius: '5px',
     '&.Mui-focused fieldset': {
       boxSizing: 'border-box',
-      borderColor: '#181842',
+      borderColor: '#724700',
       borderWidth: '2px',
     },
 
     '& fieldset': {
-      borderColor: '#181842',
+      borderColor: '#724700',
       borderWidth: '2px',
-      color: '#181842',
+      color: '#724700',
     },
   },
   '& input': {
     fontFamily: 'Work Sans, sans-serif',
-    color: '#181842',
+    color: '#724700',
   },
 });
 
@@ -59,7 +59,6 @@ export default function TextField({
       name={name}
       size="small"
       fullWidth
-      sx={{ borderColor: '#181842' }}
     />
   );
 }

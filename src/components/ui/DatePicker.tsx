@@ -8,20 +8,20 @@ import type { Dayjs } from 'dayjs';
 
 const DatePickerStyle = styled(BaseDatePicker)({
   '& label.Mui-focused': {
-    color: '#2B2B2B',
+    color: '#724700',
     fontFamily: 'Work Sans, sans-serif',
   },
   '& .MuiOutlinedInput-root': {
     '&.Mui-focused fieldset': {
       boxSizing: 'border-box',
-      borderColor: '#181842',
+      borderColor: '#724700',
       borderWidth: '2px',
     },
   },
   '& fieldset': {
-    borderColor: '#181842',
+    borderColor: '#724700',
     borderWidth: '2px',
-    color: '#181842',
+    color: '#724700',
   },
 });
 

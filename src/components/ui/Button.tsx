@@ -2,6 +2,7 @@ import React from 'react';
 
 interface Props {
   children: React.ReactNode;
+  color?: string;
   isDisabled?: boolean;
   onClick?: (event: React.MouseEvent) => void;
   type?: 'button' | 'submit' | 'reset' | undefined;
@@ -14,6 +15,7 @@ const Button: React.FC<Props> = ({
   type = 'button',
   isDisabled = false,
   onClick = () => {},
+  color = 'navyBlue',
 }) => {
   return (
     <button
@@ -22,7 +24,7 @@ const Button: React.FC<Props> = ({
       className={`w-full px-4 py-1 text-slate-50 font-semibold rounded-lg text-sm
         ${
           variant === 'primary' && !isDisabled
-            ? 'bg-navyBlue text-white'
+            ? `bg-${color} text-white`
             : isDisabled
             ? 'bg-blue text-white border-none cursor-not-allowed disabled'
             : 'bg-white text-navyBlue border-solid border-navyBlue border-2'
