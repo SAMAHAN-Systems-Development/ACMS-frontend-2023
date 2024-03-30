@@ -329,9 +329,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                 )}
                 <div className="flex justify-end mt-4">
                   <div className="w-[10rem]">
-                    <Button type="submit" color={primaryColor}>
-                      Submit
-                    </Button>
+                    <Button type="submit">Submit</Button>
                   </div>
                 </div>
               </form>
