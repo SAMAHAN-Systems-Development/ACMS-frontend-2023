@@ -10,8 +10,8 @@ import { MenuItem } from '@mui/material';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useQuery } from '@tanstack/react-query';
 import { io } from 'socket.io-client';
-import { v4 as uuidv4 } from 'uuid';
 
+import RegisterLoadingModal from '@/components/register/RegisterLoadingModal';
 import RegistrationEventTiersTable from '@/components/register/RegistrationEventTiersTable';
 import Button from '@/components/ui/Button';
 import InputFile from '@/components/ui/InputFile';
@@ -62,8 +62,8 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
 
   const supabase = createClientComponentClient();
 
+  const [isLoadingModalOpen, setIsLoadingModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
   const [registrationData, setRegistrationData] = useState<{
     email: string;
     eventTierId: number;
@@ -140,22 +140,32 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
       return;
     }
 
+    let photoFileName = '';
+
     let finalRegistrationData;
     try {
       if (!eventQuery.data) {
         throw new Error('Event not found');
       }
 
+      photoFileName = `${registrationData.email
+        .split('@')[0]
+        .replace('.', '-')}_${registrationData.year_and_course.replace(
+        ' ',
+        ''
+      )}_E${eventQuery.data.id}`;
+
       if (eventQuery.data.requires_payment) {
         if (!selectedFile) {
           toast.error('Please add an payment photo');
           return;
         }
-        const photoFileName = `${uuidv4()}-${selectedFile.name}`;
+        setIsLoadingModalOpen(true);
+
         const { error } = await supabase.storage
           .from('payment')
           .upload(photoFileName, selectedFile, {
-            upsert: false,
+            upsert: true,
           });
 
         const { data } = supabase.storage
@@ -189,19 +199,9 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
       }
 
       const studentData = await submitRegistration(finalRegistrationData);
-      toast.success('Registration successful');
-      setRegistrationData({
-        firstName: '',
-        lastName: '',
-        year_and_course: '',
-        email: '',
-        isSubmittedByStudent: true,
-        eventTierId: eventTiers[0]?.id || 1,
-        is_addu_student: true,
-      });
-      setSelectedFile(null);
       router.push(`/student?uuid=${studentData.uuid}`);
     } catch (error) {
+      setIsLoadingModalOpen(false);
       if (error instanceof Error) {
         if (error.message === 'maxParticipantsReached') {
           toast.error('The ticket limit has been reached');
@@ -230,113 +230,118 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
 
   if (eventQuery.isFetched && eventQuery.data) {
     return (
-      <div className="w-full flex flex-col">
-        <Image
-          src={getImageSrcByViewportSize(width)}
-          alt="Cover Photo"
-          width={3000}
-          height={3000}
-          className="w-full"
-        />
-        <div className="flex lg:flex-row flex-col lg:gap-12 justify-center">
-          <div className="flex justify-center mt-12 mx-4">
-            <div
-              className={`md:w-[30rem] w-[40rem] h-fit border-2  border-brown`}
-            >
-              <RegistrationEventTiersTable eventTiers={eventTiers} />
-            </div>
+      <>
+        <RegisterLoadingModal isModalOpen={isLoadingModalOpen} />
+        <div className="w-full flex flex-col">
+          <div className="border-b-4 border-brown">
+            <Image
+              src={getImageSrcByViewportSize(width)}
+              alt="Cover Photo"
+              width={3000}
+              height={3000}
+              className="w-full"
+            />
           </div>
-          <div className="flex justify-center mt-12 pb-8 mx-8">
-            <div className="flex flex-col gap-8 max-w-[20rem] sm:max-w-[28rem]">
-              <h3 className={`text-lg text-${primaryColor} font-bold w-full`}>
-                *Please fill the form below with correct information
-              </h3>
-              <form
-                className="flex flex-col justify-center gap-4"
-                onSubmit={handleSubmit}
+          <div className="flex lg:flex-row flex-col lg:gap-12 justify-center">
+            <div className="flex justify-center mt-12 mx-4">
+              <div
+                className={`md:w-[30rem] w-[40rem] h-fit border-2  border-brown`}
               >
-                <div className="flex md:flex-row flex-col gap-4 w-full">
-                  <TextField
-                    name="firstName"
-                    onChange={inputOnChange}
-                    value={registrationData.firstName}
-                    label="First Name"
-                  />
-
-                  <TextField
-                    name="lastName"
-                    onChange={inputOnChange}
-                    value={registrationData.lastName}
-                    label="Last Name"
-                  />
-                </div>
-
-                <div className="w-full flex justify-start items-center gap-4">
-                  <Toggle
-                    value={Boolean(registrationData.is_addu_student)}
-                    label="Are you an AdDU student?"
-                    onChange={toggleOnChange}
-                    name="is_addu_student"
-                    labelPlacement={
-                      width >= VIEW_PORT_SIZES.md ? 'start' : 'top'
-                    }
-                    labelBesideToggle={
-                      Boolean(registrationData.is_addu_student)
-                        ? 'Yes, I am'
-                        : 'No, I am not'
-                    }
-                  />
-                </div>
-
-                <TextField
-                  name="email"
-                  onChange={inputOnChange}
-                  value={registrationData.email}
-                  label={
-                    Boolean(registrationData.is_addu_student)
-                      ? 'AdDU Email'
-                      : 'Personal Email'
-                  }
-                  type="email"
-                />
-
-                <TextField
-                  name="year_and_course"
-                  onChange={inputOnChange}
-                  value={registrationData.year_and_course}
-                  label="Year and Course"
-                />
-                <Select
-                  value={registrationData.eventTierId}
-                  onChange={selectInputOnChange}
-                  name="eventTierId"
+                <RegistrationEventTiersTable eventTiers={eventTiers} />
+              </div>
+            </div>
+            <div className="flex justify-center mt-12 pb-8 mx-8">
+              <div className="flex flex-col gap-8 max-w-[20rem] sm:max-w-[28rem]">
+                <h3 className={`text-lg text-${primaryColor} font-bold w-full`}>
+                  *Please fill the form below with correct information
+                </h3>
+                <form
+                  className="flex flex-col justify-center gap-4"
+                  onSubmit={handleSubmit}
                 >
-                  {eventTiersQuery.isSuccess &&
-                    eventTiers.map((eventTier: EventTierRegistration) => (
-                      <MenuItem key={eventTier.id} value={eventTier.id}>
-                        {eventTier.name}
-                      </MenuItem>
-                    ))}
-                </Select>
-                {eventQuery.data.requires_payment && (
-                  <InputFile
-                    handleChange={handleChange}
-                    selectedFile={selectedFile}
-                    label="Payment Photo"
-                    color="brown"
-                    textColor="brown"
-                  />
-                )}
-                <div className="flex justify-end mt-4">
-                  <div className="w-[10rem]">
-                    <Button type="submit">Submit</Button>
+                  <div className="flex md:flex-row flex-col gap-4 w-full">
+                    <TextField
+                      name="firstName"
+                      onChange={inputOnChange}
+                      value={registrationData.firstName}
+                      label="First Name"
+                    />
+
+                    <TextField
+                      name="lastName"
+                      onChange={inputOnChange}
+                      value={registrationData.lastName}
+                      label="Last Name"
+                    />
                   </div>
-                </div>
-              </form>
+
+                  <div className="w-full flex justify-start items-center gap-4">
+                    <Toggle
+                      value={Boolean(registrationData.is_addu_student)}
+                      label="Are you an AdDU student?"
+                      onChange={toggleOnChange}
+                      name="is_addu_student"
+                      labelPlacement={
+                        width >= VIEW_PORT_SIZES.md ? 'start' : 'top'
+                      }
+                      labelBesideToggle={
+                        Boolean(registrationData.is_addu_student)
+                          ? 'Yes, I am'
+                          : 'No, I am not'
+                      }
+                    />
+                  </div>
+
+                  <TextField
+                    name="email"
+                    onChange={inputOnChange}
+                    value={registrationData.email}
+                    label={
+                      Boolean(registrationData.is_addu_student)
+                        ? 'AdDU Email'
+                        : 'Personal Email'
+                    }
+                    type="email"
+                  />
+
+                  <TextField
+                    name="year_and_course"
+                    onChange={inputOnChange}
+                    value={registrationData.year_and_course}
+                    label="Year and Course"
+                  />
+                  <Select
+                    value={registrationData.eventTierId}
+                    onChange={selectInputOnChange}
+                    name="eventTierId"
+                  >
+                    {eventTiersQuery.isSuccess &&
+                      eventTiers.map((eventTier: EventTierRegistration) => (
+                        <MenuItem key={eventTier.id} value={eventTier.id}>
+                          {eventTier.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                  {eventQuery.data.requires_payment && (
+                    <InputFile
+                      handleChange={handleChange}
+                      selectedFile={selectedFile}
+                      label="Payment Photo"
+                      color="brown"
+                      textColor="brown"
+                    />
+                  )}
+                  <div className="flex justify-end mt-4">
+                    <div className="w-[10rem]">
+                      <Button type="submit">Submit</Button>
+                    </div>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
