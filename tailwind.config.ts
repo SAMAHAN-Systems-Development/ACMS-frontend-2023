@@ -29,6 +29,12 @@ const config: Config = {
       lightBrown: '#d2a36a',
     },
   },
-  plugins: [addDynamicIconSelectors()],
+  plugins: [addDynamicIconSelectors(), require('daisyui')],
+  daisyui: {
+    darkTheme: 'light', // name of one of the included themes for dark mode
+    base: false, // applies background color and foreground color for root element by default
+    styled: true, // include daisyUI colors and design decisions for all components
+    utils: true, // adds responsive and modifier utility classes
+  },
 };
 export default config;
