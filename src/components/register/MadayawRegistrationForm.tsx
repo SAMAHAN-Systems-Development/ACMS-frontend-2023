@@ -243,11 +243,28 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
             />
           </div>
           <div className="flex lg:flex-row flex-col lg:gap-12 justify-center">
-            <div className="flex justify-center mt-12 mx-4">
-              <div
-                className={`md:w-[30rem] w-[40rem] h-fit border-2  border-brown`}
-              >
-                <RegistrationEventTiersTable eventTiers={eventTiers} />
+            <div className="flex justify-center md:mt-0 mt-8 mx-4">
+              <div className="flex flex-col gap-4 justify-center">
+                <div className="flex flex-col gap-2 p-4 border-2 rounded-xl">
+                  <h2 className="text-left pl-8 mb-4 text-2xl font-bold">
+                    Payment Methods
+                  </h2>
+                  <div className="flex gap-8 pl-8 md:flex-row flex-col">
+                    <div className="flex flex-col">
+                      <h3 className="font-bold">BPI</h3>
+                      <p>Account Name: Christine Duat</p>
+                      <p>Account Number: 2519268305</p>
+                    </div>
+                    <div className="flex flex-col">
+                      <h3 className="font-bold">GCash</h3>
+                      <p>Account Name: Christine D.</p>
+                      <p>Mobile Number: 09666495401</p>
+                    </div>
+                  </div>
+                </div>
+                <div className={`md:w-[40rem] h-fit border-2  border-brown`}>
+                  <RegistrationEventTiersTable eventTiers={eventTiers} />
+                </div>
               </div>
             </div>
             <div className="flex justify-center mt-12 pb-8 mx-8">
@@ -279,7 +296,8 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                     <Toggle
                       value={Boolean(registrationData.is_addu_student)}
                       label="Are you an AdDU student?"
-                      onChange={toggleOnChange}
+                      // onChange={toggleOnChange}
+                      onChange={() => {}}
                       name="is_addu_student"
                       labelPlacement={
                         width >= VIEW_PORT_SIZES.md ? 'start' : 'top'
