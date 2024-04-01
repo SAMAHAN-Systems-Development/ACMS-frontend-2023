@@ -100,12 +100,12 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     }));
   };
 
-  const toggleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRegistrationData({
-      ...registrationData,
-      [event.target.name]: event.target.checked,
-    });
-  };
+  // const toggleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setRegistrationData({
+  //     ...registrationData,
+  //     [event.target.name]: event.target.checked,
+  //   });
+  // };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -242,8 +242,17 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
               className="w-full"
             />
           </div>
-          <div className="flex lg:flex-row flex-col lg:gap-12 justify-center">
-            <div className="flex justify-center md:mt-0 mt-8 mx-4">
+          <div className="w-full flex justify-center mt-8 px-8">
+            <Image
+              src="/RegistrationFormText.png"
+              alt="Regitration Form Text"
+              width={3000}
+              height={3000}
+              className="w-[40rem]"
+            />
+          </div>
+          <div className="flex xl:flex-row flex-col xl:gap-12 justify-center items-start mt-12">
+            <div className="flex justify-center md:mt-0 px-4 xl:w-fit w-full">
               <div className="flex flex-col gap-4 justify-center">
                 <div className="flex flex-col gap-2 p-4 border-2 rounded-xl">
                   <h2 className="text-left pl-8 mb-4 text-2xl font-bold">
@@ -267,7 +276,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                 </div>
               </div>
             </div>
-            <div className="flex justify-center mt-12 pb-8 mx-8">
+            <div className="flex justify-center pb-8 px-8 xl:pt-0 pt-8 xl:w-fit w-full">
               <div className="flex flex-col gap-8 max-w-[20rem] sm:max-w-[28rem]">
                 <h3 className={`text-lg text-${primaryColor} font-bold w-full`}>
                   *Please fill the form below with correct information
