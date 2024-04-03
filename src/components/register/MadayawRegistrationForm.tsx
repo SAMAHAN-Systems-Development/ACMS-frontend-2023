@@ -100,12 +100,12 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     }));
   };
 
-  // const toggleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setRegistrationData({
-  //     ...registrationData,
-  //     [event.target.name]: event.target.checked,
-  //   });
-  // };
+  const toggleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRegistrationData({
+      ...registrationData,
+      [event.target.name]: event.target.checked,
+    });
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -314,8 +314,8 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                     <Toggle
                       value={Boolean(registrationData.is_addu_student)}
                       label="Are you an AdDU student?"
-                      // onChange={toggleOnChange}
-                      onChange={() => {}}
+                      onChange={toggleOnChange}
+                      disabled={true}
                       name="is_addu_student"
                       labelPlacement={
                         width >= VIEW_PORT_SIZES.md ? 'start' : 'top'

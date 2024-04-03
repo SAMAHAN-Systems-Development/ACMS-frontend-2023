@@ -9,6 +9,7 @@ type propTypes = {
   name: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   value: boolean;
+  disabled?: boolean;
   labelBesideToggle?: string;
   labelPlacement?: 'start' | 'end' | 'top' | 'bottom';
 };
@@ -20,6 +21,7 @@ export const Toggle: React.FC<propTypes> = ({
   name,
   labelPlacement = 'end',
   labelBesideToggle = '',
+  disabled = false,
 }) => {
   const classNamebyLabelPlacement = () => {
     if (labelPlacement === 'start') return 'flex-row items-center';
@@ -37,6 +39,7 @@ export const Toggle: React.FC<propTypes> = ({
           onChange={onChange}
           sx={{ margin: 1 }}
           name={name}
+          disabled={disabled}
         />
         <h3 className="text-md text-brown font-bold">{labelBesideToggle}</h3>
       </div>
