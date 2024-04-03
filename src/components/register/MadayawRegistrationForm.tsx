@@ -278,9 +278,18 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
             </div>
             <div className="flex justify-center pb-8 px-8 xl:pt-0 pt-8 xl:w-fit w-full">
               <div className="flex flex-col gap-8 max-w-[20rem] sm:max-w-[28rem]">
-                <h3 className={`text-lg text-${primaryColor} font-bold w-full`}>
-                  *Please fill the form below with correct information
-                </h3>
+                <div>
+                  <h3
+                    className={`text-md text-${primaryColor} font-bold w-full`}
+                  >
+                    * Please fill the form below with correct information
+                  </h3>
+                  <h3
+                    className={`text-md text-${primaryColor} font-bold w-full`}
+                  >
+                    * 1 TICKET PER SUBMISSION
+                  </h3>
+                </div>
                 <form
                   className="flex flex-col justify-center gap-4"
                   onSubmit={handleSubmit}
