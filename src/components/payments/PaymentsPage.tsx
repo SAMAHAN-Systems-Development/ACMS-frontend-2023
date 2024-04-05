@@ -19,6 +19,7 @@ import {
   fetchPendingPayments,
   restorePayments,
 } from '@/utilities/fetch/payment';
+import FetchingPaymentLoading from '@/components/payments/FetchingPaymentLoadin';
 
 type propTypes = {
   paymentPageType: 'accepted' | 'declined' | 'pending';
@@ -225,35 +226,41 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
         <div className="flex justify-center">
           <Pagination page={page} setPage={setPage} maxPage={maxPage} />
         </div>
-        {listOfStudents.length > 0 ? (
-          <>
-            <div className="flex gap-8 flex-wrap justify-center">
-              {listOfStudents.map((payment: Payment, index: number) => (
-                <PaymentsCard
-                  key={payment.id + index}
-                  hasRestoreButton={
-                    paymentPageType === 'accepted' ||
-                    paymentPageType === 'declined'
-                  }
-                  hasAcceptButton={paymentPageType === 'pending'}
-                  hasDeclineButton={paymentPageType === 'pending'}
-                  hasCheckbox={true}
-                  checkedCards={checkedCards}
-                  setCheckedCards={setCheckedCards}
-                  payment={payment}
-                  paymentPageType={paymentPageType}
-                  page={page}
-                />
-              ))}
-            </div>
-            <div className="flex justify-center">
-              <Pagination page={page} setPage={setPage} maxPage={maxPage} />
-            </div>
-          </>
+        {paymentsQuery.isFetching ? (
+          <FetchingPaymentLoading />
         ) : (
-          <h1 className="text-3xl text-navyBlue font-extrabold">
-            No payments found
-          </h1>
+          <>
+            {listOfStudents.length > 0 ? (
+              <>
+                <div className="flex gap-8 flex-wrap justify-center">
+                  {listOfStudents.map((payment: Payment, index: number) => (
+                    <PaymentsCard
+                      key={payment.id + index}
+                      hasRestoreButton={
+                        paymentPageType === 'accepted' ||
+                        paymentPageType === 'declined'
+                      }
+                      hasAcceptButton={paymentPageType === 'pending'}
+                      hasDeclineButton={paymentPageType === 'pending'}
+                      hasCheckbox={true}
+                      checkedCards={checkedCards}
+                      setCheckedCards={setCheckedCards}
+                      payment={payment}
+                      paymentPageType={paymentPageType}
+                      page={page}
+                    />
+                  ))}
+                </div>
+                <div className="flex justify-center">
+                  <Pagination page={page} setPage={setPage} maxPage={maxPage} />
+                </div>
+              </>
+            ) : (
+              <h1 className="text-3xl text-navyBlue font-extrabold">
+                No payments found
+              </h1>
+            )}
+          </>
         )}
       </div>
     </div>

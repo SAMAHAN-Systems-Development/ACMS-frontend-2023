@@ -16,7 +16,7 @@ const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
         <tr>
           <th className="w-[20%] p-2 text-brown">Tier Name</th>
           <th className="w-[15%] p-2 text-brown">Price</th>
-          <th className="w-[15%] p-2 text-brown">Number of tickets left</th>
+          {/* <th className="w-[15%] p-2 text-brown">Number of tickets left</th> */}
         </tr>
       </thead>
       <tbody>
@@ -29,7 +29,7 @@ const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
             <td className="p-2 text-brown">
               {moneyFormatter(eventTier.price)}
             </td>
-            <td className="p-2 text-brown">{eventTier.numberOfTicketsLeft}</td>
+            {/* <td className="p-2 text-brown">{eventTier.numberOfTicketsLeft}</td> */}
           </tr>
         ))}
         {eventTiers.length === 0 && (

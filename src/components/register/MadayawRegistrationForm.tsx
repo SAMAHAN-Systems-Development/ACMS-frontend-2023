@@ -232,7 +232,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     return (
       <>
         <RegisterLoadingModal isModalOpen={isLoadingModalOpen} />
-        <div className="w-full flex flex-col">
+        <div className="w-full flex flex-col pb-12">
           <div className="border-b-4 border-brown">
             <Image
               src={getImageSrcByViewportSize(width)}
