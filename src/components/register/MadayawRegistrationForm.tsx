@@ -1,6 +1,6 @@
 'use client';
 import type { FormEvent } from 'react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -9,11 +9,11 @@ import type { SelectChangeEvent } from '@mui/material';
 import { MenuItem } from '@mui/material';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useQuery } from '@tanstack/react-query';
-import { io } from 'socket.io-client';
 
 import RegisterLoadingModal from '@/components/register/RegisterLoadingModal';
 import RegistrationEventTiersTable from '@/components/register/RegistrationEventTiersTable';
 import Button from '@/components/ui/Button';
+import Checkbox from '@/components/ui/Checkbox';
 import InputFile from '@/components/ui/InputFile';
 import Loading from '@/components/ui/Loading';
 import Select from '@/components/ui/Select';
@@ -62,6 +62,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
 
   const supabase = createClientComponentClient();
 
+  const [isAgreementChecked, setIsAgreementChecked] = useState(false);
   const [isLoadingModalOpen, setIsLoadingModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [registrationData, setRegistrationData] = useState<{
@@ -219,14 +220,14 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     }
   };
 
-  useEffect(() => {
-    const socket = io(String(process.env.NEXT_PUBLIC_WS_URL));
-    socket.on('sendStudentRegisteredSignal', async (wsEventId: number) => {
-      if (eventId === wsEventId) {
-        await eventTiersQuery.refetch();
-      }
-    });
-  }, [eventId, eventTiersQuery]);
+  // useEffect(() => {
+  //   const socket = io(String(process.env.NEXT_PUBLIC_WS_URL));
+  //   socket.on('sendStudentRegisteredSignal', async (wsEventId: number) => {
+  //     if (eventId === wsEventId) {
+  //       await eventTiersQuery.refetch();
+  //     }
+  //   });
+  // }, [eventId, eventTiersQuery]);
 
   if (eventQuery.isFetched && eventQuery.data) {
     return (
@@ -282,12 +283,12 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                   <h3
                     className={`text-md text-${primaryColor} font-bold w-full`}
                   >
-                    * Please fill the form below with correct information
+                    * 1 TICKET PER SUBMISSION
                   </h3>
                   <h3
                     className={`text-md text-${primaryColor} font-bold w-full`}
                   >
-                    * 1 TICKET PER SUBMISSION
+                    * One receipt is good for one person
                   </h3>
                 </div>
                 <form
@@ -367,9 +368,29 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                       textColor="brown"
                     />
                   )}
+                  <div className="flex items-start gap-3 mt-4">
+                    <div className="pt-1">
+                      <Checkbox
+                        checked={isAgreementChecked}
+                        onCheckedAction={(event) => {
+                          setIsAgreementChecked(event.target.checked);
+                        }}
+                      />
+                    </div>
+                    <p className="text-justify">
+                      I HEREBY CERTIFY that the information provided in this
+                      form is complete, true and correct to the best of my
+                      knowledge.
+                    </p>
+                  </div>
                   <div className="flex justify-end mt-4">
                     <div className="w-[10rem]">
-                      <Button type="submit">Submit</Button>
+                      <Button
+                        type={isAgreementChecked ? 'submit' : 'button'}
+                        isDisabled={!isAgreementChecked}
+                      >
+                        Submit
+                      </Button>
                     </div>
                   </div>
                 </form>

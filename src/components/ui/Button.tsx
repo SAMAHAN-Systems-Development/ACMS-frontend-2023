@@ -25,7 +25,7 @@ const Button: React.FC<Props> = ({
           variant === 'primary' && !isDisabled
             ? `bg-brown text-white`
             : isDisabled
-            ? 'bg-blue text-white border-none cursor-not-allowed disabled'
+            ? 'bg-blue text-white border-none cursor-not-allowed disabled bg-opacity-50'
             : 'bg-white text-navyBlue border-solid border-navyBlue border-2'
         }`}
     >
