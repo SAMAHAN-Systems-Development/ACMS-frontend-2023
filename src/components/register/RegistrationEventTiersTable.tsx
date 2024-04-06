@@ -1,27 +1,52 @@
 import React from 'react';
 
-import dayjs from 'dayjs';
-
 import type { EventTierRegistration } from '@/types/types';
 import moneyFormatter from '@/utilities/moneyFormatter';
+import dayjs from 'dayjs';
 
 type propTypes = {
   eventTiers: EventTierRegistration[];
 };
 
+const ticketsLeftTemp: { [key: string]: { ticketsLeft: number } } = {
+  VVIP: {
+    ticketsLeft: 53,
+  },
+  Gold: {
+    ticketsLeft: 224,
+  },
+  Silver: {
+    ticketsLeft: 91,
+  },
+  Bronze: {
+    ticketsLeft: 20,
+  },
+  'Gen Ad': {
+    ticketsLeft: 66,
+  },
+};
+
 const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
+  const eventTierWithTicketsLeftTemp = eventTiers.map((eventTier) => {
+    return {
+      ...eventTier,
+      numberOfTicketsLeft: ticketsLeftTemp[eventTier.name].ticketsLeft,
+    };
+  });
   const timeToCompareTo = dayjs('2024-04-06T13:00:00.000Z');
   const timeNow = dayjs();
   const hourDifference = timeNow.diff(timeToCompareTo, 'hour');
   const ticketsToDeduct = hourDifference * 20;
 
-  const eventTierWithTicketsLeftDeducted = eventTiers.map((eventTier) => {
-    const ticketLeft = eventTier.numberOfTicketsLeft - ticketsToDeduct;
-    return {
-      ...eventTier,
-      numberOfTicketsLeft: ticketLeft > 0 ? ticketLeft : 0,
-    };
-  });
+  const eventTierWithTicketsLeftDeducted = eventTierWithTicketsLeftTemp.map(
+    (eventTier) => {
+      const ticketLeft = eventTier.numberOfTicketsLeft - ticketsToDeduct;
+      return {
+        ...eventTier,
+        numberOfTicketsLeft: ticketLeft > 0 ? ticketLeft : 0,
+      };
+    }
+  );
 
   const eventTiersSorted = eventTierWithTicketsLeftDeducted.sort(
     (et1, et2) => et2.price - et1.price
