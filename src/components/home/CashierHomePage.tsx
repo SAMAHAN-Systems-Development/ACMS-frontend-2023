@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 
 import { MenuItem, type SelectChangeEvent } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { io } from 'socket.io-client';
 
 import RegistrationEventTiersTable from '@/components/register/RegistrationEventTiersTable';
 import Button from '@/components/ui/Button';
@@ -147,12 +146,13 @@ const CashierHomePage = () => {
   }, []);
 
   useEffect(() => {
-    const socket = io(String(process.env.NEXT_PUBLIC_WS_URL));
-    socket.on('sendStudentRegisteredSignal', async (wsEventId: number) => {
-      if (inputData.eventId === wsEventId) {
-        eventTierMutation.mutate(inputData.eventId);
-      }
-    });
+    // const socket = io(String(process.env.NEXT_PUBLIC_WS_URL));
+    // socket.on('sendStudentRegisteredSignal', async (wsEventId: number) => {
+    //   if (inputData.eventId === wsEventId) {
+    //     eventTierMutation.mutate(inputData.eventId);
+    //   }
+    // });
+    eventTierMutation.mutate(inputData.eventId);
   }, [inputData.eventId, eventTierMutation]);
 
   return (
