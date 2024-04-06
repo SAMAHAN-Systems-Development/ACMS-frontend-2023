@@ -14,8 +14,8 @@ const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
     <table className="w-full text-center">
       <thead className="border-b-2 border-brown">
         <tr>
-          <th className="w-[20%] p-2 text-brown">Tier Name</th>
-          <th className="w-[15%] p-2 text-brown">Price</th>
+          <th className="w-[50%] p-2 text-brown">Tier Name</th>
+          <th className="w-[50%] p-2 text-brown">Price</th>
           {/* <th className="w-[15%] p-2 text-brown">Number of tickets left</th> */}
         </tr>
       </thead>
