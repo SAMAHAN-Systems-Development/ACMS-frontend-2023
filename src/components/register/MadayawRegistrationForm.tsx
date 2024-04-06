@@ -261,14 +261,14 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                   </h2>
                   <div className="flex gap-8 md:pl-8 md:flex-row flex-col">
                     <div className="flex flex-col">
-                      <h3 className="font-bold">BPI</h3>
-                      <p>Account Name: Christine Duat</p>
-                      <p>Account Number: 2519268305</p>
+                      <h3 className="font-bold">BDO</h3>
+                      <p>Account Name: Kayen Benaiah Bufe</p>
+                      <p>Account Number: 001740236694</p>
                     </div>
                     <div className="flex flex-col">
                       <h3 className="font-bold">GCash</h3>
-                      <p>Account Name: Christine D.</p>
-                      <p>Mobile Number: 09666495401</p>
+                      <p>Account Name: K. Bufe</p>
+                      <p>Mobile Number: 09196948577</p>
                     </div>
                   </div>
                 </div>
