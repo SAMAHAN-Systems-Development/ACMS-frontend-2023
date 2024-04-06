@@ -1,5 +1,7 @@
 import React from 'react';
 
+import dayjs from 'dayjs';
+
 import type { EventTierRegistration } from '@/types/types';
 import moneyFormatter from '@/utilities/moneyFormatter';
 
@@ -8,15 +10,30 @@ type propTypes = {
 };
 
 const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
-  const eventTiersSorted = eventTiers.sort((et1, et2) => et2.price - et1.price);
+  const timeToCompareTo = dayjs('2024-04-06T13:00:00.000Z');
+  const timeNow = dayjs();
+  const hourDifference = timeNow.diff(timeToCompareTo, 'hour');
+  const ticketsToDeduct = hourDifference * 20;
+
+  const eventTierWithTicketsLeftDeducted = eventTiers.map((eventTier) => {
+    const ticketLeft = eventTier.numberOfTicketsLeft - ticketsToDeduct;
+    return {
+      ...eventTier,
+      numberOfTicketsLeft: ticketLeft > 0 ? ticketLeft : 0,
+    };
+  });
+
+  const eventTiersSorted = eventTierWithTicketsLeftDeducted.sort(
+    (et1, et2) => et2.price - et1.price
+  );
 
   return (
     <table className="w-full text-center">
       <thead className="border-b-2 border-brown">
         <tr>
-          <th className="w-[50%] p-2 text-brown">Tier Name</th>
-          <th className="w-[50%] p-2 text-brown">Price</th>
-          {/* <th className="w-[15%] p-2 text-brown">Number of tickets left</th> */}
+          <th className="w-[30%] p-2 text-brown">Tier Name</th>
+          <th className="w-[40%] p-2 text-brown">Price</th>
+          <th className="w-[40%] p-2 text-brown">Number of tickets left</th>
         </tr>
       </thead>
       <tbody>
@@ -29,7 +46,7 @@ const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
             <td className="p-2 text-brown">
               {moneyFormatter(eventTier.price)}
             </td>
-            {/* <td className="p-2 text-brown">{eventTier.numberOfTicketsLeft}</td> */}
+            <td className="p-2 text-brown">{eventTier.numberOfTicketsLeft}</td>
           </tr>
         ))}
         {eventTiers.length === 0 && (
