@@ -65,7 +65,14 @@ export const StudentPage = () => {
                     height={250}
                   />
                 </div>
-                <div className="font-bold">{student.uuid}</div>
+                <div>
+                  <Image
+                    src={student.id_src}
+                    alt="qr-code"
+                    width={200}
+                    height={200}
+                  />
+                </div>
                 <div>{student.firstName + ' ' + student.lastName}</div>
                 <div>
                   {student.is_addu_student

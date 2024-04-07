@@ -8,6 +8,7 @@ export type Student = {
   eventTier: EventTierStudent;
   firstName: string;
   id: string;
+  id_src: string;
   is_addu_student: boolean;
   lastName: string;
   payment: PaymentStudent;

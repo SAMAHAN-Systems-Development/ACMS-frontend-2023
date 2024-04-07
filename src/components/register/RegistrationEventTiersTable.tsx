@@ -10,6 +10,9 @@ type propTypes = {
 };
 
 const ticketsLeftTemp: { [key: string]: { ticketsLeft: number } } = {
+  'MADAYAW TIER': {
+    ticketsLeft: 50,
+  },
   VVIP: {
     ticketsLeft: 50,
   },

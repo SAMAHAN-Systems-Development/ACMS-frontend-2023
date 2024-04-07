@@ -7,6 +7,7 @@ export const submitRegistration = async (studentInfo: {
   eventId: number;
   eventTierId: number;
   firstName: string;
+  id_src: string;
   isSubmittedByStudent: boolean;
   lastName: string;
   photo_src: string;

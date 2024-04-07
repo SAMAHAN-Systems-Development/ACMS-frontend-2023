@@ -67,7 +67,11 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
 
   const [isAgreementChecked, setIsAgreementChecked] = useState(false);
   const [isLoadingModalOpen, setIsLoadingModalOpen] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedPaymentFile, setSelectedPaymentFile] = useState<File | null>(
+    null
+  );
+
+  const [selectedIdFile, setSelectedIdFile] = useState<File | null>(null);
   const [registrationData, setRegistrationData] = useState<{
     email: string;
     eventTierId: number;
@@ -86,8 +90,16 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     eventTierId: eventTiers[0]?.id || 1,
   });
 
-  const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedFile(event.target.files ? event.target.files[0] : null);
+  const handleSelectedPaymentFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSelectedPaymentFile(event.target.files ? event.target.files[0] : null);
+  };
+
+  const handleSelectedIdFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSelectedIdFile(event.target.files ? event.target.files[0] : null);
   };
 
   const inputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -159,26 +171,30 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
         ''
       )}_E${eventQuery.data.id}`;
 
+      if (!selectedIdFile) {
+        toast.error('Please add your Valid Id photo');
+        return;
+      }
+
+      const idPublicUrl = await uploadPhotoAndGetPublicUrl(
+        selectedIdFile,
+        photoFileName,
+        'valid_id'
+      );
+
       if (eventQuery.data.requires_payment) {
-        if (!selectedFile) {
+        if (!selectedPaymentFile) {
           toast.error('Please add an payment photo');
           return;
         }
+
         setIsLoadingModalOpen(true);
 
-        const { error } = await supabase.storage
-          .from('payment')
-          .upload(photoFileName, selectedFile, {
-            upsert: true,
-          });
-
-        const { data } = supabase.storage
-          .from('payment')
-          .getPublicUrl(photoFileName);
-
-        if (error) {
-          throw new Error(error.message);
-        }
+        const paymentPublicUrl = await uploadPhotoAndGetPublicUrl(
+          selectedPaymentFile,
+          photoFileName,
+          'payment'
+        );
 
         const required_payment =
           eventTiers.find(
@@ -187,10 +203,11 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
 
         finalRegistrationData = {
           ...registrationData,
-          photo_src: data.publicUrl,
+          photo_src: paymentPublicUrl,
           eventId: eventQuery.data.id,
           event_requires_payment: eventQuery.data.requires_payment,
           required_payment: required_payment,
+          id_src: idPublicUrl,
         };
       } else {
         finalRegistrationData = {
@@ -199,6 +216,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
           eventId: eventQuery.data.id,
           event_requires_payment: eventQuery.data.requires_payment,
           required_payment: 0,
+          id_src: idPublicUrl,
         };
       }
 
@@ -221,6 +239,26 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
       toast.error('Error in submitting registration');
       return;
     }
+  };
+
+  const uploadPhotoAndGetPublicUrl = async (
+    file: File,
+    fileName: string,
+    bucketName: string
+  ) => {
+    const { error } = await supabase.storage
+      .from(bucketName)
+      .upload(fileName, file, {
+        upsert: true,
+      });
+
+    const { data } = supabase.storage.from(bucketName).getPublicUrl(fileName);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return data.publicUrl;
   };
 
   // useEffect(() => {
@@ -366,13 +404,22 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                   </Select>
                   {eventQuery.data.requires_payment && (
                     <InputFile
-                      handleChange={handleChange}
-                      selectedFile={selectedFile}
+                      handleChange={handleSelectedPaymentFileChange}
+                      selectedFile={selectedPaymentFile}
                       label="Payment Photo"
                       color="brown"
                       textColor="brown"
+                      id="payment-input"
                     />
                   )}
+                  <InputFile
+                    handleChange={handleSelectedIdFileChange}
+                    selectedFile={selectedIdFile}
+                    label="Valid Id"
+                    color="brown"
+                    textColor="brown"
+                    id="id-input"
+                  />
                   <div className="flex items-start gap-3 mt-4">
                     <div className="pt-1">
                       <Checkbox
