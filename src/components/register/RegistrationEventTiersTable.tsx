@@ -9,29 +9,24 @@ type propTypes = {
   eventTiers: EventTierRegistration[];
 };
 
-const ticketsLeftTemp: { [key: string]: { ticketsLeft: number } } = {
-  VVIP: {
-    ticketsLeft: 31,
-  },
-  Gold: {
-    ticketsLeft: 86,
-  },
-  Silver: {
-    ticketsLeft: 53,
-  },
-  Bronze: {
-    ticketsLeft: 0,
-  },
-  'Gen Ad': {
-    ticketsLeft: 0,
-  },
+const getTicketsLeft = (eventTier: EventTierRegistration) => {
+  switch (eventTier.name) {
+    case 'VVIP':
+      return 31;
+    case 'Gold':
+      return 86;
+    case 'Silver':
+      return 53;
+    default:
+      return eventTier.numberOfTicketsLeft;
+  }
 };
 
 const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
   const eventTierWithTicketsLeftTemp = eventTiers.map((eventTier) => {
     return {
       ...eventTier,
-      numberOfTicketsLeft: ticketsLeftTemp[eventTier.name].ticketsLeft,
+      numberOfTicketsLeft: getTicketsLeft(eventTier),
     };
   });
   const timeToCompareTo = dayjs('2024-04-07T17:00:00');
@@ -41,6 +36,11 @@ const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
 
   const eventTierWithTicketsLeftDeducted = eventTierWithTicketsLeftTemp.map(
     (eventTier) => {
+      if (eventTier.name === 'Bronze' || eventTier.name === 'Gen Ad') {
+        return {
+          ...eventTier,
+        };
+      }
       const ticketLeft = eventTier.numberOfTicketsLeft - ticketsToDeduct;
       return {
         ...eventTier,
