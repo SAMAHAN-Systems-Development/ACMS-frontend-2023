@@ -10,19 +10,19 @@ type propTypes = {
 
 const ticketsLeftTemp: { [key: string]: { ticketsLeft: number } } = {
   VVIP: {
-    ticketsLeft: 53,
+    ticketsLeft: 50,
   },
   Gold: {
-    ticketsLeft: 224,
+    ticketsLeft: 200,
   },
   Silver: {
-    ticketsLeft: 91,
+    ticketsLeft: 100,
   },
   Bronze: {
-    ticketsLeft: 20,
+    ticketsLeft: 10,
   },
   'Gen Ad': {
-    ticketsLeft: 66,
+    ticketsLeft: 10,
   },
 };
 
@@ -33,10 +33,10 @@ const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
       numberOfTicketsLeft: ticketsLeftTemp[eventTier.name].ticketsLeft,
     };
   });
-  const timeToCompareTo = dayjs('2024-04-06T13:00:00.000Z');
+  const timeToCompareTo = dayjs('2024-04-07T14:00:00');
   const timeNow = dayjs();
   const hourDifference = timeNow.diff(timeToCompareTo, 'hour');
-  const ticketsToDeduct = hourDifference * 20;
+  const ticketsToDeduct = hourDifference * 2;
 
   const eventTierWithTicketsLeftDeducted = eventTierWithTicketsLeftTemp.map(
     (eventTier) => {
