@@ -50,8 +50,8 @@ export const StudentPage = () => {
 
   return (
     <div className="w-full min-h-full flex flex-col items-center justify-center gap-8">
-      <div className="w-full max-w-[50rem] overflow-y-auto rounded bg-white flex flex-col justify-center items-center m-4">
-        <div className="flex items-center justify-center bg-white">
+      <div className="w-full max-w-[50rem] overflow-y-auto rounded bg-white flex flex-col justify-center items-center m-4 sm:p-0 p-4">
+        <div className="flex items-center justify-center bg-white w-full sm:w-fit">
           {isFound ? (
             <div className="w-full h-full flex flex-col md:flex-row items-center justify-center text-center gap-8 border-navyBlue mb-8 border-solid border-2 rounded-3xl md:p-12 p-4">
               <div className="flex flex-col items-center gap-2">
@@ -68,7 +68,7 @@ export const StudentPage = () => {
                 <div>
                   <Image
                     src={student.id_src}
-                    alt="qr-code"
+                    alt="valid Id"
                     width={200}
                     height={200}
                   />
