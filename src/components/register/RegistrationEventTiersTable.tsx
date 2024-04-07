@@ -11,19 +11,19 @@ type propTypes = {
 
 const ticketsLeftTemp: { [key: string]: { ticketsLeft: number } } = {
   VVIP: {
-    ticketsLeft: 50,
+    ticketsLeft: 31,
   },
   Gold: {
-    ticketsLeft: 200,
+    ticketsLeft: 86,
   },
   Silver: {
-    ticketsLeft: 100,
+    ticketsLeft: 53,
   },
   Bronze: {
-    ticketsLeft: 10,
+    ticketsLeft: 1,
   },
   'Gen Ad': {
-    ticketsLeft: 10,
+    ticketsLeft: 1,
   },
 };
 
