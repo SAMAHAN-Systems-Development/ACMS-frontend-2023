@@ -9,9 +9,9 @@ import {
 } from '@tanstack/react-query';
 
 import EventPage from '@/components/event/EventPage';
+import Navigation from '@/components/ui/Navigation';
 import { fetchInactiveEvents } from '@/utilities/fetch/event';
 import { fetchUser } from '@/utilities/fetch/user';
-import Navigation from '@/components/ui/Navigation';
 
 const PageFinal = async () => {
   const queryClient = new QueryClient();

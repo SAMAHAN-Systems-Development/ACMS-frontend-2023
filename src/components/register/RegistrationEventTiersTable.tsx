@@ -1,8 +1,9 @@
 import React from 'react';
 
+import dayjs from 'dayjs';
+
 import type { EventTierRegistration } from '@/types/types';
 import moneyFormatter from '@/utilities/moneyFormatter';
-import dayjs from 'dayjs';
 
 type propTypes = {
   eventTiers: EventTierRegistration[];
@@ -36,7 +37,7 @@ const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
   const timeToCompareTo = dayjs('2024-04-07T14:00:00');
   const timeNow = dayjs();
   const hourDifference = timeNow.diff(timeToCompareTo, 'hour');
-  const ticketsToDeduct = hourDifference * 2;
+  const ticketsToDeduct = hourDifference * 3;
 
   const eventTierWithTicketsLeftDeducted = eventTierWithTicketsLeftTemp.map(
     (eventTier) => {

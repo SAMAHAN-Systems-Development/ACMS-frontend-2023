@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import FetchingPaymentLoading from '@/components/payments/FetchingPaymentLoadin';
 import PaymentsCard from '@/components/payments/PaymentsCard';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
@@ -19,7 +20,6 @@ import {
   fetchPendingPayments,
   restorePayments,
 } from '@/utilities/fetch/payment';
-import FetchingPaymentLoading from '@/components/payments/FetchingPaymentLoadin';
 
 type propTypes = {
   paymentPageType: 'accepted' | 'declined' | 'pending';
