@@ -59,6 +59,9 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
   });
 
   const eventTiers = eventTiersQuery.data || [];
+  const eventTiersFiltered = eventTiers.filter(
+    (eventTier) => eventTier.numberOfTicketsLeft > 0
+  );
 
   const supabase = createClientComponentClient();
 
@@ -353,11 +356,13 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                     name="eventTierId"
                   >
                     {eventTiersQuery.isSuccess &&
-                      eventTiers.map((eventTier: EventTierRegistration) => (
-                        <MenuItem key={eventTier.id} value={eventTier.id}>
-                          {eventTier.name}
-                        </MenuItem>
-                      ))}
+                      eventTiersFiltered.map(
+                        (eventTier: EventTierRegistration) => (
+                          <MenuItem key={eventTier.id} value={eventTier.id}>
+                            {eventTier.name}
+                          </MenuItem>
+                        )
+                      )}
                   </Select>
                   {eventQuery.data.requires_payment && (
                     <InputFile
