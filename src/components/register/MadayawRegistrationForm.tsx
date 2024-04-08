@@ -66,6 +66,8 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
   const supabase = createClientComponentClient();
 
   const [isAgreementChecked, setIsAgreementChecked] = useState(false);
+  const [isSecondAgreementChecked, setIsSecondAgreementChecked] =
+    useState(false);
   const [isLoadingModalOpen, setIsLoadingModalOpen] = useState(false);
   const [selectedPaymentFile, setSelectedPaymentFile] = useState<File | null>(
     null
@@ -79,6 +81,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     is_addu_student: boolean;
     isSubmittedByStudent: boolean;
     lastName: string;
+    payment_reference_number: string;
     year_and_course: string;
   }>({
     firstName: '',
@@ -88,6 +91,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     is_addu_student: true,
     isSubmittedByStudent: true,
     eventTierId: eventTiers[0]?.id || 1,
+    payment_reference_number: '',
   });
 
   const handleSelectedPaymentFileChange = async (
@@ -126,6 +130,10 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if (!eventQuery.data) {
+      throw new Error('Event not found');
+    }
+
     if (
       registrationData.email === '' ||
       registrationData.firstName === '' ||
@@ -133,6 +141,16 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
       registrationData.year_and_course === ''
     ) {
       toast.error('Please fill up all the fields', { autoClose: 4000 });
+      return;
+    }
+
+    if (
+      eventQuery.data.requires_payment &&
+      registrationData.payment_reference_number === ''
+    ) {
+      toast.error('Please fill up all the fields', {
+        autoClose: 4000,
+      });
       return;
     }
 
@@ -157,13 +175,11 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     }
 
     let photoFileName = '';
-
     let finalRegistrationData;
+    let photo_src = '';
+    let required_payment = 0;
     try {
-      if (!eventQuery.data) {
-        throw new Error('Event not found');
-      }
-
+      setIsLoadingModalOpen(true);
       photoFileName = `${registrationData.email
         .split('@')[0]
         .replace('.', '-')}_${registrationData.year_and_course.replace(
@@ -171,8 +187,30 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
         ''
       )}_E${eventQuery.data.id}`;
 
+      if (eventQuery.data.requires_payment) {
+        if (!selectedPaymentFile) {
+          toast.error('Please add an payment photo');
+          setIsLoadingModalOpen(false);
+          return;
+        }
+
+        const paymentPublicUrl = await uploadPhotoAndGetPublicUrl(
+          selectedPaymentFile,
+          photoFileName,
+          'payment'
+        );
+
+        photo_src = paymentPublicUrl;
+
+        required_payment =
+          eventTiers.find(
+            (eventTier) => eventTier.id === registrationData.eventTierId
+          )?.price || 0;
+      }
+
       if (!selectedIdFile) {
         toast.error('Please add your Valid Id photo');
+        setIsLoadingModalOpen(false);
         return;
       }
 
@@ -182,43 +220,14 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
         'valid_id'
       );
 
-      if (eventQuery.data.requires_payment) {
-        if (!selectedPaymentFile) {
-          toast.error('Please add an payment photo');
-          return;
-        }
-
-        setIsLoadingModalOpen(true);
-
-        const paymentPublicUrl = await uploadPhotoAndGetPublicUrl(
-          selectedPaymentFile,
-          photoFileName,
-          'payment'
-        );
-
-        const required_payment =
-          eventTiers.find(
-            (eventTier) => eventTier.id === registrationData.eventTierId
-          )?.price || 0;
-
-        finalRegistrationData = {
-          ...registrationData,
-          photo_src: paymentPublicUrl,
-          eventId: eventQuery.data.id,
-          event_requires_payment: eventQuery.data.requires_payment,
-          required_payment: required_payment,
-          id_src: idPublicUrl,
-        };
-      } else {
-        finalRegistrationData = {
-          ...registrationData,
-          photo_src: '',
-          eventId: eventQuery.data.id,
-          event_requires_payment: eventQuery.data.requires_payment,
-          required_payment: 0,
-          id_src: idPublicUrl,
-        };
-      }
+      finalRegistrationData = {
+        ...registrationData,
+        photo_src: photo_src,
+        eventId: eventQuery.data.id,
+        event_requires_payment: eventQuery.data.requires_payment,
+        required_payment: required_payment,
+        id_src: idPublicUrl,
+      };
 
       const studentData = await submitRegistration(finalRegistrationData);
       router.push(`/student?uuid=${studentData.uuid}`);
@@ -403,14 +412,22 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                       )}
                   </Select>
                   {eventQuery.data.requires_payment && (
-                    <InputFile
-                      handleChange={handleSelectedPaymentFileChange}
-                      selectedFile={selectedPaymentFile}
-                      label="Payment Photo"
-                      color="brown"
-                      textColor="brown"
-                      id="payment-input"
-                    />
+                    <>
+                      <InputFile
+                        handleChange={handleSelectedPaymentFileChange}
+                        selectedFile={selectedPaymentFile}
+                        label="Payment Photo"
+                        color="brown"
+                        textColor="brown"
+                        id="payment-input"
+                      />
+                      <TextField
+                        name="payment_reference_number"
+                        onChange={inputOnChange}
+                        value={registrationData.payment_reference_number}
+                        label="Payment Reference #"
+                      />
+                    </>
                   )}
                   <InputFile
                     handleChange={handleSelectedIdFileChange}
@@ -435,11 +452,33 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                       knowledge.
                     </p>
                   </div>
+                  <div className="flex items-start gap-3 mt-4">
+                    <div className="pt-1">
+                      <Checkbox
+                        checked={isSecondAgreementChecked}
+                        onCheckedAction={(event) => {
+                          setIsSecondAgreementChecked(event.target.checked);
+                        }}
+                      />
+                    </div>
+                    <p className="text-justify">
+                      By purchasing a ticket, I hereby signify to strictly agree
+                      and follow to abide by ALL the Ateneo Culture and Arts
+                      Cluster (ACAC) and the organizing team’s rules and
+                      regulations.
+                    </p>
+                  </div>
                   <div className="flex justify-end mt-4">
                     <div className="w-[10rem]">
                       <Button
-                        type={isAgreementChecked ? 'submit' : 'button'}
-                        isDisabled={!isAgreementChecked}
+                        type={
+                          isAgreementChecked && isSecondAgreementChecked
+                            ? 'submit'
+                            : 'button'
+                        }
+                        isDisabled={
+                          !isAgreementChecked || !isSecondAgreementChecked
+                        }
                       >
                         Submit
                       </Button>

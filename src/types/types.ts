@@ -22,6 +22,7 @@ export type PaymentStudent = {
   createdAt: string;
   id: number;
   photo_src: string;
+  reference_number: string;
   status: string;
   updatedAt: string;
 };

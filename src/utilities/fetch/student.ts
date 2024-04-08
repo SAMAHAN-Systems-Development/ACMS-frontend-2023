@@ -10,6 +10,7 @@ export const submitRegistration = async (studentInfo: {
   id_src: string;
   isSubmittedByStudent: boolean;
   lastName: string;
+  payment_reference_number: string;
   photo_src: string;
   required_payment: number;
   year_and_course: string;
