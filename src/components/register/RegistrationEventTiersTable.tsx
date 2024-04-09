@@ -14,9 +14,9 @@ const getTicketsLeft = (eventTier: EventTierRegistration) => {
     case 'VVIP':
       return 4;
     case 'Gold':
-      return 60;
+      return 31;
     case 'Silver':
-      return 27;
+      return 7;
     default:
       return eventTier.numberOfTicketsLeft;
   }
@@ -29,7 +29,7 @@ const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
       numberOfTicketsLeft: getTicketsLeft(eventTier),
     };
   });
-  const timeToCompareTo = dayjs('2024-04-08T13:00:00');
+  const timeToCompareTo = dayjs('2024-04-09T18:00:00');
   const timeNow = dayjs();
   const hourDifference = timeNow.diff(timeToCompareTo, 'hour');
   const ticketsToDeduct = hourDifference * 1;
@@ -39,7 +39,8 @@ const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
       if (
         eventTier.name === 'Bronze' ||
         eventTier.name === 'Gen Ad' ||
-        eventTier.name === 'VVIP'
+        eventTier.name === 'VVIP' ||
+        eventTier.name === 'Silver'
       ) {
         return {
           ...eventTier,
