@@ -446,9 +446,9 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                       />
                     </div>
                     <p className="text-justify">
-                      I HEREBY CERTIFY that the information provided in this
-                      form is complete, true and correct to the best of my
-                      knowledge.
+                      I hereby acknowledge that all information provided is
+                      accurate and final. Furthermore, I understand that the
+                      tickets issued are non-refundable.
                     </p>
                   </div>
                   <div className="flex items-start gap-3 mt-4">
