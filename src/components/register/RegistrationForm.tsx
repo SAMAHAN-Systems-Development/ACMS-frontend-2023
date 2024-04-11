@@ -65,6 +65,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     is_addu_student: boolean;
     isSubmittedByStudent: boolean;
     lastName: string;
+    payment_reference_number: string;
     year_and_course: string;
   }>({
     firstName: '',
@@ -74,6 +75,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     is_addu_student: true,
     isSubmittedByStudent: true,
     eventTierId: eventTiers[0]?.id || 1,
+    payment_reference_number: '',
   });
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -171,6 +173,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
           eventId: eventQuery.data.id,
           event_requires_payment: eventQuery.data.requires_payment,
           required_payment: required_payment,
+          id_src: '',
         };
       } else {
         finalRegistrationData = {
@@ -179,6 +182,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
           eventId: eventQuery.data.id,
           event_requires_payment: eventQuery.data.requires_payment,
           required_payment: 0,
+          id_src: '',
         };
       }
 
@@ -192,6 +196,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
         isSubmittedByStudent: true,
         eventTierId: eventTiers[0]?.id || 1,
         is_addu_student: true,
+        payment_reference_number: '',
       });
       setSelectedFile(null);
       router.push(`/student?uuid=${studentData.uuid}`);
@@ -317,6 +322,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
               </Select>
               {eventQuery.data.requires_payment && (
                 <InputFile
+                  id="payment_photo"
                   handleChange={handleChange}
                   selectedFile={selectedFile}
                   label="Payment Photo"
