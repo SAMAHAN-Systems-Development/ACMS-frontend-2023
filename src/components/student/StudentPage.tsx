@@ -65,14 +65,16 @@ export const StudentPage = () => {
                     height={250}
                   />
                 </div>
-                <div>
-                  <Image
-                    src={student.id_src}
-                    alt="valid Id"
-                    width={200}
-                    height={200}
-                  />
-                </div>
+                {student.id_src && (
+                  <div>
+                    <Image
+                      src={student.id_src}
+                      alt="valid Id"
+                      width={200}
+                      height={200}
+                    />
+                  </div>
+                )}
                 <div>{student.firstName + ' ' + student.lastName}</div>
                 <div>
                   {student.is_addu_student
@@ -89,10 +91,12 @@ export const StudentPage = () => {
                     width={200}
                     height={200}
                   />
-                  <div className="mt-4 text-center">
-                    <span className="font-bold block">Reference Number:</span>
-                    {student.payment.reference_number}
-                  </div>
+                  {student.payment.reference_number && (
+                    <div className="mt-4 text-center">
+                      <span className="font-bold block">Reference Number:</span>
+                      {student.payment.reference_number}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
