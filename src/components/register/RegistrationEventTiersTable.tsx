@@ -11,12 +11,6 @@ type propTypes = {
 
 const getTicketsLeft = (eventTier: EventTierRegistration) => {
   switch (eventTier.name) {
-    case 'VVIP':
-      return 4;
-    case 'Gold':
-      return 12;
-    case 'Silver':
-      return 7;
     default:
       return eventTier.numberOfTicketsLeft;
   }
@@ -41,7 +35,8 @@ const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
         eventTier.name === 'Gen Ad' ||
         eventTier.name === 'VVIP' ||
         eventTier.name === 'Silver' ||
-        eventTier.name === 'Gold'
+        eventTier.name === 'Gold' ||
+        eventTier.name === 'MADAYAW TIER'
       ) {
         return {
           ...eventTier,
