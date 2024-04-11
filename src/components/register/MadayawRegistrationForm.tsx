@@ -306,19 +306,14 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
             <div className="flex justify-center md:mt-0 px-4 xl:w-fit w-full">
               <div className="flex flex-col gap-4 justify-center">
                 <div className="flex flex-col gap-2 p-4 border-2 rounded-xl">
-                  <h2 className="text-left md:pl-8 mb-4 text-2xl font-bold">
+                  <h2 className="text-center md:pl-8 mb-4 text-2xl font-bold">
                     Payment Methods
                   </h2>
                   <div className="flex gap-8 md:pl-8 md:flex-row flex-col">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col text-center w-full">
                       <h3 className="font-bold">BDO</h3>
                       <p>Account Name: Madayaw Nights 2024</p>
                       <p>Account Number: 001740236694</p>
-                    </div>
-                    <div className="flex flex-col">
-                      <h3 className="font-bold">GCash</h3>
-                      <p>Account Name: Christine D.</p>
-                      <p>Mobile Number: 09666495401</p>
                     </div>
                   </div>
                 </div>
