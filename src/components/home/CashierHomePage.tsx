@@ -109,6 +109,7 @@ const CashierHomePage = () => {
       isSubmittedByStudent: false,
       event_requires_payment: null,
       required_payment: required_payment,
+      id_src: '',
     });
 
     if (studentData) {

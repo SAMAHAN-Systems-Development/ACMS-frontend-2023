@@ -2,6 +2,7 @@
 
 type propTypes = {
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  id: string;
   label: string;
   selectedFile: File | null;
   color?: string;
@@ -14,6 +15,7 @@ const InputFile: React.FC<propTypes> = ({
   label,
   color = 'navyBlue',
   textColor = 'navyBlue',
+  id = 'file-input',
 }) => {
   return (
     <div>
@@ -25,14 +27,14 @@ const InputFile: React.FC<propTypes> = ({
           className={`flex items-center bg-lightBrown h-full border-${color} border-r-2`}
         >
           <label
-            htmlFor="file-input"
+            htmlFor={id}
             className={`font-bold text-${textColor} cursor-pointer whitespace-nowrap p-2`}
           >
             <input
               type="file"
               accept="*"
               hidden
-              id="file-input"
+              id={id}
               onChange={(event) => handleChange(event)}
               className="w-full h-full"
             />
