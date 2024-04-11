@@ -110,6 +110,7 @@ const CashierHomePage = () => {
       event_requires_payment: null,
       required_payment: required_payment,
       id_src: '',
+      payment_reference_number: '',
     });
 
     if (studentData) {
