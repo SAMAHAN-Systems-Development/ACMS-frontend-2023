@@ -43,6 +43,7 @@ const PaymentsCard: React.FC<propTypes> = ({
   const paymentPhotoUrl = payment.photo_src;
   const eventTier = payment.eventTier.name;
   const studentEmail = payment.student.email;
+  const reference_number = payment.reference_number || '';
   const tokenQuery = useQuery<string>({
     queryKey: ['jwt'],
   });
@@ -121,13 +122,13 @@ const PaymentsCard: React.FC<propTypes> = ({
 
   return (
     <div
-      className="md:w-[24rem] w-[20rem] h-[46rem] cursor-pointer p-8 rounded-xl border-blue border-2 shadow-[2px_0px_4px_0px_rgba(0,0,0,0.25),0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+      className="md:w-[24rem] w-[20rem] h-[48rem] cursor-pointer p-8 rounded-xl border-blue border-2 shadow-[2px_0px_4px_0px_rgba(0,0,0,0.25),0px_4px_4px_0px_rgba(0,0,0,0.25)]"
       onClick={onCheckedAction}
       role="button"
       onKeyUp={onCheckedAction}
       tabIndex={0}
     >
-      <div className="flex flex-col gap-4 max-h-full min-h-full">
+      <div className="flex flex-col gap-2 max-h-full min-h-full">
         <div className="flex justify-between gap-12 items-start">
           <div className="flex flex-col items-start justify-start">
             <p className="font-body text-sm text-left font-bold">
@@ -140,43 +141,49 @@ const PaymentsCard: React.FC<propTypes> = ({
           )}
         </div>
 
-        <div className="flex flex-col items-center justify-between flex-grow">
-          <div className="flex flex-col gap-4">
-            <p className="text-xl text-center font-bold">
-              {moneyFormatter(required_payment)}
-            </p>
-            <div className="flex items-center justify-center">
-              <Image
-                className="object-cover"
-                src={paymentPhotoUrl || '/placeholderImage.jpg'}
-                alt="Payment Photo"
-                width={200}
-                height={200}
-              />
-            </div>
+        <div className="flex flex-col gap-2 flex-grow justify-between items-center">
+          <div className="flex gap-2">
+            <p className="text-sm text-center">Ref#:</p>
+            <p className="text-sm text-center font-bold">{reference_number}</p>
           </div>
-          <div className="flex flex-row gap-4 justify-between w-full">
-            {hasRestoreButton && (
-              <div className="flex items-center justify-center my-3 w-full">
-                <div className="w-[8rem]">
-                  <Button onClick={restoreButtonAction}>Restore</Button>
-                </div>
+          <div className="flex flex-col items-center justify-between flex-grow">
+            <div className="flex flex-col gap-4">
+              <p className="text-xl text-center font-bold">
+                {moneyFormatter(required_payment)}
+              </p>
+              <div className="flex items-center justify-center">
+                <Image
+                  className="object-cover"
+                  src={paymentPhotoUrl || '/placeholderImage.jpg'}
+                  alt="Payment Photo"
+                  width={200}
+                  height={200}
+                />
               </div>
-            )}
-            {hasAcceptButton && (
-              <div className="flex items-center justify-center my-3 w-full">
-                <div className="w-[8rem]">
-                  <Button onClick={acceptButtonAction}>Accept</Button>
+            </div>
+            <div className="flex flex-row gap-4 justify-between w-full">
+              {hasRestoreButton && (
+                <div className="flex items-center justify-center my-3 w-full">
+                  <div className="w-[8rem]">
+                    <Button onClick={restoreButtonAction}>Restore</Button>
+                  </div>
                 </div>
-              </div>
-            )}
-            {hasDeclineButton && (
-              <div className="flex items-center justify-center my-3 w-full">
-                <div className="w-[8rem]">
-                  <Button onClick={declineButtonAction}>Decline</Button>
+              )}
+              {hasAcceptButton && (
+                <div className="flex items-center justify-center my-3 w-full">
+                  <div className="w-[8rem]">
+                    <Button onClick={acceptButtonAction}>Accept</Button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+              {hasDeclineButton && (
+                <div className="flex items-center justify-center my-3 w-full">
+                  <div className="w-[8rem]">
+                    <Button onClick={declineButtonAction}>Decline</Button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

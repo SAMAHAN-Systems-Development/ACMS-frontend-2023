@@ -109,6 +109,7 @@ export type Payment = {
   eventTier: EventTierPayment;
   id: number;
   photo_src: string;
+  reference_number: string;
   required_payment: number;
   status: string;
   student: StudentPayment;
