@@ -43,7 +43,7 @@ const PaymentsCard: React.FC<propTypes> = ({
   const paymentPhotoUrl = payment.photo_src;
   const eventTier = payment.eventTier.name;
   const studentEmail = payment.student.email;
-  const reference_number = payment.reference_number || '';
+  const reference_number = payment.reference_number || 'N/A';
   const tokenQuery = useQuery<string>({
     queryKey: ['jwt'],
   });
