@@ -58,7 +58,11 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     queryFn: () => fetchEventTiersBasedOnEventId(eventId),
   });
 
-  const eventTiers = eventTiersQuery.data || [];
+  const eventTiersUnsorted = eventTiersQuery.data || [];
+  const eventTiers = eventTiersUnsorted.sort(
+    (et1, et2) => et2.price - et1.price
+  );
+
   const eventTiersFiltered = eventTiers.filter(
     (eventTier) => eventTier.numberOfTicketsLeft > 0
   );

@@ -50,9 +50,9 @@ const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
     }
   );
 
-  const eventTiersSorted = eventTierWithTicketsLeftDeducted.sort(
-    (et1, et2) => et2.price - et1.price
-  );
+  // const eventTiersSorted = eventTierWithTicketsLeftDeducted.sort(
+  //   (et1, et2) => et2.price - et1.price
+  // );
 
   return (
     <table className="w-full text-center">
@@ -64,18 +64,22 @@ const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
         </tr>
       </thead>
       <tbody>
-        {eventTiersSorted.map((eventTier: EventTierRegistration) => (
-          <tr
-            key={eventTier.id}
-            className="border-t-2 border-brown hover:bg-lightBrown"
-          >
-            <td className="p-2 text-brown">{eventTier.name}</td>
-            <td className="p-2 text-brown">
-              {moneyFormatter(eventTier.price)}
-            </td>
-            <td className="p-2 text-brown">{eventTier.numberOfTicketsLeft}</td>
-          </tr>
-        ))}
+        {eventTierWithTicketsLeftDeducted.map(
+          (eventTier: EventTierRegistration) => (
+            <tr
+              key={eventTier.id}
+              className="border-t-2 border-brown hover:bg-lightBrown"
+            >
+              <td className="p-2 text-brown">{eventTier.name}</td>
+              <td className="p-2 text-brown">
+                {moneyFormatter(eventTier.price)}
+              </td>
+              <td className="p-2 text-brown">
+                {eventTier.numberOfTicketsLeft}
+              </td>
+            </tr>
+          )
+        )}
         {eventTiers.length === 0 && (
           <tr>
             <td colSpan={4} className="text-center py-5">
