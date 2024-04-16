@@ -94,7 +94,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     email: '',
     is_addu_student: true,
     isSubmittedByStudent: true,
-    eventTierId: eventTiers[0]?.id || 1,
+    eventTierId: eventTiers[1]?.id || 1,
     payment_reference_number: '',
   });
 
@@ -297,7 +297,21 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
               className="w-full"
             />
           </div>
-          <div className="w-full flex justify-center mt-8 px-8">
+          <div className="w-full gap-8 flex flex-col items-center mt-8 px-8">
+            <div className="text-center">
+              <h2 className="font-bold text-xl">
+                Official Madayaw Nights Merch:
+              </h2>
+              <a
+                href="https://tinyurl.com/FOEMadayawNightsMerch"
+                className="text-xl underline"
+                target="_blank"
+              >
+                https://tinyurl.com/FOE
+                <span className="sm:inline block">MadayawNightsMerch</span>
+              </a>
+            </div>
+
             <Image
               src="/RegistrationFormText.png"
               alt="Regitration Form Text"
