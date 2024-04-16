@@ -12,11 +12,11 @@ type propTypes = {
 const getTicketsLeft = (eventTier: EventTierRegistration) => {
   switch (eventTier.name) {
     case 'VVIP':
-      return 137;
+      return 150;
     case 'Gold':
-      return 297;
+      return 503;
     case 'Silver':
-      return 366;
+      return 280;
     default:
       return eventTier.numberOfTicketsLeft;
   }
@@ -29,7 +29,7 @@ const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
       numberOfTicketsLeft: getTicketsLeft(eventTier),
     };
   });
-  const timeToCompareTo = dayjs('2024-04-15T16:00:00');
+  const timeToCompareTo = dayjs('2024-04-16T19:00:00');
   const timeNow = dayjs();
   const hourDifference = timeNow.diff(timeToCompareTo, 'hour');
   const ticketsToDeduct = hourDifference * 5;
