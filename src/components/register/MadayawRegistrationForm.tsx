@@ -365,7 +365,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                       value={Boolean(registrationData.is_addu_student)}
                       label="Are you an AdDU student?"
                       onChange={toggleOnChange}
-                      disabled={true}
+                      disabled={false}
                       name="is_addu_student"
                       labelPlacement={
                         width >= VIEW_PORT_SIZES.md ? 'start' : 'top'
