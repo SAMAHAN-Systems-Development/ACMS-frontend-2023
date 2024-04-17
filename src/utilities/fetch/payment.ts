@@ -1,13 +1,20 @@
 const backendUrl =
   process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
 
-export const fetchAcceptedPayments = async (token: string, page: number) => {
-  const response = await fetch(`${backendUrl}/payment/accepted?page=${page}`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const fetchAcceptedPayments = async (
+  token: string,
+  page: number,
+  studentNameSearch: string
+) => {
+  const response = await fetch(
+    `${backendUrl}/payment/accepted?page=${page}&studentName=${studentNameSearch}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   if (!response.ok) {
     throw new Error('Error in fetching the accepted payments');
@@ -19,13 +26,20 @@ export const fetchAcceptedPayments = async (token: string, page: number) => {
   return { payments: acceptedPayments, maxPage };
 };
 
-export const fetchDeclinedPayments = async (token: string, page: number) => {
-  const response = await fetch(`${backendUrl}/payment/declined?page=${page}`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const fetchDeclinedPayments = async (
+  token: string,
+  page: number,
+  studentNameSearch: string
+) => {
+  const response = await fetch(
+    `${backendUrl}/payment/declined?page=${page}&studentName=${studentNameSearch}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   if (!response.ok) {
     throw new Error('Error in fetching the declined payments');
@@ -38,13 +52,20 @@ export const fetchDeclinedPayments = async (token: string, page: number) => {
   return { payments: declinedPayments, maxPage };
 };
 
-export const fetchPendingPayments = async (token: string, page: number) => {
-  const response = await fetch(`${backendUrl}/payment/pending?page=${page}`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const fetchPendingPayments = async (
+  token: string,
+  page: number,
+  studentNameSearch: string
+) => {
+  const response = await fetch(
+    `${backendUrl}/payment/pending?page=${page}&studentName=${studentNameSearch}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   if (!response.ok) {
     throw new Error('Error in fetching the pending payments');

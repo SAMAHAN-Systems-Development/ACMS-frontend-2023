@@ -55,8 +55,8 @@ const Home = async () => {
   });
 
   await queryClient.prefetchQuery({
-    queryKey: ['payments', 'pending', { page: 1 }],
-    queryFn: () => fetchPendingPayments(accessToken, 1),
+    queryKey: ['payments', 'pending', { page: 1, studentNameSearch: '' }],
+    queryFn: () => fetchPendingPayments(accessToken, 1, ''),
   });
 
   if (userType === 'facilitator') {

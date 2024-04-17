@@ -36,6 +36,7 @@ type TextFieldProps = {
   className?: string;
   defaultValue?: string;
   id?: string;
+  onKeyUp?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   type?: string;
 };
 
@@ -47,6 +48,7 @@ export default function TextField({
   onChange,
   name,
   value,
+  onKeyUp,
 }: TextFieldProps) {
   return (
     <TextFieldStyle
@@ -54,6 +56,7 @@ export default function TextField({
       label={label}
       type={type}
       onChange={onChange}
+      onKeyUp={onKeyUp}
       value={value}
       className={className}
       name={name}

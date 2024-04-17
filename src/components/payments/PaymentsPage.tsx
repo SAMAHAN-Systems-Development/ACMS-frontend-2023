@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
@@ -11,6 +11,7 @@ import PaymentsCard from '@/components/payments/PaymentsCard';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import Pagination from '@/components/ui/Pagination';
+import TextField from '@/components/ui/TextField';
 import type { Payment } from '@/types/types';
 import {
   acceptPayments,
@@ -44,21 +45,28 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
 
   const token = tokenQuery.data || '';
 
+  const [studentNameSearchInput, setStudentNameSearchInput] = useState('');
+  const [studentNameSearchValue, setStudentNameSearchValue] = useState('');
+
   const queryFn = () => {
     if (paymentPageType === 'accepted') {
-      return fetchAcceptedPayments(token, page);
+      return fetchAcceptedPayments(token, page, studentNameSearchValue);
     }
 
     if (paymentPageType === 'pending') {
-      return fetchPendingPayments(token, page);
+      return fetchPendingPayments(token, page, studentNameSearchValue);
     }
 
-    return fetchDeclinedPayments(token, page);
+    return fetchDeclinedPayments(token, page, studentNameSearchValue);
   };
 
   const paymentsQuery = useQuery<{ maxPage: number; payments: Payment[] }>({
-    queryKey: ['payments', paymentPageType, { page }],
-    queryFn: queryFn,
+    queryKey: [
+      'payments',
+      paymentPageType,
+      { page, studentNameSearch: studentNameSearchValue },
+    ],
+    queryFn: () => queryFn(),
   });
 
   const { payments: listOfStudents, maxPage } = paymentsQuery.data || {
@@ -143,6 +151,20 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
     declineAllSelectedMutation.mutate();
   };
 
+  useEffect(() => {
+    const invalidate = async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [
+          'payments',
+          paymentPageType,
+          { page: 1, setStudentNameSearchValue },
+        ],
+        exact: true,
+      });
+    };
+    void invalidate();
+  }, [paymentPageType, queryClient, setStudentNameSearchValue]);
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex sm:flex-row flex-col border-b-2 w-full">
@@ -223,6 +245,37 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
         </div>
       </div>
       <div className="flex flex-col gap-8 flex-wrap justify-center items-center md:px-16 md:pb-16 px-4 pb-4">
+        <div className="flex gap-2 lg:self-end">
+          <TextField
+            label="Search Student Name"
+            name="studentNameSearch"
+            value={studentNameSearchInput}
+            onChange={(event) => setStudentNameSearchInput(event.target.value)}
+            onKeyUp={async (event: React.KeyboardEvent<HTMLInputElement>) => {
+              if (event.key === 'Enter') {
+                setPage(1);
+                setStudentNameSearchValue(studentNameSearchInput);
+              }
+            }}
+          />
+          <div className="border-2 bg-navyBlue flex justify-center items-center rounded">
+            <span
+              className="icon-[material-symbols--search]"
+              style={{
+                width: '34px',
+                height: '24px',
+                color: '#FFFFFF',
+              }}
+              onClick={async () => {
+                setPage(1);
+                setStudentNameSearchValue(studentNameSearchInput);
+              }}
+              role="button"
+              onKeyUp={() => {}}
+              tabIndex={0}
+            />
+          </div>
+        </div>
         <div className="flex justify-center">
           <Pagination page={page} setPage={setPage} maxPage={maxPage} />
         </div>
