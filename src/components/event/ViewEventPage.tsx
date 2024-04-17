@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import EventTierTable from '@/components/event/EventTierTable';
 import PaymentsModal from '@/components/payments/PaymentsModal';
 import Button from '@/components/ui/Button';
-import StudentsTable from '@/components/ui/StudentsTable';
+// import StudentsTable from '@/components/ui/StudentsTable';
 import type { ViewEvent } from '@/types/types';
 import { VIEW_PORT_SIZES } from '@/utilities/constants';
 import { fetchEventData } from '@/utilities/fetch/event';
@@ -116,13 +116,13 @@ const ViewEventPage = ({ id }: { id: string }) => {
           <EventTierTable eventTiers={data.eventTiers} />
         </div>
       </section>
-      <section className="md:w-4/5 w-96 mx-auto my-10 pb-8">
+      {/* <section className="md:w-4/5 w-96 mx-auto my-10 pb-8">
         {eventQuery.isFetching ? (
           <div className="flex justify-center">Loading...</div>
         ) : (
           <StudentsTable list={data.students} />
         )}
-      </section>
+      </section> */}
     </>
   );
 };
