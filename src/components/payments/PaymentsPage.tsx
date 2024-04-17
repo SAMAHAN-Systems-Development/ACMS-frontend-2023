@@ -247,7 +247,7 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
       <div className="flex flex-col gap-8 flex-wrap justify-center items-center md:px-16 md:pb-16 px-4 pb-4">
         <div className="flex gap-2 lg:self-end">
           <TextField
-            label="Search Student Name"
+            label="Search"
             name="studentNameSearch"
             value={studentNameSearchInput}
             onChange={(event) => setStudentNameSearchInput(event.target.value)}
