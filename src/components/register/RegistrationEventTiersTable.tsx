@@ -29,7 +29,7 @@ const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
       numberOfTicketsLeft: getTicketsLeft(eventTier),
     };
   });
-  const timeToCompareTo = dayjs('2024-04-16T19:00:00');
+  const timeToCompareTo = dayjs('2024-04-18T01:00:00');
   const timeNow = dayjs();
   const hourDifference = timeNow.diff(timeToCompareTo, 'hour');
   const ticketsToDeduct = hourDifference * 1;
