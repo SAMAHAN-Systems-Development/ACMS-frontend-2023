@@ -329,9 +329,9 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                   </h2>
                   <div className="flex gap-8 md:pl-8 md:flex-row flex-col">
                     <div className="flex flex-col text-center w-full">
-                      <h3 className="font-bold">BDO Unibank</h3>
-                      <p>Account Name: Madayaw Nights 2024</p>
-                      <p>Account Number: 001740236694</p>
+                      <h3 className="font-bold">Paymaya</h3>
+                      <p>Account Name: kayenbenaiahbufe</p>
+                      <p>Account Number: 09954563149</p>
                     </div>
                   </div>
                 </div>
