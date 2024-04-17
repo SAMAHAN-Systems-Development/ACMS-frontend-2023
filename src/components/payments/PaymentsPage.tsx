@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
@@ -151,19 +151,19 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
     declineAllSelectedMutation.mutate();
   };
 
-  useEffect(() => {
-    const invalidate = async () => {
-      await queryClient.invalidateQueries({
-        queryKey: [
-          'payments',
-          paymentPageType,
-          { page: 1, setStudentNameSearchValue },
-        ],
-        exact: true,
-      });
-    };
-    void invalidate();
-  }, [paymentPageType, queryClient, setStudentNameSearchValue]);
+  // useEffect(() => {
+  //   const invalidate = async () => {
+  //     await queryClient.invalidateQueries({
+  //       queryKey: [
+  //         'payments',
+  //         paymentPageType,
+  //         { page: 1, setStudentNameSearchValue },
+  //       ],
+  //       exact: true,
+  //     });
+  //   };
+  //   void invalidate();
+  // }, [paymentPageType, queryClient, setStudentNameSearchValue]);
 
   return (
     <div className="flex flex-col gap-8">
