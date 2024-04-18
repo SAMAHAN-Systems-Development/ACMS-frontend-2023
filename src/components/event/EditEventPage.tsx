@@ -61,7 +61,12 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
 
   const eventQuery = useQuery({
     queryKey: ['event', eventId],
-    queryFn: () => fetchEventData(token, eventId),
+    queryFn: () =>
+      fetchEventData(token, eventId, {
+        studentItems: 10,
+        studentPage: 1,
+        studentSearchValue: '',
+      }),
   });
 
   const [formData, setFormData] = React.useState<FormData>({

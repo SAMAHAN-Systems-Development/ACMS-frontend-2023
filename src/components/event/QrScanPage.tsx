@@ -24,7 +24,12 @@ const QrScanPage: React.FC<propTypes> = ({ eventId }) => {
 
   const eventDataQuery = useQuery<ViewEvent>({
     queryKey: ['events', eventId],
-    queryFn: () => fetchEventData(token, eventId),
+    queryFn: () =>
+      fetchEventData(token, eventId, {
+        studentItems: 10,
+        studentPage: 1,
+        studentSearchValue: '',
+      }),
   });
 
   const eventData = eventDataQuery.data || { title: '' };
