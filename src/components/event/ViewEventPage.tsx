@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 
 import { useQuery } from '@tanstack/react-query';
@@ -39,6 +39,12 @@ const ViewEventPage = ({ id }: { id: string }) => {
   });
 
   const data: ViewEvent = eventQuery.data;
+
+  const [queryParamsInitial, setQueryParamsInitial] = useState({
+    studentPage: 1,
+    studentSearchValue: '',
+    studentItems: 10,
+  });
 
   return (
     <>
@@ -120,7 +126,11 @@ const ViewEventPage = ({ id }: { id: string }) => {
         {eventQuery.isFetching ? (
           <div className="flex justify-center">Loading...</div>
         ) : (
-          <StudentsTable list={data.students} />
+          <StudentsTable
+            list={data.students}
+            queryParamsInitial={queryParamsInitial}
+            setQueryParamsInitial={setQueryParamsInitial}
+          />
         )}
       </section> */}
     </>

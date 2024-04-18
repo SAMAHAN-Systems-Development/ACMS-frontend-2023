@@ -9,33 +9,51 @@ import type { StudentViewEvent } from '@/types/types';
 
 const PAGE_SIZE = 10;
 
-const StudentsTable = ({ list }: { list: StudentViewEvent[] }) => {
-  const [query, setQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [shownStudents, setShownStudents] = useState<StudentViewEvent[]>([]);
-
-  const handleSearchStudents = (list: StudentViewEvent[], query: string) => {
-    const inputValue = query.trim().toLowerCase();
-    const filteredList = list.filter(
-      (student: StudentViewEvent) =>
-        student.firstName.toLowerCase().includes(inputValue) ||
-        student.lastName.toLowerCase().includes(inputValue) ||
-        student.year_and_course.toLowerCase().includes(inputValue) ||
-        `${student.firstName} ${student.lastName}`.includes(inputValue)
-    );
-
-    setShownStudents(filteredList);
-    setCurrentPage(1);
+type PropTypes = {
+  list: StudentViewEvent[];
+  queryParamsInitial: {
+    studentItems: number;
+    studentPage: number;
+    studentSearchValue: string;
   };
+  setQueryParamsInitial: React.Dispatch<
+    React.SetStateAction<{
+      studentItems: number;
+      studentPage: number;
+      studentSearchValue: string;
+    }>
+  >;
+};
 
-  useEffect(() => {
-    handleSearchStudents(list, query);
-  }, [list, query]);
+const StudentsTable: React.FC<PropTypes> = ({
+  list,
+  queryParamsInitial,
+  setQueryParamsInitial,
+}) => {
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const totalPages = Math.ceil(shownStudents.length / PAGE_SIZE);
+  // const handleSearchStudents = (list: StudentViewEvent[], query: string) => {
+  // const inputValue = query.trim().toLowerCase();
+  // const filteredList = list.filter(
+  //   (student: StudentViewEvent) =>
+  //     student.firstName.toLowerCase().includes(inputValue) ||
+  //     student.lastName.toLowerCase().includes(inputValue) ||
+  //     student.year_and_course.toLowerCase().includes(inputValue) ||
+  //     `${student.firstName} ${student.lastName}`.includes(inputValue)
+  // );
+  // setShownStudents(filteredList);
+  // setCurrentPage(1);
+  // };
+
+  // useEffect(() => {
+  //   handleSearchStudents(list, query);
+  // }, [list, query]);
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    setQueryParamsInitial({
+      ...queryParamsInitial,
+      studentPage: page,
+    });
   };
 
   const renderStudentsForPage = () => {
@@ -51,7 +69,10 @@ const StudentsTable = ({ list }: { list: StudentViewEvent[] }) => {
         <div>
           <TextField
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setQuery(event.target.value)
+              setQueryParamsInitial({
+                ...queryParamsInitial,
+                studentSearchValue: event.target.value,
+              })
             }
             value={query}
             label="Search"
