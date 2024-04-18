@@ -1,72 +1,104 @@
 'use client';
 
 import type { ChangeEvent } from 'react';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 
 import TextField from '@/components/ui/TextField';
 import type { StudentViewEvent } from '@/types/types';
 
-const PAGE_SIZE = 10;
-
 type PropTypes = {
-  list: StudentViewEvent[];
-  queryParamsInitial: {
+  queryParamsFinal: {
     studentItems: number;
     studentPage: number;
     studentSearchValue: string;
   };
-  setQueryParamsInitial: React.Dispatch<
+  queryParamsInitial: {
+    studentSearchValue: string;
+  };
+  setQueryParamsFinal: React.Dispatch<
     React.SetStateAction<{
       studentItems: number;
       studentPage: number;
       studentSearchValue: string;
     }>
   >;
+  setQueryParamsInitial: React.Dispatch<
+    React.SetStateAction<{
+      studentSearchValue: string;
+    }>
+  >;
+  students: StudentViewEvent[];
+  studentsMaxPage: number;
 };
 
 const StudentsTable: React.FC<PropTypes> = ({
-  list,
+  students,
   queryParamsInitial,
   setQueryParamsInitial,
+  queryParamsFinal,
+  setQueryParamsFinal,
+  studentsMaxPage,
 }) => {
-  // const [currentPage, setCurrentPage] = useState(1);
-
-  // const handleSearchStudents = (list: StudentViewEvent[], query: string) => {
-  // const inputValue = query.trim().toLowerCase();
-  // const filteredList = list.filter(
-  //   (student: StudentViewEvent) =>
-  //     student.firstName.toLowerCase().includes(inputValue) ||
-  //     student.lastName.toLowerCase().includes(inputValue) ||
-  //     student.year_and_course.toLowerCase().includes(inputValue) ||
-  //     `${student.firstName} ${student.lastName}`.includes(inputValue)
-  // );
-  // setShownStudents(filteredList);
-  // setCurrentPage(1);
-  // };
-
-  // useEffect(() => {
-  //   handleSearchStudents(list, query);
-  // }, [list, query]);
-
   const handlePageChange = (page: number) => {
-    setQueryParamsInitial({
-      ...queryParamsInitial,
+    setQueryParamsFinal({
+      ...queryParamsFinal,
       studentPage: page,
     });
   };
 
-  // const renderStudentsForPage = () => {
-  //   const startIndex = (currentPage - 1) * PAGE_SIZE;
-  //   const endIndex = startIndex + PAGE_SIZE;
-  //   return shownStudents.slice(startIndex, endIndex);
-  // };
+  //The length of the students is always 10
+
+  students = students.concat(
+    Array.from({ length: 10 - students.length }, () => dummyStudent)
+  );
 
   return (
     <>
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center">
         <p className="text-xl font-semibold">Registered Students</p>
-        <div>
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={() => handlePageChange(1)}
+            className="px-4 py-2 mx-1"
+          >
+            First
+          </button>
+          <button
+            onClick={() => handlePageChange(queryParamsFinal.studentPage - 1)}
+            className="px-4 py-2 mx-1"
+            disabled={queryParamsFinal.studentPage === 1}
+          >
+            Prev
+          </button>
+          <select
+            value={queryParamsFinal.studentPage}
+            onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+              handlePageChange(Number(event.target.value))
+            }
+            className="px-4 py-2 mx-1"
+          >
+            {Array.from({ length: studentsMaxPage }, (__, index) => (
+              <option key={index + 1} value={index + 1}>
+                Page {index + 1}
+              </option>
+            ))}
+          </select>
+          <button
+            onClick={() => handlePageChange(queryParamsFinal.studentPage + 1)}
+            className="px-4 py-2 mx-1"
+            disabled={queryParamsFinal.studentPage === studentsMaxPage}
+          >
+            Next
+          </button>
+          <button
+            onClick={() => handlePageChange(studentsMaxPage)}
+            className="px-4 py-2 mx-1"
+          >
+            Last
+          </button>
+        </div>
+        <div className="flex gap-2">
           <TextField
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               setQueryParamsInitial({
@@ -77,7 +109,36 @@ const StudentsTable: React.FC<PropTypes> = ({
             value={queryParamsInitial.studentSearchValue}
             label="Search"
             name="search"
+            onKeyUp={async (event: React.KeyboardEvent<HTMLInputElement>) => {
+              if (event.key === 'Enter') {
+                setQueryParamsFinal({ ...queryParamsFinal, studentPage: 1 });
+                setQueryParamsFinal({
+                  ...queryParamsFinal,
+                  studentSearchValue: queryParamsInitial.studentSearchValue,
+                });
+              }
+            }}
           />
+          <div className="border-2 bg-navyBlue flex justify-center items-center rounded">
+            <span
+              className="icon-[material-symbols--search]"
+              style={{
+                width: '34px',
+                height: '24px',
+                color: '#FFFFFF',
+              }}
+              onClick={async () => {
+                setQueryParamsFinal({ ...queryParamsFinal, studentPage: 1 });
+                setQueryParamsFinal({
+                  ...queryParamsFinal,
+                  studentSearchValue: queryParamsInitial.studentSearchValue,
+                });
+              }}
+              role="button"
+              onKeyUp={() => {}}
+              tabIndex={0}
+            />
+          </div>
         </div>
       </div>
       <div className="rounded-3xl rounded-tr-3xl border-navyBlue border-2 mt-3">
@@ -92,9 +153,9 @@ const StudentsTable: React.FC<PropTypes> = ({
             </tr>
           </thead>
           <tbody>
-            {list.map((student: StudentViewEvent) => (
+            {students.map((student: StudentViewEvent, index: number) => (
               <tr
-                key={student.uuid}
+                key={student.uuid + index}
                 className="even:bg-slate-600 odd:bg-slate-400 border-t-2 hover:bg-blue"
               >
                 <td className="py-2">{student.uuid}</td>
@@ -104,16 +165,20 @@ const StudentsTable: React.FC<PropTypes> = ({
                 <td className="py-2">{student.year_and_course}</td>
                 <td className="py-2">{student.eventTier}</td>
                 <td className="border-l-2 py-2">
-                  <Link
-                    href={`/student?uuid=${student.uuid}`}
-                    className="text-navyBlue underline"
-                  >
-                    View More
-                  </Link>
+                  {student.uuid !== '' ? (
+                    <Link
+                      href={`/student?uuid=${student.uuid}`}
+                      className="text-navyBlue underline"
+                    >
+                      View More
+                    </Link>
+                  ) : (
+                    <p className="text-gray">View More</p>
+                  )}
                 </td>
               </tr>
             ))}
-            {list.length === 0 && (
+            {students.length === 0 && (
               <tr>
                 <td colSpan={5} className="text-center py-5">
                   <p className="me-0">No Student/s Found</p>
@@ -123,46 +188,16 @@ const StudentsTable: React.FC<PropTypes> = ({
           </tbody>
         </table>
       </div>
-      <div className="flex justify-center mt-4">
-        <button onClick={() => handlePageChange(1)} className="px-4 py-2 mx-1">
-          First
-        </button>
-        <button
-          onClick={() => handlePageChange(queryParamsInitial.studentPage - 1)}
-          className="px-4 py-2 mx-1"
-          disabled={queryParamsInitial.studentPage === 1}
-        >
-          Prev
-        </button>
-        <select
-          value={queryParamsInitial.studentPage}
-          onChange={(event: ChangeEvent<HTMLSelectElement>) =>
-            handlePageChange(Number(event.target.value))
-          }
-          className="px-4 py-2 mx-1"
-        >
-          {Array.from({ length: totalPages }, (__, index) => (
-            <option key={index + 1} value={index + 1}>
-              Page {index + 1}
-            </option>
-          ))}
-        </select>
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          className="px-4 py-2 mx-1"
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
-        <button
-          onClick={() => handlePageChange(totalPages)}
-          className="px-4 py-2 mx-1"
-        >
-          Last
-        </button>
-      </div>
     </>
   );
 };
 
 export default StudentsTable;
+
+const dummyStudent: StudentViewEvent = {
+  eventTier: '',
+  firstName: '',
+  lastName: '',
+  uuid: '',
+  year_and_course: '',
+};

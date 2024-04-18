@@ -73,8 +73,10 @@ export type ViewEvent = {
   hasEarlyBirdAccess: boolean;
   id: number;
   is_active: boolean;
+  registeredStudentsCount: number;
   requires_payment: boolean;
   students: StudentViewEvent[];
+  studentsMaxPage: number;
   title: string;
 };
 

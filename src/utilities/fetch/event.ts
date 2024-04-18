@@ -3,8 +3,22 @@ import type { AddEditEventDTO } from '@/types/types';
 const backendUrl =
   process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
 
-export const fetchEventData = async (token: string, id: string) => {
-  const response = await fetch(`${backendUrl}/event/${id}`, {
+export const fetchEventData = async (
+  token: string,
+  id: string,
+  queryParamsFinal: {
+    studentItems: number;
+    studentPage: number;
+    studentSearchValue: string;
+  }
+) => {
+  const paramsString = Object.keys(queryParamsFinal)
+    .map((key: string) => {
+      return `${key}=${queryParamsFinal[key as keyof typeof queryParamsFinal]}`;
+    })
+    .join('&');
+
+  const response = await fetch(`${backendUrl}/event/${id}?${paramsString}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
