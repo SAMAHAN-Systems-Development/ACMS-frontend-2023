@@ -30,7 +30,7 @@ const StudentsTable: React.FC<PropTypes> = ({
   queryParamsInitial,
   setQueryParamsInitial,
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
 
   // const handleSearchStudents = (list: StudentViewEvent[], query: string) => {
   // const inputValue = query.trim().toLowerCase();
@@ -56,11 +56,11 @@ const StudentsTable: React.FC<PropTypes> = ({
     });
   };
 
-  const renderStudentsForPage = () => {
-    const startIndex = (currentPage - 1) * PAGE_SIZE;
-    const endIndex = startIndex + PAGE_SIZE;
-    return shownStudents.slice(startIndex, endIndex);
-  };
+  // const renderStudentsForPage = () => {
+  //   const startIndex = (currentPage - 1) * PAGE_SIZE;
+  //   const endIndex = startIndex + PAGE_SIZE;
+  //   return shownStudents.slice(startIndex, endIndex);
+  // };
 
   return (
     <>
@@ -74,7 +74,7 @@ const StudentsTable: React.FC<PropTypes> = ({
                 studentSearchValue: event.target.value,
               })
             }
-            value={query}
+            value={queryParamsInitial.studentSearchValue}
             label="Search"
             name="search"
           />
@@ -92,7 +92,7 @@ const StudentsTable: React.FC<PropTypes> = ({
             </tr>
           </thead>
           <tbody>
-            {renderStudentsForPage().map((student: StudentViewEvent) => (
+            {list.map((student: StudentViewEvent) => (
               <tr
                 key={student.uuid}
                 className="even:bg-slate-600 odd:bg-slate-400 border-t-2 hover:bg-blue"
@@ -113,7 +113,7 @@ const StudentsTable: React.FC<PropTypes> = ({
                 </td>
               </tr>
             ))}
-            {shownStudents.length === 0 && (
+            {list.length === 0 && (
               <tr>
                 <td colSpan={5} className="text-center py-5">
                   <p className="me-0">No Student/s Found</p>
@@ -128,14 +128,14 @@ const StudentsTable: React.FC<PropTypes> = ({
           First
         </button>
         <button
-          onClick={() => handlePageChange(currentPage - 1)}
+          onClick={() => handlePageChange(queryParamsInitial.studentPage - 1)}
           className="px-4 py-2 mx-1"
-          disabled={currentPage === 1}
+          disabled={queryParamsInitial.studentPage === 1}
         >
           Prev
         </button>
         <select
-          value={currentPage}
+          value={queryParamsInitial.studentPage}
           onChange={(event: ChangeEvent<HTMLSelectElement>) =>
             handlePageChange(Number(event.target.value))
           }
