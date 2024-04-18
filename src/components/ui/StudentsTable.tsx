@@ -200,4 +200,8 @@ const dummyStudent: StudentViewEvent = {
   lastName: '',
   uuid: '',
   year_and_course: '',
+  email: '',
+  id: 0,
+  is_addu_student: false,
+  requires_payment: false,
 };
