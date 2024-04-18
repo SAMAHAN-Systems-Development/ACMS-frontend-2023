@@ -26,7 +26,12 @@ const EventsPage = async ({ params }: { params: { id: string } }) => {
 
   await queryClient.prefetchQuery({
     queryKey: ['event', params.id],
-    queryFn: () => fetchEventData(user.accessToken, params.id),
+    queryFn: () =>
+      fetchEventData(user.accessToken, params.id, {
+        studentItems: 10,
+        studentPage: 1,
+        studentSearchValue: '',
+      }),
   });
 
   await queryClient.prefetchQuery({
