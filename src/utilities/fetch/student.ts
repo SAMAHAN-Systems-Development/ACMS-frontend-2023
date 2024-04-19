@@ -64,7 +64,7 @@ export const fetchStudentOnEvent = async (
   token: string,
   uuid: string,
   eventId: number,
-  isForScanning: boolean
+  isForScanning?: boolean
 ) => {
   const response = await fetch(
     `${backendUrl}/student/${uuid}/${eventId}?isForScanning=${isForScanning}`,
