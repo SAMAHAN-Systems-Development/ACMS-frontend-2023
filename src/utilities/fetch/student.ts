@@ -63,14 +63,18 @@ export const fetchStudent = async (token: string, uuid: string) => {
 export const fetchStudentOnEvent = async (
   token: string,
   uuid: string,
-  eventId: number
+  eventId: number,
+  isForScanning: boolean
 ) => {
-  const response = await fetch(`${backendUrl}/student/${uuid}/${eventId}`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await fetch(
+    `${backendUrl}/student/${uuid}/${eventId}?isForScanning=${isForScanning}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   if (!response.ok) {
     return { student: {}, isFound: false };

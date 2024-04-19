@@ -37,7 +37,7 @@ const QrScanPage: React.FC<propTypes> = ({ eventId }) => {
 
   const studentMutation = useMutation({
     mutationFn: async (uuid: string) => {
-      return await fetchStudentOnEvent(token, uuid, Number(eventId));
+      return await fetchStudentOnEvent(token, uuid, Number(eventId), true);
     },
   });
 

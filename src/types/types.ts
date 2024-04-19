@@ -1,6 +1,7 @@
 import type { Dayjs } from 'dayjs';
 
 export type Student = {
+  accepted: boolean;
   createdAt: string;
   email: string;
   event: EventStudent;
@@ -11,6 +12,7 @@ export type Student = {
   id_src: string;
   is_addu_student: boolean;
   lastName: string;
+  message: string;
   payment: PaymentStudent;
   paymentId: number;
   updatedAt: string;

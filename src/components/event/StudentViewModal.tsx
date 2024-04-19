@@ -64,7 +64,7 @@ const StudentViewModal: React.FC<propTypes> = ({
               'isSuccess' in studentMutation &&
               studentMutation.isSuccess ? (
                 <div className="min-w-full flex items-center justify-center bg-white">
-                  {isFound ? (
+                  {isFound && student.accepted ? (
                     <div className="w-full h-full flex flex-col items-center justify-center text-center gap-8 border-navyBlue mb-8 border-solid border-2 rounded-3xl p-12">
                       <div className="flex flex-col items-center gap-2">
                         <div className="text-3xl font-bold">{`${student.eventTier.name}`}</div>
@@ -103,7 +103,11 @@ const StudentViewModal: React.FC<propTypes> = ({
                           height={200}
                         />
                       </div>
-                      <div className="font-bold">STUDENT NOT FOUND</div>
+                      <div className="font-bold">
+                        {student.message
+                          ? student.message
+                          : 'STUDENT NOT FOUND'}
+                      </div>
                     </div>
                   )}
                 </div>
