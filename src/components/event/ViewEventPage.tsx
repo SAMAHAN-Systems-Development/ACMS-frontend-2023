@@ -103,12 +103,12 @@ const ViewEventPage = ({ id }: { id: string }) => {
             )}
             <div className="flex md:flex-row flex-col gap-4 items-center mt-5 max-w-[70rem]">
               <PaymentsModal
-                paymentType={'accepted'}
+                paymentType={'Accepted'}
                 token={token}
                 eventId={data.id}
               />
               <PaymentsModal
-                paymentType={'declined'}
+                paymentType={'Declined'}
                 token={token}
                 eventId={data.id}
               />

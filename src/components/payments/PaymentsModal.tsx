@@ -50,7 +50,7 @@ const PaymentsModal: FC<PaymentsModalProps> = ({
     <Dialog.Root>
       <Dialog.Trigger className="w-full">
         <div className="w-full">
-          <Button onClick={() => {}}>{`View ${paymentType} payments`}</Button>
+          <Button onClick={() => {}}>{`View ${paymentType} Payments`}</Button>
         </div>
       </Dialog.Trigger>
       <Dialog.Portal>
