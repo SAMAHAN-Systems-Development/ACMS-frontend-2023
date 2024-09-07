@@ -192,7 +192,7 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
                 }
                 onCheckedAction={() => {}}
               />
-              <p className="text-navyBlue font-medium text-md leading-none">
+              <p className="leading-none text-navyBlue font-medium text-md">
                 Select All
               </p>
             </div>
