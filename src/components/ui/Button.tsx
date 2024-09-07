@@ -20,10 +20,10 @@ const Button: React.FC<Props> = ({
     <button
       onClick={onClick}
       type={type}
-      className={`w-full px-4 py-1 text-slate-50 font-semibold rounded-lg text-sm
+      className={`w-full px-4 py-1 text-slate-50 font-semibold rounded-lg text-sm transition-colors duration-200 ease-in-out
         ${
           variant === 'primary' && !isDisabled
-            ? `bg-brown text-white`
+            ? `bg-brown text-white hover:bg-goldenBrown`
             : isDisabled
             ? 'bg-blue text-white border-none cursor-not-allowed disabled bg-opacity-50'
             : 'bg-white text-navyBlue border-solid border-navyBlue border-2'
