@@ -63,9 +63,7 @@ const LoginForm = () => {
           />
           <div className="w-full flex justify-end mt-4">
             <div className="w-[8rem]">
-              <Button type="submit" onClick={() => {}}>
-                Login
-              </Button>
+              <Button type="submit">Login</Button>
             </div>
           </div>
         </form>

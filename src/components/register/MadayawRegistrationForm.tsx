@@ -193,7 +193,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
 
       if (eventQuery.data.requires_payment) {
         if (!selectedPaymentFile) {
-          toast.error('Please add an payment photo');
+          toast.error('Please add a payment photo'); // TODO
           setIsLoadingModalOpen(false);
           return;
         }
