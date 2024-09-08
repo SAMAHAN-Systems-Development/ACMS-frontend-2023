@@ -16,11 +16,7 @@ import TextField from '@/components/ui/TextField';
 import { Toggle } from '@/components/ui/Toggle';
 import type { EventTierPayment, EventTierViewEvent } from '@/types/types';
 import { VIEW_PORT_SIZES } from '@/utilities/constants';
-import {
-  editEvent,
-  fetchEventData,
-  fetchEventTiers,
-} from '@/utilities/fetch/event';
+import { editEvent, fetchEventData } from '@/utilities/fetch/event';
 import useWindowSize from '@/utilities/useWindowSize';
 
 export type FormData = {
@@ -52,13 +48,6 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
 
   const token = tokenQuery.data || '';
 
-  const eventTiersQuery = useQuery<EventTierPayment[]>({
-    queryKey: ['event-tiers'],
-    queryFn: () => fetchEventTiers(token),
-  });
-
-  const eventTiers = eventTiersQuery.data || [];
-
   const eventQuery = useQuery({
     queryKey: ['event', eventId],
     queryFn: () =>
@@ -68,6 +57,8 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
         studentSearchValue: '',
       }),
   });
+
+  const eventTiers = eventQuery.data.eventTiers;
 
   const [formData, setFormData] = React.useState<FormData>({
     title: eventQuery.data.title,
@@ -191,7 +182,7 @@ const EditEventPage: React.FC<propTypes> = ({ eventId }) => {
                   name="earlyBirdAccessDate"
                 />
               )}
-            {eventTiers.map((eventTier) => (
+            {eventTiers.map((eventTier: any) => (
               <EventTierField
                 key={eventTier.id}
                 eventTier={eventTier}
