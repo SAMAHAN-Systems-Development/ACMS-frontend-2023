@@ -151,14 +151,16 @@ const PaymentsCard: React.FC<propTypes> = ({
               <p className="text-xl text-center font-bold">
                 {moneyFormatter(required_payment)}
               </p>
-              <div className="flex items-center justify-center">
-                <Image
-                  className="object-cover"
-                  src={paymentPhotoUrl || '/placeholderImage.jpg'}
-                  alt="Payment Photo"
-                  width={200}
-                  height={200}
-                />
+              <div className="flex items-center justify-center w-[200px] h-[434px] overflow-y-auto">
+                <div className='w-full h-full'>
+                  <Image
+                    className="object-cover"
+                    src={paymentPhotoUrl || '/placeholderImage.jpg'}
+                    alt="Payment Photo"
+                    width={200}
+                    height={200}
+                  />
+                </div>
               </div>
             </div>
             <div className="flex flex-row gap-4 justify-between w-full">
