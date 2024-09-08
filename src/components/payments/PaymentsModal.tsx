@@ -49,9 +49,9 @@ const PaymentsModal: FC<PaymentsModalProps> = ({
   return (
     <Dialog.Root>
       <Dialog.Trigger className="w-full">
-        <div className="w-full">
-          <Button onClick={() => {}}>{`View ${paymentType} Payments`}</Button>
-        </div>
+        <div
+          className={`w-full px-4 py-1 text-slate-50 font-semibold rounded-lg text-sm  transition-colors duration-200 ease-in-out bg-brown text-white hover:bg-goldenBrown`}
+        >{`View ${paymentType} Payments`}</div>
       </Dialog.Trigger>
       <Dialog.Portal>
         <ModalWrapper>
