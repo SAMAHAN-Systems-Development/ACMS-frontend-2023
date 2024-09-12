@@ -110,8 +110,8 @@ export default EventPage;
 
 const getEventTitle = (eventType: 'active' | 'inactive') => {
   return eventType === 'active'
-    ? 'List of Active Events'
-    : 'List of Inactive Events';
+    ? 'Active Events'
+    : 'Inactive Events';
 };
 
 const getFetchFunction = (eventType: 'active' | 'inactive') => {
