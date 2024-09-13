@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
+import { MenuItem } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import FetchingPaymentLoading from '@/components/payments/FetchingPaymentLoadin';
@@ -11,9 +12,11 @@ import PaymentsCard from '@/components/payments/PaymentsCard';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import Pagination from '@/components/ui/Pagination';
+import Select from '@/components/ui/Select';
 import TextField from '@/components/ui/TextField';
 import type { Payment } from '@/types/types';
-import {
+import { fetchActiveEvents } from '@/utilities/fetch/event';
+import {  
   acceptPayments,
   declinePayments,
   fetchAcceptedPayments,
@@ -164,6 +167,16 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
     };
     void invalidate();
   }, [paymentPageType, queryClient, setStudentNameSearchValue]);
+  
+  const [allActiveEvents, setAllActiveEvents] = useState<[id: Number, title: String] | null>(null);
+
+  useEffect(() => {
+    const getAllActiveEvents = async () => {
+      const allActiveEvents = await fetchActiveEvents(token, page);
+      setAllActiveEvents(allActiveEvents.events);
+    };
+    void getAllActiveEvents();
+  }, []);
 
   return (
     <div className="flex flex-col gap-8">
@@ -245,35 +258,51 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
         </div>
       </div>
       <div className="flex flex-col gap-8 flex-wrap justify-center items-center md:px-16 md:pb-16 px-4 pb-4">
-        <div className="flex gap-2 lg:self-end">
-          <TextField
-            label="Search"
-            name="studentNameSearch"
-            value={studentNameSearchInput}
-            onChange={(event) => setStudentNameSearchInput(event.target.value)}
-            onKeyUp={async (event: React.KeyboardEvent<HTMLInputElement>) => {
-              if (event.key === 'Enter') {
-                setPage(1);
-                setStudentNameSearchValue(studentNameSearchInput);
-              }
-            }}
-          />
-          <div className="border-2 bg-navyBlue flex justify-center items-center rounded">
-            <span
-              className="icon-[material-symbols--search]"
-              style={{
-                width: '34px',
-                height: '24px',
-                color: '#FFFFFF',
+        <div className="flex flex-row gap-2 lg:self-end">
+          <div className='w-60'>
+            <Select
+              name="event"
+              value={''}
+              onChange={() => {}}
+            >
+              {allActiveEvents && allActiveEvents.map((event: any) => (
+                <MenuItem key={event.id} value={event.title}>
+                  {event.title}
+                </MenuItem>
+              ))}
+            </Select>
+          </div>
+          <div className="flex flex-row gap-1">
+            <TextField
+              label="Search"
+              name="studentNameSearch"
+              value={studentNameSearchInput}
+              onChange={(event) => setStudentNameSearchInput(event.target.value)}
+              className='w-52'
+              onKeyUp={async (event: React.KeyboardEvent<HTMLInputElement>) => {
+                if (event.key === 'Enter') {
+                  setPage(1);
+                  setStudentNameSearchValue(studentNameSearchInput);
+                }
               }}
-              onClick={async () => {
-                setPage(1);
-                setStudentNameSearchValue(studentNameSearchInput);
-              }}
-              role="button"
-              onKeyUp={() => {}}
-              tabIndex={0}
             />
+            <div className="border-2 bg-navyBlue flex justify-center items-center rounded">
+              <span
+                className="icon-[material-symbols--search]"
+                style={{
+                  width: '34px',
+                  height: '24px',
+                  color: '#FFFFFF',
+                }}
+                onClick={async () => {
+                  setPage(1);
+                  setStudentNameSearchValue(studentNameSearchInput);
+                }}
+                role="button"
+                onKeyUp={() => {}}
+                tabIndex={0}
+              />
+            </div>
           </div>
         </div>
         <div className="flex justify-center">
