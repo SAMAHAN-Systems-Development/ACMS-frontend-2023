@@ -141,9 +141,11 @@ export const editEvent = async (
 };
 
 export const addEvent = async (token: string, event: AddEditEventDTO) => {
-  event.eventTiers.filter((eventTier) => {
-    eventTier.max_participants !== 0;
+  const filteredEventTiers = event.eventTiers.filter((eventTier) => {
+    return eventTier.max_participants !== 0;
   });
+
+  event.eventTiers = filteredEventTiers;
 
   const response = await fetch(`${backendUrl}/event`, {
     method: 'POST',
