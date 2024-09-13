@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 type propTypes = {
   maxPage: number;
@@ -31,8 +32,39 @@ const Pagination: React.FC<propTypes> = ({ page, setPage, maxPage }) => {
   };
 
   const inputChangeAction = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if(isNaN(Number(event.target.value))){
+      toast.error('Page number must be a number');
+      return;
+    }
+
+    if(Number(event.target.value) < 0){
+      toast.error('Page number cannot be negative');
+    }
+
+    if(Number(event.target.value) > maxPage){
+      toast.error('Page number cannot be greater than ' + maxPage);
+    }
+
     setPageTemp(Number(event.target.value));
   };
+
+  const inputEnterAction = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      if(pageTemp < 1){
+        setPage(1);
+        setPageTemp(1);
+        toast.error('Invalid input');
+        return;
+      }
+      if(pageTemp > maxPage){
+        setPage(maxPage);
+        setPageTemp(maxPage);
+        toast.error('Invalid input');
+        return;
+      }
+      setPage(pageTemp);
+    }
+  }
 
   const inputBlurAction = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (Number(event.target.value) > maxPage) {
@@ -66,13 +98,21 @@ const Pagination: React.FC<propTypes> = ({ page, setPage, maxPage }) => {
         onKeyUp={() => {}}
         tabIndex={0}
       />
+      Page
       <input
         className="w-10 border-2 border-blue h-8 text-center rounded text-md text-navyBlue font-bold"
         type="text"
         onChange={inputChangeAction}
         onBlur={inputBlurAction}
+        onKeyDown={(event) => {inputEnterAction(event)}}
         value={pageTemp}
       />
+      of
+      <span
+        className="text-center rounded text-lg text-navyBlue font-bold"
+      >
+        {maxPage}
+      </span>
       <span
         className="icon-[material-symbols--keyboard-arrow-right]"
         style={{
