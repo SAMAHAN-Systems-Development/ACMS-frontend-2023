@@ -27,12 +27,17 @@ import {
 } from '@/utilities/fetch/event';
 import { submitRegistration } from '@/utilities/fetch/student';
 import useWindowSize from '@/utilities/useWindowSize';
+import Checkbox from '../ui/Checkbox';
 
 const getImageSrcByViewportSize = (width: number) => {
   if (width >= VIEW_PORT_SIZES.md) {
-    return '/RegisterCoverPhoto-lg.png';
+    return '/botb/RegisHeader_LG.png';
   }
-  return '/RegisterCoverPhoto-sm.png';
+  if (width >= VIEW_PORT_SIZES.sm) {
+    return '/botb/RegisHeader_MD.png';
+  }
+
+  return '/botb/RegisHeader_SM.png';
 };
 
 const RegistrationForm = ({ formName }: { formName: string }) => {
@@ -57,6 +62,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
   const supabase = createClientComponentClient();
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isAgreementChecked, setIsAgreementChecked] = useState(false);
 
   const [registrationData, setRegistrationData] = useState<{
     email: string;
@@ -218,14 +224,14 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     }
   };
 
-  useEffect(() => {
-    const socket = io(String(process.env.NEXT_PUBLIC_WS_URL));
-    socket.on('sendStudentRegisteredSignal', async (wsEventId: number) => {
-      if (eventId === wsEventId) {
-        await eventTiersQuery.refetch();
-      }
-    });
-  }, [eventId, eventTiersQuery]);
+  // useEffect(() => {
+  //   const socket = io(String(process.env.NEXT_PUBLIC_WS_URL));
+  //   socket.on('sendStudentRegisteredSignal', async (wsEventId: number) => {
+  //     if (eventId === wsEventId) {
+  //       await eventTiersQuery.refetch();
+  //     }
+  //   });
+  // }, [eventId, eventTiersQuery]);
 
   if (eventQuery.isFetched && eventQuery.data) {
     return (
@@ -235,105 +241,164 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
           alt="Cover Photo"
           width={3000}
           height={3000}
+          // height={3000}
           className="w-full"
         />
         <div className="flex flex-col items-center border-y-2 py-5 px-4">
-          <h1 className="font-semibold md:text-2xl text-xl text-center">
+          <h1 className="font-semibold md:text-5xl text-4xl px-4 text-center">
             {eventQuery.data.title}
           </h1>
-          <h1 className="font-semibold md:text-5xl text-4xl px-4 text-center">
+          <h1 className="font-semibold md:text-2xl text-xl text-center">
             Registration Form
           </h1>
         </div>
-        <div className="flex border-navyBlue justify-center mt-12 mx-4">
-          <div className="w-[60rem] border-2">
-            <RegistrationEventTiersTable eventTiers={eventTiers} />
-          </div>
-        </div>
-        <div className="flex justify-center mt-12 pb-12 mx-8">
-          <div className="flex flex-col gap-8 max-w-[20rem] sm:max-w-[28rem]">
-            <h3 className="text-lg font-bold w-full">
-              *Please fill the form below with correct information
-            </h3>
-            <form
-              className="flex flex-col justify-center gap-4"
-              onSubmit={handleSubmit}
-            >
-              <div className="flex md:flex-row flex-col gap-4 w-full">
-                <TextField
-                  name="firstName"
-                  onChange={inputOnChange}
-                  value={registrationData.firstName}
-                  label="First Name"
-                />
-
-                <TextField
-                  name="lastName"
-                  onChange={inputOnChange}
-                  value={registrationData.lastName}
-                  label="Last Name"
-                />
-              </div>
-
-              <div className="w-full flex justify-start items-center gap-4">
-                <Toggle
-                  value={Boolean(registrationData.is_addu_student)}
-                  label="Are you an AdDU student?"
-                  onChange={toggleOnChange}
-                  name="is_addu_student"
-                  labelPlacement={width >= VIEW_PORT_SIZES.md ? 'start' : 'top'}
-                  labelBesideToggle={
-                    Boolean(registrationData.is_addu_student)
-                      ? 'Yes, I am'
-                      : 'No, I am not'
-                  }
-                />
-              </div>
-
-              <TextField
-                name="email"
-                onChange={inputOnChange}
-                value={registrationData.email}
-                label={
-                  Boolean(registrationData.is_addu_student)
-                    ? 'AdDU Email'
-                    : 'Personal Email'
-                }
-                type="email"
-              />
-
-              <TextField
-                name="year_and_course"
-                onChange={inputOnChange}
-                value={registrationData.year_and_course}
-                label="Year and Course"
-              />
-              <Select
-                value={registrationData.eventTierId}
-                onChange={selectInputOnChange}
-                name="eventTierId"
-              >
-                {eventTiersQuery.isSuccess &&
-                  eventTiers.map((eventTier: EventTierRegistration) => (
-                    <MenuItem key={eventTier.id} value={eventTier.id}>
-                      {eventTier.name}
-                    </MenuItem>
-                  ))}
-              </Select>
-              {eventQuery.data.requires_payment && (
-                <InputFile
-                  id="payment_photo"
-                  handleChange={handleChange}
-                  selectedFile={selectedFile}
-                  label="Payment Photo"
-                />
-              )}
-              <div className="flex justify-end mt-4">
-                <div className="w-[10rem]">
-                  <Button type="submit">Submit</Button>
+        <div className="flex xl:flex-row flex-col xl:gap-12 justify-center items-start mt-12">
+          <div className="flex justify-center md:mt-0 px-4 xl:w-fit w-full">
+            <div className="flex flex-col gap-4 justify-center">
+              <div className="flex flex-col gap-2 p-4 border-2 rounded-xl">
+                <h2 className=" md:pl-8 mb-2 text-2xl font-bold">
+                  Ticket Inclusions
+                </h2>
+                <div className="flex gap-4 md:pl-8 flex-col">
+                  <div className="flex flex-col w-full">
+                    <h3 className="font-bold">4th FLOOR (1,000 seats)</h3>
+                    <p>Price: PHP 250.00 </p>
+                    <p>Inclusion: Snacks & Drinks + DITO Sim</p>
+                  </div>
+                  <div className="flex flex-col w-full">
+                    <h3 className="font-bold">5th FLOOR (170 seats)</h3>
+                    <p>Price: PHP 150.00 </p>
+                    <p>Inclusion: DITO Sim</p>
+                  </div>
+                  <div className="flex flex-col w-full">
+                    <h3 className="font-bold">6th & 7th FLOOR (180 seats)</h3>
+                    <p>Price: PHP 50.00 </p>
+                    <p>Inclusion: DITO Sim</p>
+                  </div>
                 </div>
               </div>
-            </form>
+
+              <div className={`md:w-[40rem] h-fit border-2  border-brown`}>
+                <RegistrationEventTiersTable eventTiers={eventTiers} />
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-center pb-8 px-8 xl:pt-0 pt-8 xl:w-fit w-full">
+            <div className="flex flex-col gap-8 max-w-[20rem] sm:max-w-[28rem]">
+              <div className="flex flex-col gap-2 p-4 border-2 rounded-xl">
+                <h2 className=" md:pl-8 mb-2 text-2xl font-bold">
+                  Payment Methods
+                </h2>
+                <div className="flex gap-8 md:pl-8 md:flex-row flex-col">
+                  <div className="flex flex-col w-full">
+                    <h3 className="font-bold">GCash</h3>
+                    <p>Account Name: john doe</p>
+                    <p>Account Number: 09123456789 </p>
+                  </div>
+                </div>
+              </div>
+              <form
+                className="flex flex-col justify-center gap-4"
+                onSubmit={handleSubmit}
+              >
+                <div className="flex md:flex-row flex-col gap-4 w-full">
+                  <TextField
+                    name="firstName"
+                    onChange={inputOnChange}
+                    value={registrationData.firstName}
+                    label="First Name"
+                  />
+
+                  <TextField
+                    name="lastName"
+                    onChange={inputOnChange}
+                    value={registrationData.lastName}
+                    label="Last Name"
+                  />
+                </div>
+
+                <div className="w-full flex justify-start items-center gap-4">
+                  <Toggle
+                    value={Boolean(registrationData.is_addu_student)}
+                    label="Are you an AdDU student?"
+                    onChange={toggleOnChange}
+                    name="is_addu_student"
+                    labelPlacement={
+                      width >= VIEW_PORT_SIZES.md ? 'start' : 'top'
+                    }
+                    labelBesideToggle={
+                      Boolean(registrationData.is_addu_student)
+                        ? 'Yes, I am'
+                        : 'No, I am not'
+                    }
+                  />
+                </div>
+
+                <TextField
+                  name="email"
+                  onChange={inputOnChange}
+                  value={registrationData.email}
+                  label={
+                    Boolean(registrationData.is_addu_student)
+                      ? 'AdDU Email'
+                      : 'Personal Email'
+                  }
+                  type="email"
+                />
+
+                <TextField
+                  name="year_and_course"
+                  onChange={inputOnChange}
+                  value={registrationData.year_and_course}
+                  label="Year and Course"
+                />
+                <Select
+                  value={registrationData.eventTierId}
+                  onChange={selectInputOnChange}
+                  name="eventTierId"
+                >
+                  {eventTiersQuery.isSuccess &&
+                    eventTiers.map((eventTier: EventTierRegistration) => (
+                      <MenuItem key={eventTier.id} value={eventTier.id}>
+                        {eventTier.name}
+                      </MenuItem>
+                    ))}
+                </Select>
+                {eventQuery.data.requires_payment && (
+                  <InputFile
+                    id="payment_photo"
+                    handleChange={handleChange}
+                    selectedFile={selectedFile}
+                    label="Payment Photo"
+                  />
+                )}
+                <div className="flex items-start gap-3 mt-4">
+                  <div className="pt-1">
+                    <Checkbox
+                      checked={isAgreementChecked}
+                      onCheckedAction={(event) => {
+                        setIsAgreementChecked(event.target.checked);
+                      }}
+                    />
+                  </div>
+                  <p className="text-justify">
+                    I hereby acknowledge that all information provided is
+                    accurate and final. Furthermore, I understand that the
+                    tickets issued are non-refundable.
+                  </p>
+                </div>
+                <div className="flex justify-end mt-4">
+                  <div className="w-[10rem]">
+                    <Button
+                      type={isAgreementChecked ? 'submit' : 'button'}
+                      isDisabled={!isAgreementChecked}
+                    >
+                      Submit
+                    </Button>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>

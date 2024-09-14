@@ -1,6 +1,7 @@
 import { QueryClient } from '@tanstack/react-query';
 
-import RegistrationForm from '@/components/register/MadayawRegistrationForm';
+// import RegistrationForm from '@/components/register/MadayawRegistrationForm';
+import RegistrationForm from '@/components/register/RegistrationForm';
 import { fetchEventByFormName } from '@/utilities/fetch/event';
 
 const Page = async ({ params }: { params: { formName: string } }) => {
