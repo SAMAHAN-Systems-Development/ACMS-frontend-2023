@@ -1,6 +1,6 @@
 'use client';
 import type { FormEvent } from 'react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -9,7 +9,6 @@ import type { SelectChangeEvent } from '@mui/material';
 import { MenuItem } from '@mui/material';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useQuery } from '@tanstack/react-query';
-import { io } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 
 import RegistrationEventTiersTable from '@/components/register/RegistrationEventTiersTable';
@@ -27,7 +26,7 @@ import {
 } from '@/utilities/fetch/event';
 import { submitRegistration } from '@/utilities/fetch/student';
 import useWindowSize from '@/utilities/useWindowSize';
-import Checkbox from '../ui/Checkbox';
+import Checkbox from '@/components/ui/Checkbox';
 
 const getImageSrcByViewportSize = (width: number) => {
   if (width >= VIEW_PORT_SIZES.md) {

@@ -1,25 +1,10 @@
 import React from 'react';
 
-import dayjs from 'dayjs';
-
 import type { EventTierRegistration } from '@/types/types';
 import moneyFormatter from '@/utilities/moneyFormatter';
 
 type propTypes = {
   eventTiers: EventTierRegistration[];
-};
-
-const getTicketsLeft = (eventTier: EventTierRegistration) => {
-  switch (eventTier.name) {
-    case 'VVIP':
-      return 98;
-    case 'Gold':
-      return 358;
-    case 'Silver':
-      return 135;
-    default:
-      return eventTier.numberOfTicketsLeft;
-  }
 };
 
 const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {

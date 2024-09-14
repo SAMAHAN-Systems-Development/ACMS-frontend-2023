@@ -9,7 +9,6 @@ import { useQuery } from '@tanstack/react-query';
 import ModalWrapper from '@/components/ui/ModalWrapper';
 
 import PaymentsCard from '@/components/payments/PaymentsCard';
-import Button from '@/components/ui/Button';
 import Pagination from '@/components/ui/Pagination';
 import type { Payment } from '@/types/types';
 import {

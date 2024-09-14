@@ -14,7 +14,7 @@ import DatePicker from '@/components/ui/DatePicker';
 import TextArea from '@/components/ui/TextArea';
 import TextField from '@/components/ui/TextField';
 import { Toggle } from '@/components/ui/Toggle';
-import type { EventTierPayment, EventTierViewEvent } from '@/types/types';
+import type { EventTierViewEvent } from '@/types/types';
 import { VIEW_PORT_SIZES } from '@/utilities/constants';
 import { editEvent, fetchEventData } from '@/utilities/fetch/event';
 import useWindowSize from '@/utilities/useWindowSize';
