@@ -115,6 +115,18 @@ const AddEventPage = () => {
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (!formData.description.trim() && !formData.title.trim()) {
+      toast.error('Event title and description are required.');
+      return;
+    }
+    if (!formData.title.trim()) {
+      toast.error('Event title is required.');
+      return;
+    }
+    if (!formData.description.trim()) {
+      toast.error('Event description is required.');
+      return;
+    }
     addEventMutation.mutate();
   };
 
