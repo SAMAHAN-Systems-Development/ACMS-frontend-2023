@@ -154,7 +154,6 @@ export const addEvent = async (token: string, event: AddEditEventDTO) => {
     throw new Error('Error in adding the event');
   }
   const data = await response.json();
-
   return data;
 };
 
