@@ -8,7 +8,9 @@ type propTypes = {
 };
 
 const RegistrationEventTiersTable: React.FC<propTypes> = ({ eventTiers }) => {
-  eventTiers.sort((a, b) => a.name.localeCompare(b.name));
+  eventTiers.sort((eventTierA, eventTierB) =>
+    eventTierA.name.localeCompare(eventTierB.name)
+  );
 
   return (
     <table className="w-full text-center">
