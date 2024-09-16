@@ -270,7 +270,9 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                     <p>Inclusion: DITO Sim</p>
                   </div>
                   <div className="flex flex-col w-full">
-                    <h3 className="font-bold">6th & 7th FLOOR (180 seats)</h3>
+                    <h3 className="font-bold">
+                      6th & 7th FLOOR (180 seats EACH)
+                    </h3>
                     <p>Price: PHP 50.00 </p>
                     <p>Inclusion: DITO Sim</p>
                   </div>
