@@ -288,11 +288,23 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                 <h2 className=" md:pl-8 mb-2 text-2xl font-bold">
                   Payment Methods
                 </h2>
-                <div className="flex gap-8 md:pl-8 md:flex-row flex-col">
-                  <div className="flex flex-col w-full">
-                    <h3 className="font-bold">GCash</h3>
-                    <p>Account Name: john doe</p>
-                    <p>Account Number: 09123456789 </p>
+                <div className="flex gap-4 md:pl-8 md:flex-row flex-col">
+                  <div className="flex flex-col gap-2 w-full">
+                    <div>
+                      <h3 className="font-bold">GCash</h3>
+                      <p>MARY CLAIR CLARDE</p>
+                      <p>09192610882</p>
+                    </div>
+                    <div>
+                      <h3 className="font-bold">BPI</h3>
+                      <p>MARY CLAIR A. CLARDE</p>
+                      <p>2089 3153 71</p>
+                    </div>
+                    <div>
+                      <h3 className="font-bold">Landbank</h3>
+                      <p>Russelle Van Fajardo</p>
+                      <p>1026 2308 68</p>
+                    </div>
                   </div>
                 </div>
               </div>
