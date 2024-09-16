@@ -56,7 +56,7 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
     queryFn: () => fetchEventTiersBasedOnEventId(eventId),
   });
 
-  const eventTiers = eventTiersQuery.data || [];
+  const eventTiers = eventTiersQuery.isSuccess ? eventTiersQuery.data : [];
 
   const supabase = createClientComponentClient();
 
