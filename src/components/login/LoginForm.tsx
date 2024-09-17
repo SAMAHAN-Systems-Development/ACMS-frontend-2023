@@ -14,11 +14,67 @@ const LoginForm = () => {
     password: '',
   });
 
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
   const fieldOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFieldValues((prev) => ({
       ...prev,
       [event.target.name]: event.target.value,
     }));
+    setError(null); 
+  };
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    // If field values is missing or empty
+    if (!fieldValues.email){
+      setError('Email is required.');
+      return;
+    }
+
+    if (!validateEmail(fieldValues.email)) {
+      setError('Invalid email address.');
+      return;
+    }
+
+    if (!fieldValues.password) {
+      setError('Password is required.');
+      return;
+    }
+    setLoading(true); 
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: fieldValues.email,
+          password: fieldValues.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Login successful:', data);
+        setLoading(false);
+      } else {
+        setError(data.message || 'Email and password do not match.');
+        setLoading(false);
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,11 +97,12 @@ const LoginForm = () => {
           width={200}
           className="absolute md:-inset-y-[5.3rem] md:w-[11rem] w-[8rem] -inset-y-16"
         />
-        <h1 className="text-[2rem] font-semibold text-center">LOGIN FORM</h1>
+        <h1 className="text-[2rem] font-semibold text-center">ACMS LOGIN</h1>
         <form
           className="md:w-[25rem] flex flex-col gap-4"
           action="/auth/login"
           method="post"
+          onSubmit={handleSubmit}
         >
           <TextField
             label="Email"
@@ -61,9 +118,12 @@ const LoginForm = () => {
             onChange={fieldOnChange}
             value={fieldValues.password}
           />
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
           <div className="w-full flex justify-end mt-4">
             <div className="w-[8rem]">
-              <Button type="submit" onClick={() => {}}>
+              <Button type="submit">
                 Login
               </Button>
             </div>
