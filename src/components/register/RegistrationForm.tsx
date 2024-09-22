@@ -61,6 +61,8 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
   const supabase = createClientComponentClient();
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedIdFile, setSelectedIdFile] = useState<File | null>(null);
+
   const [isAgreementChecked, setIsAgreementChecked] = useState(false);
 
   const [registrationData, setRegistrationData] = useState<{
@@ -85,6 +87,12 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedFile(event.target.files ? event.target.files[0] : null);
+  };
+
+  const handleSelectedIdFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSelectedIdFile(event.target.files ? event.target.files[0] : null);
   };
 
   const inputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -172,13 +180,24 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
             (eventTier) => eventTier.id === registrationData.eventTierId
           )?.price || 0;
 
+        if (!selectedIdFile) {
+          toast.error('Please add your Valid Id photo');
+          return;
+        }
+
+        const idPublicUrl = await uploadPhotoAndGetPublicUrl(
+          selectedIdFile,
+          photoFileName,
+          'valid_id'
+        );
+
         finalRegistrationData = {
           ...registrationData,
           photo_src: data.publicUrl,
           eventId: eventQuery.data.id,
           event_requires_payment: eventQuery.data.requires_payment,
           required_payment: required_payment,
-          id_src: '',
+          id_src: idPublicUrl,
         };
       } else {
         finalRegistrationData = {
@@ -217,10 +236,31 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
           return;
         }
       }
+      console.error(error);
 
       toast.error('Error in submitting registration');
       return;
     }
+  };
+
+  const uploadPhotoAndGetPublicUrl = async (
+    file: File,
+    fileName: string,
+    bucketName: string
+  ) => {
+    const { error } = await supabase.storage
+      .from(bucketName)
+      .upload(fileName, file, {
+        upsert: true,
+      });
+
+    const { data } = supabase.storage.from(bucketName).getPublicUrl(fileName);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return data.publicUrl;
   };
 
   // useEffect(() => {
@@ -385,6 +425,14 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                     label="Payment Photo"
                   />
                 )}
+                <InputFile
+                  handleChange={handleSelectedIdFileChange}
+                  selectedFile={selectedIdFile}
+                  label="Valid Id"
+                  color="brown"
+                  textColor="brown"
+                  id="id-input"
+                />
                 <div className="flex items-start gap-3 mt-4">
                   <div className="pt-1">
                     <Checkbox
