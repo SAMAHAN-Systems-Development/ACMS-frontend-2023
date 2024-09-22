@@ -77,6 +77,36 @@ export const fetchPendingPayments = async (
   return { payments: pendingPayments, maxPage };
 };
 
+export const fetchPaymentsByEventId = async (
+  token: string,
+  page: number,
+  studentNameSearch: string,
+  eventId: number | null,
+  paymentType: string
+) => {
+  const response = await fetch(
+    `${backendUrl}/payment/${paymentType}/${
+      eventId ?? ''
+    }?page=${page}&studentName=${studentNameSearch}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('Error in fetching the pending payments');
+  }
+
+  const responseData = await response.json();
+  const { maxPage, ...other } = responseData;
+  const listOfPayments = other[Object.keys(other)[0]];
+
+  return { payments: listOfPayments, maxPage };
+};
+
 export const restorePayments = async (token: string, paymentIds: number[]) => {
   const response = await fetch(`${backendUrl}/payment/restore`, {
     method: 'POST',

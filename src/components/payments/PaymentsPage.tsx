@@ -14,13 +14,14 @@ import Checkbox from '@/components/ui/Checkbox';
 import Pagination from '@/components/ui/Pagination';
 import Select from '@/components/ui/Select';
 import TextField from '@/components/ui/TextField';
-import type { Payment } from '@/types/types';
+import type { Payment, Event } from '@/types/types';
 import { fetchActiveEvents } from '@/utilities/fetch/event';
-import {  
+import {
   acceptPayments,
   declinePayments,
   fetchAcceptedPayments,
   fetchDeclinedPayments,
+  fetchPaymentsByEventId,
   fetchPendingPayments,
   restorePayments,
 } from '@/utilities/fetch/payment';
@@ -51,22 +52,40 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
   const [studentNameSearchInput, setStudentNameSearchInput] = useState('');
   const [studentNameSearchValue, setStudentNameSearchValue] = useState('');
 
+  const [selectedEventId, setSelectedEventId] = useState(0);
+  const [selectedEventTitle, setSelectedEventTitle] = useState('All');
+
+  const handleEventSelect = (event: any) => {
+    setStudentNameSearchValue('');
+    setStudentNameSearchInput('');
+    if (event.target.value === 'All') {
+      setSelectedEventTitle('All');
+      setSelectedEventId(0);
+      return;
+    }
+
+    setSelectedEventTitle(event.target.value as string);
+    const selectedEvent = allActiveEvents?.find(
+      (activeEvent) => activeEvent.title === event.target.value
+    );
+    setSelectedEventId(selectedEvent?.id as number);
+  };
+
   const queryFn = () => {
-    if (paymentPageType === 'accepted') {
-      return fetchAcceptedPayments(token, page, studentNameSearchValue);
-    }
-
-    if (paymentPageType === 'pending') {
-      return fetchPendingPayments(token, page, studentNameSearchValue);
-    }
-
-    return fetchDeclinedPayments(token, page, studentNameSearchValue);
+    return fetchPaymentsByEventId(
+      token,
+      page,
+      studentNameSearchValue,
+      selectedEventId > 0 ? selectedEventId : null,
+      paymentPageType
+    );
   };
 
   const paymentsQuery = useQuery<{ maxPage: number; payments: Payment[] }>({
     queryKey: [
       'payments',
       paymentPageType,
+      selectedEventId,
       { page, studentNameSearch: studentNameSearchValue },
     ],
     queryFn: () => queryFn(),
@@ -160,15 +179,16 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
         queryKey: [
           'payments',
           paymentPageType,
-          { page: 1, setStudentNameSearchValue },
+          selectedEventId,
+          { page, studentNameSearch: studentNameSearchValue },
         ],
         exact: true,
       });
     };
     void invalidate();
   }, [paymentPageType, queryClient, setStudentNameSearchValue]);
-  
-  const [allActiveEvents, setAllActiveEvents] = useState<[id: Number, title: String] | null>(null);
+
+  const [allActiveEvents, setAllActiveEvents] = useState<Event[] | null>(null);
 
   useEffect(() => {
     const getAllActiveEvents = async () => {
@@ -259,17 +279,22 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
       </div>
       <div className="flex flex-col gap-8 flex-wrap justify-center items-center md:px-16 md:pb-16 px-4 pb-4">
         <div className="flex flex-row gap-2 lg:self-end">
-          <div className='w-60'>
+          <div className="w-60">
             <Select
               name="event"
-              value={''}
-              onChange={() => {}}
+              value={selectedEventTitle}
+              onChange={handleEventSelect}
             >
-              {allActiveEvents && allActiveEvents.map((event: any) => (
-                <MenuItem key={event.id} value={event.title}>
-                  {event.title}
-                </MenuItem>
-              ))}
+              <MenuItem key={0} value={'All'}>
+                All
+              </MenuItem>
+
+              {allActiveEvents &&
+                allActiveEvents.map((event: any) => (
+                  <MenuItem key={event.id} value={event.title}>
+                    {event.title}
+                  </MenuItem>
+                ))}
             </Select>
           </div>
           <div className="flex flex-row gap-1">
@@ -277,12 +302,16 @@ const PaymentsPage: React.FC<propTypes> = ({ paymentPageType }) => {
               label="Search"
               name="studentNameSearch"
               value={studentNameSearchInput}
-              onChange={(event) => setStudentNameSearchInput(event.target.value)}
-              className='w-52'
+              onChange={(event) =>
+                setStudentNameSearchInput(event.target.value)
+              }
+              className="w-52"
               onKeyUp={async (event: React.KeyboardEvent<HTMLInputElement>) => {
                 if (event.key === 'Enter') {
                   setPage(1);
                   setStudentNameSearchValue(studentNameSearchInput);
+                  setSelectedEventTitle('All');
+                  setSelectedEventId(0);
                 }
               }}
             />
