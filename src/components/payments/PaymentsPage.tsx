@@ -19,10 +19,7 @@ import { fetchActiveEvents } from '@/utilities/fetch/event';
 import {
   acceptPayments,
   declinePayments,
-  fetchAcceptedPayments,
-  fetchDeclinedPayments,
   fetchPaymentsByEventId,
-  fetchPendingPayments,
   restorePayments,
 } from '@/utilities/fetch/payment';
 
