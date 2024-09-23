@@ -147,16 +147,6 @@ const CashierHomePage = () => {
     eventTierMutation.mutate(allEventTitle[0].id);
   }, []);
 
-  useEffect(() => {
-    // const socket = io(String(process.env.NEXT_PUBLIC_WS_URL));
-    // socket.on('sendStudentRegisteredSignal', async (wsEventId: number) => {
-    //   if (inputData.eventId === wsEventId) {
-    //     eventTierMutation.mutate(inputData.eventId);
-    //   }
-    // });
-    eventTierMutation.mutate(inputData.eventId);
-  }, [inputData.eventId, eventTierMutation]);
-
   return (
     <div className="w-full">
       <div className="p-8 w-full border-b-2">
