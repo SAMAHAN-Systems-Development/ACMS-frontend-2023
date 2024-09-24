@@ -334,8 +334,8 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
                   <div className="flex flex-col gap-2 w-full">
                     <div>
                       <h3 className="font-bold">GCash</h3>
-                      <p>MARY CLAIR CLARDE</p>
-                      <p>09192610882</p>
+                      <p>CHRISTOPHER RAY SUAYBAGUIO ARAGON</p>
+                      <p>0968 328 2851</p>
                     </div>
                     <div>
                       <h3 className="font-bold">BPI</h3>
