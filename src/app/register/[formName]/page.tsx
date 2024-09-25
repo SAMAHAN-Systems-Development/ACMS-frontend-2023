@@ -3,6 +3,7 @@ import { QueryClient } from '@tanstack/react-query';
 // import RegistrationForm from '@/components/register/MadayawRegistrationForm';
 import RegistrationForm from '@/components/register/RegistrationForm';
 import StarSearchRegistrationForm from '@/components/register/StarSearchRegistrationForm';
+import Closed from '@/components/register/Closed';
 import { fetchEventByFormName } from '@/utilities/fetch/event';
 
 const Page = async ({ params }: { params: { formName: string } }) => {
@@ -16,6 +17,10 @@ const Page = async ({ params }: { params: { formName: string } }) => {
 
   if (formName === 'star-search-2024') {
     return <StarSearchRegistrationForm formName={formName} />;
+  }
+
+  if (formName === 'battle-of-the-bands-2024') {
+    return <Closed formName={formName} />;
   }
 
   return <RegistrationForm formName={formName} />;
