@@ -19,8 +19,8 @@ const Page = async ({ params }: { params: { formName: string } }) => {
     return <StarSearchRegistrationForm formName={formName} />;
   }
 
-  if (formName === 'battle-of-the-bands-2024') {
-    return <Closed formName={formName} />;
+  if (formName === "battle-of-the-bands-'24") {
+    return <Closed />;
   }
 
   return <RegistrationForm formName={formName} />;
