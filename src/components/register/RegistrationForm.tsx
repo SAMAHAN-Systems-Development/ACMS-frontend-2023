@@ -296,26 +296,23 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
             <div className="flex flex-col gap-4 justify-center">
               <div className="flex flex-col gap-2 p-4 border-2 rounded-xl">
                 <h2 className=" md:pl-8 mb-2 text-2xl font-bold">
-                  Ticket Inclusions
+                  This is a Demo Registration Page
                 </h2>
                 <div className="flex gap-4 md:pl-8 flex-col">
-                  <div className="flex flex-col w-full">
-                    <h3 className="font-bold">4th FLOOR (1,000 seats)</h3>
-                    <p>Price: PHP 250.00 </p>
-                    <p>Inclusion: Snacks & Drinks + DITO Sim</p>
-                  </div>
-                  <div className="flex flex-col w-full">
-                    <h3 className="font-bold">5th FLOOR (170 seats)</h3>
-                    <p>Price: PHP 150.00 </p>
-                    <p>Inclusion: DITO Sim</p>
-                  </div>
-                  <div className="flex flex-col w-full">
-                    <h3 className="font-bold">
-                      6th & 7th FLOOR (180 seats EACH)
-                    </h3>
-                    <p>Price: PHP 50.00 </p>
-                    <p>Inclusion: DITO Sim</p>
-                  </div>
+                  <ol>
+                    <li>
+                      1. Try submitting a registration and you will receive an
+                      email with your QR code.
+                    </li>
+                    <li>
+                      2. Using the admin demo account, mark your ticket as
+                      verified.
+                    </li>
+                    <li>
+                      3. Using the facilitator demo account, scan the QR in your
+                      email to mark your attendance.
+                    </li>
+                  </ol>
                 </div>
               </div>
 
@@ -328,24 +325,19 @@ const RegistrationForm = ({ formName }: { formName: string }) => {
             <div className="flex flex-col gap-8 max-w-[20rem] sm:max-w-[28rem]">
               <div className="flex flex-col gap-2 p-4 border-2 rounded-xl">
                 <h2 className=" md:pl-8 mb-2 text-2xl font-bold">
-                  Payment Methods
+                  Hope you have a nice day!
                 </h2>
                 <div className="flex gap-4 md:pl-8 md:flex-row flex-col">
                   <div className="flex flex-col gap-2 w-full">
                     <div>
                       <h3 className="font-bold">GCash</h3>
-                      <p>Gabriel Paolo G. Abucayon</p>
-                      <p>0991 153 7348</p>
+                      <p>Juan Dela Cruz</p>
+                      <p>0948 193 5598</p>
                     </div>
                     <div>
                       <h3 className="font-bold">BPI</h3>
-                      <p>MARY CLAIR A. CLARDE</p>
-                      <p>2089 3153 71</p>
-                    </div>
-                    <div>
-                      <h3 className="font-bold">Landbank</h3>
-                      <p>Russelle Van Fajardo</p>
-                      <p>1026 2308 68</p>
+                      <p>John Doe</p>
+                      <p>1234 567 89</p>
                     </div>
                   </div>
                 </div>
