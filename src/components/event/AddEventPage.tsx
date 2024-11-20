@@ -78,11 +78,15 @@ const AddEventPage = () => {
     setFormData({ ...formData, date });
   };
 
+  const earlyBirdDateOnChange = (earlyBirdAccessDate: Dayjs | null) => {
+    setFormData({ ...formData, earlyBirdAccessDate });
+  };
+
   const addEventMutation = useMutation({
     mutationFn: async () => {
-      await addEvent(token, formData);
+      return await addEvent(token, formData);
     },
-    onSuccess: async () => {
+    onSuccess: async (newEvent) => {
       await queryClient.invalidateQueries({
         queryKey: ['events', 'active', { page: 1 }],
         exact: true,
@@ -97,11 +101,32 @@ const AddEventPage = () => {
         earlyBirdAccessDate: dayjs().add(1, 'day'),
       });
       toast.success('Added the event successfully');
+      if (newEvent && newEvent.id) {
+        router.push(`/event/view/${newEvent.id}`);
+      } else {
+        toast.error('Failed to retrieve the new event ID');
+      }
+    },
+    onError: (error) => {
+      console.error('Error in mutation:', error); // Log the error
+      toast.error(error.message);
     },
   });
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (!formData.description.trim() && !formData.title.trim()) {
+      toast.error('Event title and description are required.');
+      return;
+    }
+    if (!formData.title.trim()) {
+      toast.error('Event title is required.');
+      return;
+    }
+    if (!formData.description.trim()) {
+      toast.error('Event description is required.');
+      return;
+    }
     addEventMutation.mutate();
   };
 
@@ -178,7 +203,7 @@ const AddEventPage = () => {
               Boolean(formData.hasEarlyBirdAccess) && (
                 <DatePicker
                   value={formData.earlyBirdAccessDate}
-                  onChange={dateOnChange}
+                  onChange={earlyBirdDateOnChange}
                   label="Early Bird Access Date"
                   name="earlyBirdAccessDate"
                 />
