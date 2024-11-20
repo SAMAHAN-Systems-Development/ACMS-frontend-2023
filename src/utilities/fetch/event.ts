@@ -161,7 +161,6 @@ export const addEvent = async (token: string, event: AddEditEventDTO) => {
   }
 
   const data = await response.json();
-
   return data;
 };
 

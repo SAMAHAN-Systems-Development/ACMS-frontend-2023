@@ -78,11 +78,15 @@ const AddEventPage = () => {
     setFormData({ ...formData, date });
   };
 
+  const earlyBirdDateOnChange = (earlyBirdAccessDate: Dayjs | null) => {
+    setFormData({ ...formData, earlyBirdAccessDate });
+  };
+
   const addEventMutation = useMutation({
     mutationFn: async () => {
-      await addEvent(token, formData);
+      return await addEvent(token, formData);
     },
-    onSuccess: async () => {
+    onSuccess: async (newEvent) => {
       await queryClient.invalidateQueries({
         queryKey: ['events', 'active', { page: 1 }],
         exact: true,
@@ -97,6 +101,15 @@ const AddEventPage = () => {
         earlyBirdAccessDate: dayjs().add(1, 'day'),
       });
       toast.success('Added the event successfully');
+      if (newEvent && newEvent.id) {
+        router.push(`/event/view/${newEvent.id}`);
+      } else {
+        toast.error('Failed to retrieve the new event ID');
+      }
+    },
+    onError: (error) => {
+      console.error('Error in mutation:', error); // Log the error
+      toast.error(error.message);
     },
   });
 
@@ -178,7 +191,7 @@ const AddEventPage = () => {
               Boolean(formData.hasEarlyBirdAccess) && (
                 <DatePicker
                   value={formData.earlyBirdAccessDate}
-                  onChange={dateOnChange}
+                  onChange={earlyBirdDateOnChange}
                   label="Early Bird Access Date"
                   name="earlyBirdAccessDate"
                 />
